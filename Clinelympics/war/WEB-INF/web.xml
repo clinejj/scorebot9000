@@ -7,7 +7,28 @@
 		<servlet-name>score</servlet-name>
 		<url-pattern>/score</url-pattern>
 	</servlet-mapping>
+   <servlet>
+        <servlet-name>register</servlet-name>
+        <servlet-class>com.csoft.clinelympics.RegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>register</servlet-name>
+        <url-pattern>/register</url-pattern>
+    </servlet-mapping>
 	<servlet>
+        <servlet-name>sign</servlet-name>
+        <servlet-class>com.csoft.clinelympics.SignGuestbookServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>inbound</servlet-name>
+        <servlet-class>com.csoft.clinelympics.InboundServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>inbound</servlet-name>
+        <url-pattern>/inbound</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
         <servlet-name>sign</servlet-name>
         <servlet-class>com.csoft.clinelympics.SignGuestbookServlet</servlet-class>
     </servlet>

@@ -11,7 +11,7 @@
 
 <html>
   <head>
-  	<title>Scores - Clinelympics</title>
+  	<title>Players - Clinelympics</title>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
 
@@ -19,45 +19,43 @@
 
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key scoreKey = KeyFactory.createKey("Scores", "scoreList");
+    Key playerKey = KeyFactory.createKey("Players", "playerList");
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
-    Query query = new Query("score", scoreKey).addSort("date", Query.SortDirection.DESCENDING);
-    List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
-    if (scores.isEmpty()) {
+    Query query = new Query("player", playerKey).addSort("playerID", Query.SortDirection.DESCENDING);
+    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
+    if (players.isEmpty()) {
         %>
-        <p>There are no scores</p>
+        <p>There are no players</p>
         <%
     } else {
         %>
-        <p>Scores:</p>
+        <p>Players:</p>
         <table cellspacing="10">
-        <tr><td>Date</td><td>Player</td><td>Game</td><td>Score</td></tr>
+        <tr><td>PlayerID</td><td>PlayerName</td><td>TeamName</td></tr>
         <%
-        for (Entity score : scores) {
+        for (Entity player : players) {
 			%>
             <tr>
             <%
-            pageContext.setAttribute("player_id", score.getProperty("playerID"));
-			pageContext.setAttribute("game_id", score.getProperty("gameID"));
-			pageContext.setAttribute("player_score", score.getProperty("playerScore"));
-			pageContext.setAttribute("date", score.getProperty("date"));
+            pageContext.setAttribute("player_id", player.getProperty("playerID"));
+			pageContext.setAttribute("player_name", player.getProperty("playerName"));
+			pageContext.setAttribute("team_name", player.getProperty("teamName"));
 			%>
-            <td>${fn:escapeXml(date)}</td>
             <td>${fn:escapeXml(player_id)}</td>
-            <td>${fn:escapeXml(game_id)}</td>
-            <td>${fn:escapeXml(player_score)}</td>
+            <td>${fn:escapeXml(player_name)}</td>
+            <td>${fn:escapeXml(team_name)}</td>
 			</tr>
             <%
         }
     }
 %>
 	</table>
-    <form action="/score" method="post">
+    <form action="/register" method="post">
       <div>Player ID: <input type="text" name="playerID" /></div>
-      <div>GameID: <input type="text" name="gameID" /></div>
-      <div>Score: <input type="text" name="playerScore" /></div>
-      <div><input type="submit" value="Add Score" /></div>
+      <div>Player Name: <input type="text" name="playerName" /></div>
+      <div>Team Name: <input type="text" name="teamName" /></div>
+      <div><input type="submit" value="Add Player" /></div>
     </form>
 
   </body>
