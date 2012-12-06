@@ -15,10 +15,14 @@
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
     </servlet-mapping>
-	<servlet>
-        <servlet-name>sign</servlet-name>
-        <servlet-class>com.csoft.clinelympics.SignGuestbookServlet</servlet-class>
+    <servlet>
+        <servlet-name>games</servlet-name>
+        <servlet-class>com.csoft.clinelympics.GameServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>games</servlet-name>
+        <url-pattern>/games</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>inbound</servlet-name>
         <servlet-class>com.csoft.clinelympics.InboundServlet</servlet-class>
@@ -27,7 +31,10 @@
         <servlet-name>inbound</servlet-name>
         <url-pattern>/inbound</url-pattern>
     </servlet-mapping>
-    
+	<servlet>
+        <servlet-name>sign</servlet-name>
+        <servlet-class>com.csoft.clinelympics.SignGuestbookServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>sign</servlet-name>
         <servlet-class>com.csoft.clinelympics.SignGuestbookServlet</servlet-class>
