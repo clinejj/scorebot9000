@@ -1,11 +1,6 @@
-<!-- Indices written at Wed, 5 Dec 2012 17:06:23 MST -->
+<!-- Indices written at Mon, 10 Dec 2012 13:17:53 MST -->
 
 <datastore-indexes>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="player" ancestor="true" source="auto">
-        <property name="playerID" direction="desc"/>
-    </datastore-index>
 
     <!-- Used 1 time in query history -->
     <datastore-index kind="score" ancestor="true" source="auto">
