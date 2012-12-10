@@ -1,5 +1,7 @@
 package com.csoft.clinelympics;
 
+import java.util.ArrayList;
+
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -9,6 +11,7 @@ public class Player {
 	private String playerName;
 	private String teamName;
 	private Key playerKey;
+	private ArrayList<Score> scores;
 	
 	public static final String keyName = "playerList";
 	public static final String keyKind = "Players";
@@ -16,6 +19,7 @@ public class Player {
 	
 	public Player() {
 		playerKey = KeyFactory.createKey(keyKind, keyName);
+		scores = new ArrayList<Score>();
 	}
 	
 	public Player(String pID, String pName, String tName) {
@@ -23,6 +27,15 @@ public class Player {
 		playerID = pID;
 		playerName = pName;
 		teamName = tName;
+		scores = new ArrayList<Score>();
+	}
+	
+	public Player(Entity pA) {
+		playerID = (String) pA.getProperty("playerID");
+		playerName = (String) pA.getProperty("playerName");
+		teamName = (String) pA.getProperty("teamName");
+		playerKey = KeyFactory.createKey(keyKind, keyName);
+		scores = new ArrayList<Score>();
 	}
 	
 	public void setPlayerID(String playerID) {
@@ -42,6 +55,18 @@ public class Player {
 	}
 	public String getTeamName() {
 		return teamName;
+	}
+	
+	public void addScore(Score newScore) {
+		scores.add(newScore);
+	}
+	
+	public void removeScore(Score newScore) {
+		scores.remove(newScore);
+	}
+	
+	public ArrayList<Score> getScores() {
+		return scores;
 	}
 	
 	public Entity createEntity() {

@@ -25,8 +25,6 @@
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key scoreKey = KeyFactory.createKey("Scores", "scoreList");
-    // Run an ancestor query to ensure we see the most up-to-date
-    // view of the Greetings belonging to the selected Guestbook.
     Query query = new Query("score", scoreKey).addSort("date", Query.SortDirection.DESCENDING);
     List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
     if (scores.isEmpty()) {
@@ -36,7 +34,7 @@
     } else {
         %>
         <p>Scores:</p>
-        <table cellspacing="10">
+        <table class="table table-hover">
         <tr><td>Date</td><td>Player</td><td>Game</td><td>Score</td></tr>
         <%
         for (Entity score : scores) {

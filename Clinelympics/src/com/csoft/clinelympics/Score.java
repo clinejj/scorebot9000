@@ -26,6 +26,13 @@ public class Score {
 		gameID = gID;
 		playerScore = pScore;
 	}
+	
+	public Score(Entity eScore) {
+		scoreKey = KeyFactory.createKey(keyKind, keyName);
+		playerID = (String) eScore.getProperty("playerID");
+		gameID = ((Long) eScore.getProperty("gameID")).intValue();
+		playerScore = ((Long) eScore.getProperty("playerScore")).intValue();
+	}
 
 	public void setPlayerID(String playerID) {
 		this.playerID = playerID;
@@ -59,5 +66,14 @@ public class Score {
 		score.setProperty("date", new Date());
 		
 		return score;
+	}
+	
+	public boolean equals(Score a) {
+		if (a.getPlayerID().equals(this.playerID) &&
+				(a.getGameID() == this.gameID) &&
+				(a.getPlayerScore() == this.playerScore)) {
+			return true;
+		}
+		return false;
 	}
 }
