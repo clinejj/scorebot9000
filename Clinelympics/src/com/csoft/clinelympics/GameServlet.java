@@ -27,14 +27,21 @@ public class GameServlet extends HttpServlet {
 	    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	    
 	    if (games.size() == 0) {
-			query = new Query(Game.entityKind, new Game().getGameKey()).addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
+			int newID = 1;
+	    	query = new Query(Game.entityKind, new Game().getGameKey()).addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
 		    games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-		    int newID = ((Long) games.get(0).getProperty(Game.gameIDName)).intValue() + 1;
+		    if (games.size() > 0) {
+		    	newID = ((Long) games.get(0).getProperty(Game.gameIDName)).intValue() + 1;
+		    }
 			Game game = new Game(newID, 
 					req.getParameter(Game.gameNameName).trim(), 
 					Boolean.parseBoolean(req.getParameter(Game.scoreTypeName).trim()));
 	
 			datastore.put(game.createEntity());
+	    } else {
+	    	if (games.size() > 1) System.out.println("Multiple games with name " + req.getParameter(Game.gameNameName));
+	    	games.get(0).setProperty(Game.scoreTypeName, Boolean.parseBoolean(req.getParameter(Game.scoreTypeName).trim()));
+	    	datastore.put(games.get(0));
 	    }
 		resp.sendRedirect("/games.jsp");
 	}
