@@ -61,10 +61,15 @@
 	</table>
   </div>
   <div class="row">
+    <%
+		pageContext.setAttribute("idval", Player.playerIDName);
+		pageContext.setAttribute("nameval", Player.playerNameName);
+		pageContext.setAttribute("teamval", Player.teamNameName);
+		%>
     <form action="/register" method="post">
-      <div>Player ID: <input type="text" name="playerID" /></div>
-      <div>Player Name: <input type="text" name="playerName" /></div>
-      <div>Team Name: <input type="text" name="teamName" /></div>
+      <div>Player ID: <input type="text" name="${fn:escapeXml(idval)}" /></div>
+      <div>Player Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
+      <div>Team Name: <input type="text" name="${fn:escapeXml(teamval)}" /></div>
       <div><input type="submit" value="Add Player" class="btn btn-primary" /></div>
     </form>
     </div>

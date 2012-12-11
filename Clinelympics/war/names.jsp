@@ -32,7 +32,7 @@
     List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (names.isEmpty()) {
         %>
-        <p class="text-error">There are no scores</p>
+        <p class="text-error">There are no names</p>
         <%
     } else {
         %>
@@ -64,9 +64,10 @@
 </tbody>
 	</table>
   </div>
-  <div calss="row">
+  <div class="row">
+  <% pageContext.setAttribute("nameval", name.getProperty(Name.nameStr)); %>
     <form action="/names" method="post">
-      <div>Name: <input type="text" name="nameval" /></div>
+      <div>Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
       <div><input type="submit" value="Add Name" class="btn btn-primary"/></div>
     </form>
     </div>

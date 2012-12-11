@@ -64,10 +64,14 @@
 	</tbody>
 	</table>
   </div>
-  <div calss="row">
+  <div class="row">
+    <%
+		pageContext.setAttribute("fromval", Text.fromName);
+		pageContext.setAttribute("bodyval", Text.bodyName);
+		%>
   <form action="/inbound" method="post">
-  	From: <input type="text" name="From" />
-  	Content: <input type="text" name="Body" size="60" />
+  	From: <input type="text" name="${fn:escapeXml(fromval)}" />
+  	Content: <input type="text" name="${fn:escapeXml(bodyval)}" size="60" />
   	<input type="submit" value="Send text" class="btn btn-primary" />
   </form>
     </div>

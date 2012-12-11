@@ -28,7 +28,7 @@
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-    Query query = new Query(Game.entityKind, gameKey).addSort(Game.gameNameName, Query.SortDirection.DESCENDING);
+    Query query = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
     List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (games.isEmpty()) {
         %>
@@ -65,11 +65,16 @@
 	</table>
   </div>
   <div class="row">
+  <%
+		pageContext.setAttribute("idval", Game.gameIDName);
+		pageContext.setAttribute("nameval", Game.gameNameName);
+		pageContext.setAttribute("scoreval", Game.scoreTypeName);
+	%>
     <form action="/games" method="post">
-      <div>Game ID: <input type="text" name="gameID" /></div>
-      <div>Game Name: <input type="text" name="gameName" /></div>
-      <div>Score Type: <input type="radio" name="scoreType" value="true" checked> High
-	  <input type="radio" name="scoreType" value="false"> Low</div>
+      <div>Game ID: <input type="text" name="${fn:escapeXml(idval)}" /></div>
+      <div>Game Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
+      <div>Score Type: <input type="radio" name="${fn:escapeXml(scoreval)}" value="true" checked> High
+	  <input type="radio" name="${fn:escapeXml(scoreval)}" value="false"> Low</div>
       <div><input type="submit" value="Add Game" class="btn btn-primary"/></div>
     </form>
     </div>

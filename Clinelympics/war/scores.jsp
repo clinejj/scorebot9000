@@ -62,11 +62,16 @@
 </tbody>
 	</table>
   </div>
-  <div calss="row">
+  <div class="row">
+    <%
+		pageContext.setAttribute("idval", Score.playerIDName);
+		pageContext.setAttribute("nameval", Score.gameIDName);
+		pageContext.setAttribute("scoreval", Score.playerScoreName);
+		%>
     <form action="/score" method="post">
-      <div>Player ID: <input type="text" name="playerID" /></div>
-      <div>GameID: <input type="text" name="gameID" /></div>
-      <div>Score: <input type="text" name="playerScore" /></div>
+      <div>Player ID: <input type="text" name="${fn:escapeXml(idval)}" /></div>
+      <div>GameID: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
+      <div>Score: <input type="text" name="${fn:escapeXml(scoreval)}" /></div>
       <div><input type="submit" value="Add Score" class="btn btn-primary"/></div>
     </form>
     </div>
