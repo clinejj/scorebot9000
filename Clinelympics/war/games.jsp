@@ -7,6 +7,7 @@
 <%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ page import="com.csoft.clinelympics.Game" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
@@ -21,11 +22,13 @@
   </head>
 
   <body>
-
+  <div class="container">
+  <div class="row">	<h2>Games:</h2></div>
+  <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key gameKey = KeyFactory.createKey("Games", "gameList");
-    Query query = new Query("game", gameKey).addSort("gameName", Query.SortDirection.DESCENDING);
+    Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
+    Query query = new Query(Game.entityKind, gameKey).addSort(Game.gameNameName, Query.SortDirection.DESCENDING);
     List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
     if (games.isEmpty()) {
         %>
@@ -33,7 +36,6 @@
         <%
     } else {
         %>
-        <p>Games:</p>
         <table class="table table-hover">
         <tr><td>GameID</td><td>GameName</td><td>scoreType</td></tr>
         <%
@@ -41,9 +43,9 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("game_id", game.getProperty("gameID"));
-			pageContext.setAttribute("game_name", game.getProperty("gameName"));
-			if ((Boolean) game.getProperty("scoreType")) {			
+            pageContext.setAttribute("game_id", game.getProperty(Game.gameIDName));
+			pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+			if ((Boolean) game.getProperty(Game.scoreTypeName)) {			
 				pageContext.setAttribute("score_type", "high");
 			} else {
 				pageContext.setAttribute("score_type", "low");
@@ -58,6 +60,8 @@
     }
 %>
 	</table>
+  </div>
+  <div class="row">
     <form action="/games" method="post">
       <div>Game ID: <input type="text" name="gameID" /></div>
       <div>Game Name: <input type="text" name="gameName" /></div>
@@ -65,6 +69,7 @@
 	  <input type="radio" name="scoreType" value="false"> Low</div>
       <div><input type="submit" value="Add Game" /></div>
     </form>
-
+    </div>
+	</div>
   </body>
 </html>

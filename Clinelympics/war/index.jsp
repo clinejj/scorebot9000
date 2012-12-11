@@ -80,8 +80,13 @@
 					%>
                     <tr><td>${fn:escapeXml(player_name)}</td>
                     <%
-					for (Score s : ((Player) dp).getScores()) {
-						pageContext.setAttribute("player_score", s.getPlayerScore());
+					for (Entity game : games) {
+						Integer s = ((Player) dp).getScore(((Long) game.getProperty("gameID")).intValue());
+						if (s == null) {
+							pageContext.setAttribute("player_score", "");
+						} else {
+							pageContext.setAttribute("player_score", s);
+						}
 						%>
                         <td>${fn:escapeXml(player_score)}</td>
                         <%	

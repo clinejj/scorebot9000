@@ -2,14 +2,10 @@ package com.csoft.clinelympics;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 
 import javax.servlet.http.*;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -26,35 +22,26 @@ public class InboundServlet extends HttpServlet {
 	throws IOException {
 		boolean isValid = true;
 		String smsresp = "";
-		
-		String smsid = req.getParameter("SmsSid");
-		String accountid = req.getParameter("AccountSid");
-		String number = req.getParameter("From");
-		String body = req.getParameter("Body");
+		Text inText = new Text(req.getParameter(Text.smsIDName), 
+				req.getParameter(Text.accountSIDName), 
+				req.getParameter(Text.fromName), 
+				req.getParameter(Text.bodyName));
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
-		Key textKey = KeyFactory.createKey("Texts", "textList");
-		Entity text = new Entity("text", textKey);
-		text.setProperty("SmsSid", smsid);
-		text.setProperty("AccountSid", accountid);
-		text.setProperty("From", number);
-		text.setProperty("Body", body);
-		text.setProperty("date", new Date());
+		datastore.put(inText.createEntity());
 		
-		datastore.put(text);
-		
-		String[] split = body.split(" ");
+		String[] split = inText.getBody().split(" ");
 		if (split[0].equalsIgnoreCase(cmdReg)) {
 			if (split.length >= 2) {
-				Player player = new Player(number, "name", body.substring(body.indexOf(" ")));
+				Player player = new Player(inText.getFrom(), "name", inText.getBody().substring(inText.getBody().indexOf(" ")));
 				datastore.put(player.createEntity());
 			} else {
 				isValid = false;
 			}
 		} else if (split[0].equalsIgnoreCase(cmdScore)) {
 			if (split.length == 3) {
-				Score score = new Score(number, Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+				Score score = new Score(inText.getFrom(), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
 				datastore.put(score.createEntity());
 			} else {
 				isValid = false;

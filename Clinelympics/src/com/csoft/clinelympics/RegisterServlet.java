@@ -11,7 +11,9 @@ public class RegisterServlet extends HttpServlet {
 	
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {		
-		Player player = new Player(req.getParameter("playerID"), req.getParameter("playerName").trim(), req.getParameter("teamName").trim());
+		Player player = new Player(req.getParameter(Player.playerIDName), 
+				req.getParameter(Player.playerNameName).trim(), 
+				req.getParameter(Player.teamNameName).trim());
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(player.createEntity());

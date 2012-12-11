@@ -11,7 +11,9 @@ public class GameServlet extends HttpServlet {
     
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {	
-		Game game = new Game(Integer.parseInt(req.getParameter("gameID")), req.getParameter("gameName").trim(), Boolean.parseBoolean(req.getParameter("scoreType").trim()));
+		Game game = new Game(Integer.parseInt(req.getParameter(Game.gameIDName)), 
+				req.getParameter(Game.gameNameName).trim(), 
+				Boolean.parseBoolean(req.getParameter(Game.scoreTypeName).trim()));
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(game.createEntity());

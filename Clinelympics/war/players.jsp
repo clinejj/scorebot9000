@@ -7,6 +7,7 @@
 <%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ page import="com.csoft.clinelympics.Player" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
@@ -21,11 +22,13 @@
   </head>
 
   <body>
-
+  <div class="container">
+  <div class="row">	<h2>Players:</h2></div>
+  <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key playerKey = KeyFactory.createKey("Players", "playerList");
-    Query query = new Query("player", playerKey).addSort("playerID", Query.SortDirection.DESCENDING);
+    Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
+    Query query = new Query(Player.entityKind, playerKey).addSort(Player.playerIDName, Query.SortDirection.DESCENDING);
     List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
     if (players.isEmpty()) {
         %>
@@ -33,7 +36,6 @@
         <%
     } else {
         %>
-        <p>Players:</p>
         <table class="table table-hover">
         <tr><td>PlayerID</td><td>PlayerName</td><td>TeamName</td></tr>
         <%
@@ -41,9 +43,9 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("player_id", player.getProperty("playerID"));
-			pageContext.setAttribute("player_name", player.getProperty("playerName"));
-			pageContext.setAttribute("team_name", player.getProperty("teamName"));
+            pageContext.setAttribute("player_id", player.getProperty(Player.playerIDName));
+			pageContext.setAttribute("player_name", player.getProperty(Player.playerNameName));
+			pageContext.setAttribute("team_name", player.getProperty(Player.teamNameName));
 			%>
             <td>${fn:escapeXml(player_id)}</td>
             <td>${fn:escapeXml(player_name)}</td>
@@ -54,12 +56,15 @@
     }
 %>
 	</table>
+  </div>
+  <div class="row">
     <form action="/register" method="post">
       <div>Player ID: <input type="text" name="playerID" /></div>
       <div>Player Name: <input type="text" name="playerName" /></div>
       <div>Team Name: <input type="text" name="teamName" /></div>
       <div><input type="submit" value="Add Player" /></div>
     </form>
-
+    </div>
+	</div>
   </body>
 </html>

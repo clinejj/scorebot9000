@@ -11,7 +11,9 @@ public class ScoreServlet extends HttpServlet {
 	
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
     			throws IOException {
-		Score score = new Score(req.getParameter("playerID"), Integer.parseInt(req.getParameter("gameID").trim()), Integer.parseInt(req.getParameter("playerScore").trim()));
+		Score score = new Score(req.getParameter(Score.playerIDName), 
+				Integer.parseInt(req.getParameter(Score.gameIDName).trim()), 
+				Integer.parseInt(req.getParameter(Score.playerScoreName).trim()));
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(score.createEntity());

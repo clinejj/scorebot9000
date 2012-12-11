@@ -7,12 +7,15 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class Game {
 	private int gameID;
 	private String gameName;
-	private boolean scoreType;
+	private boolean scoreType;	// True = high score
 	private Key gameKey;
 	
 	public static final String keyName = "gameList";
 	public static final String keyKind = "Games";
 	public static final String entityKind = "game";
+	public static final String gameIDName = "gameID";
+	public static final String gameNameName = "gameName";
+	public static final String scoreTypeName = "scoreType";
 	
 	public Game() {
 		gameKey = KeyFactory.createKey(keyKind, keyName);
@@ -23,6 +26,13 @@ public class Game {
 		gameID = gID;
 		gameName = gName;
 		scoreType = sType;
+	}
+	
+	public Game(Entity eGame) {
+		gameKey = KeyFactory.createKey(keyKind, keyName);
+		gameID = ((Long) eGame.getProperty(gameIDName)).intValue();
+		gameName = (String) eGame.getProperty(gameNameName);
+		scoreType = (Boolean) eGame.getProperty(scoreTypeName);;
 	}
 	
 	public void setGameID(int gameID) {
@@ -51,9 +61,9 @@ public class Game {
 	
 	public Entity createEntity() {
 		Entity game = new Entity(entityKind, gameKey);
-		game.setProperty("gameID", gameID);
-		game.setProperty("gameName", gameName);
-		game.setProperty("scoreType", scoreType);
+		game.setProperty(gameIDName, gameID);
+		game.setProperty(gameNameName, gameName);
+		game.setProperty(scoreTypeName, scoreType);
 		
 		return game;
 	}
