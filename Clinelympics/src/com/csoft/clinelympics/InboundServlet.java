@@ -2,14 +2,17 @@ package com.csoft.clinelympics;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.*;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -55,7 +58,7 @@ public class InboundServlet extends HttpServlet {
 				}
 				Filter notUsed = new FilterPredicate(Name.usedStr, FilterOperator.EQUAL, false);
 			    query.setFilter(notUsed);
-			    List<com.google.appengine.api.datastore.Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+			    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
 			    int curEnt = r.nextInt(names.size());
 			    String newName = (String) names.get(curEnt).getProperty(Name.nameStr);
 			    
@@ -70,13 +73,57 @@ public class InboundServlet extends HttpServlet {
 			}
 		} else if (split[0].equalsIgnoreCase(cmdScore)) {
 			if (split.length == 3) {
-				Score score = new Score(inText.getFrom(), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
-				datastore.put(score.createEntity());
+				Query query = new Query(Player.entityKind, new Player().getPlayerKey());
+				Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
+				query.setFilter(isPlayer);
+			    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+			    if (players.size() > 0) {
+			    	if (players.size() > 1) System.out.println("Multiple players for player with ID " + inText.getFrom());
+			    	query = new Query(Game.entityKind, new Game().getGameKey());
+					Filter isGame = new FilterPredicate(Game.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
+					query.setFilter(isGame);
+				    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+				    if (games.size() > 0) {
+				    	if (games.size() > 1) System.out.println("Multiple games found for game " + split[1]);
+						query = new Query(Score.entityKind, new Score().getScoreKey());
+						query.addSort(Score.dateName, Query.SortDirection.DESCENDING);
+						Filter fpID = new FilterPredicate(Score.playerIDName, FilterOperator.EQUAL, inText.getFrom());
+						Filter fgID = new FilterPredicate(Score.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
+						query.setFilter(CompositeFilterOperator.and(fpID,fgID));
+						List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+						if (scores.size() == 0) {
+							Score score = new Score(inText.getFrom(), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+							datastore.put(score.createEntity());
+						} else {
+							scores.get(0).setProperty(Score.playerScoreName, Integer.parseInt(split[2]));
+							scores.get(0).setProperty(Score.dateName, new Date());
+							datastore.put(scores.get(0));
+							if (scores.size() > 1) {
+								System.out.println("Multiple scores for player " + inText.getFrom() + " and game " + split[1]);
+							}
+						}
+				    } else {
+				    	smsresp = "Couldn't find that game ID.";
+				    }
+			    } else {
+			    	smsresp = "Could not find you as a player. Have you registered yet?";
+			    }
 			} else {
 				isValid = false;
 			}
 		} else if (split[0].equalsIgnoreCase(cmdWho)) {
 			// return player name
+			Query query = new Query(Player.entityKind, new Player().getPlayerKey());
+			Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
+			query.setFilter(isPlayer);
+		    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		    if (players.size() > 1 || players.size() <= 0) {
+		    	if (players.size() > 1) System.out.println("Multiple who answers for player with ID " + inText.getFrom());
+		    	smsresp = "You could not be found. Have you registered yet?";
+		    } else {
+		    	smsresp = "You are " + (String) players.get(0).getProperty(Player.playerNameName);
+		    }
+			
 		} else if (split[0].equalsIgnoreCase(cmdHelp)) {
 			isValid = true;
 			smsresp = "Available commands: " + cmdReg + ", " + cmdScore + ", " + cmdWho + ", " + cmdHelp;

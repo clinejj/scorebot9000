@@ -88,4 +88,12 @@ public class Player {
 		
 		return player;
 	}
+
+	public Key getPlayerKey() {
+		return playerKey;
+	}
+	
+	public void setPlayerKey(Key k) {
+		playerKey = k;
+	}
 }

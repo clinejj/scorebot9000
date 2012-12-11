@@ -80,4 +80,8 @@ public class Score {
 		}
 		return false;
 	}
+
+	public Key getScoreKey() {
+		return scoreKey;
+	}
 }

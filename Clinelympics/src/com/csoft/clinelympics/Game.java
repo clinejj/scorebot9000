@@ -67,4 +67,8 @@ public class Game {
 		
 		return game;
 	}
+
+	public Key getGameKey() {
+		return gameKey;
+	}
 }

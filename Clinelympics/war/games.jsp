@@ -66,12 +66,10 @@
   </div>
   <div class="row">
   <%
-		pageContext.setAttribute("idval", Game.gameIDName);
 		pageContext.setAttribute("nameval", Game.gameNameName);
 		pageContext.setAttribute("scoreval", Game.scoreTypeName);
 	%>
     <form action="/games" method="post">
-      <div>Game ID: <input type="text" name="${fn:escapeXml(idval)}" /></div>
       <div>Game Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
       <div>Score Type: <input type="radio" name="${fn:escapeXml(scoreval)}" value="true" checked> High
 	  <input type="radio" name="${fn:escapeXml(scoreval)}" value="false"> Low</div>
