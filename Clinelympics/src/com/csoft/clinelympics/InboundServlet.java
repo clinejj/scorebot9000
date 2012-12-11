@@ -17,6 +17,8 @@ public class InboundServlet extends HttpServlet {
 	
 	private static final String cmdReg = "REGISTER";
 	private static final String cmdScore = "SCORE";
+	private static final String cmdWho = "WHO";
+	private static final String cmdHelp = "HELP";
     
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
@@ -46,35 +48,34 @@ public class InboundServlet extends HttpServlet {
 			} else {
 				isValid = false;
 			}
+		} else if (split[0].equalsIgnoreCase(cmdWho)) {
+			// return player name
+		} else if (split[0].equalsIgnoreCase(cmdHelp)) {
+			isValid = true;
+			smsresp = "Available commands: " + cmdReg + ", " + cmdScore + ", " + cmdWho + ", " + cmdHelp;
 		} else {
 			isValid = false;
+		}
+		
+		if (isValid && smsresp.equals("")) {
+			// return sms saying did not understand
+			smsresp = "valid command!";
+		} else if (!isValid) {
+			smsresp = "I didn't understand. Text HELP for a list of available commands.";
 		}
 		
 		resp.setContentType("text/xml");
 		resp.setCharacterEncoding("UTF-8");
 		PrintWriter sos = resp.getWriter();
 		
-		if (isValid) {
-			// return sms saying did not understand
-			smsresp = "valid command!";
-		} else {
-			smsresp = "invalid command!";
-		}
-		
 		Document dom;
-		
-		// instance of a DocumentBuilderFactory
 	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    try {
-	        // use factory to get an instance of document builder
 	        DocumentBuilder db = dbf.newDocumentBuilder();
-	        // create instance of DOM
 	        dom = db.newDocument();
 
-	        // create the root element
 	        Element rootEle = dom.createElement("Response");
 
-	        // create data elements and place them under root
 	        Element e = dom.createElement("Sms");
 	        e.appendChild(dom.createTextNode(smsresp));
 	        rootEle.appendChild(e);
@@ -87,7 +88,6 @@ public class InboundServlet extends HttpServlet {
 	            tr.setOutputProperty(OutputKeys.METHOD, "xml");
 	            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
-	            // send DOM to file
 	            tr.transform(new DOMSource(dom), 
 	                                 new StreamResult(sos));
 
@@ -97,18 +97,5 @@ public class InboundServlet extends HttpServlet {
 	    } catch (ParserConfigurationException pce) {
 	        System.out.println(pce.getMessage());
 	    }
-		
-		/*
-		Key gameKey = KeyFactory.createKey("Games", "gameList");
-		Entity game = new Entity("game", gameKey);
-		game.setProperty("gameID", gameID);
-		game.setProperty("gameName", gameName);
-		game.setProperty("scoreType", scoreType);
-		
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		datastore.put(game);
-		*/
-		
-		//resp.sendRedirect("/games.jsp");
 	}
 }
