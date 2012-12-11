@@ -29,15 +29,17 @@
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key textKey = KeyFactory.createKey(Text.keyKind, Text.keyName);
     Query query = new Query(Text.entityKind, textKey).addSort(Text.sentDateName, Query.SortDirection.DESCENDING);
-    List<Entity> texts = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
+    List<Entity> texts = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (texts.isEmpty()) {
         %>
-        <p>There are no texts</p>
+        <p class="text-error">There are no texts</p>
         <%
     } else {
         %>
         <table class="table table-hover">
-        <tr><td>Date</td><td>From</td><td>Body</td><td>smsID</td><td>AccountSID</td></tr>
+        <thead>
+        <tr><th>Date</th><th>From</th><th>Body</th><th>smsID</th><th>AccountSID</th></tr></thead>
+        <tbody>
         <%
         for (Entity text : texts) {
 			%>
@@ -59,13 +61,14 @@
         }
     }
 %>
+	</tbody>
 	</table>
   </div>
   <div calss="row">
   <form action="/inbound" method="post">
   	From: <input type="text" name="From" />
   	Content: <input type="text" name="Body" size="60" />
-  	<input type="submit" value="Send text" />
+  	<input type="submit" value="Send text" class="btn btn-primary" />
   </form>
     </div>
 	</div>

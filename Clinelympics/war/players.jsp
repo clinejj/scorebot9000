@@ -29,15 +29,17 @@
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
     Query query = new Query(Player.entityKind, playerKey).addSort(Player.playerIDName, Query.SortDirection.DESCENDING);
-    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
+    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (players.isEmpty()) {
         %>
-        <p>There are no players</p>
+        <p class="text-error">There are no players</p>
         <%
     } else {
         %>
         <table class="table table-hover">
-        <tr><td>PlayerID</td><td>PlayerName</td><td>TeamName</td></tr>
+        <thead>
+        <tr><th>PlayerID</th><th>PlayerName</th><th>TeamName</th></tr>
+        </thead><tbody>
         <%
         for (Entity player : players) {
 			%>
@@ -55,6 +57,7 @@
         }
     }
 %>
+</tbody>
 	</table>
   </div>
   <div class="row">
@@ -62,7 +65,7 @@
       <div>Player ID: <input type="text" name="playerID" /></div>
       <div>Player Name: <input type="text" name="playerName" /></div>
       <div>Team Name: <input type="text" name="teamName" /></div>
-      <div><input type="submit" value="Add Player" /></div>
+      <div><input type="submit" value="Add Player" class="btn btn-primary" /></div>
     </form>
     </div>
 	</div>

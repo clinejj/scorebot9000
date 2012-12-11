@@ -7,13 +7,13 @@
 <%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
-<%@ page import="com.csoft.clinelympics.Score" %>
+<%@ page import="com.csoft.clinelympics.Name" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  	<title>Scores - Clinelympics</title>
+  	<title>Names - Clinelympics</title>
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.min.css" />
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -23,14 +23,14 @@
 
   <body>
   <div class="container">
-  <div class="row">	<h2>Scores:</h2></div>
+  <div class="row">	<h2>Names:</h2></div>
   <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Key scoreKey = KeyFactory.createKey(Score.keyKind, Score.keyName);
-    Query query = new Query(Score.entityKind, scoreKey).addSort(Score.dateName, Query.SortDirection.DESCENDING);
-    List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-    if (scores.isEmpty()) {
+    Key nameKey = KeyFactory.createKey(Name.keyKind, Name.keyName);
+    Query query = new Query(Name.entityKind, nameKey).addSort(Name.nameStr, Query.SortDirection.DESCENDING);
+    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+    if (names.isEmpty()) {
         %>
         <p class="text-error">There are no scores</p>
         <%
@@ -38,22 +38,24 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>Date</td><th>Player</th><th>Game</th><th>Score</th></tr></thead>
+        <tr><th>Name</th><th>rnd</th><th>isUsed</th></tr></thead>
         <tbody>
         <%
-        for (Entity score : scores) {
+        for (Entity name : names) {
 			%>
             <tr>
             <%
-            pageContext.setAttribute("player_id", score.getProperty(Score.playerIDName));
-			pageContext.setAttribute("game_id", score.getProperty(Score.gameIDName));
-			pageContext.setAttribute("player_score", score.getProperty(Score.playerScoreName));
-			pageContext.setAttribute("date", score.getProperty(Score.dateName));
-			%>
-            <td>${fn:escapeXml(date)}</td>
-            <td>${fn:escapeXml(player_id)}</td>
-            <td>${fn:escapeXml(game_id)}</td>
-            <td>${fn:escapeXml(player_score)}</td>
+            pageContext.setAttribute("name", name.getProperty(Name.nameStr));
+						pageContext.setAttribute("rnd", name.getProperty(Name.rndStr));
+						if ((Boolean) name.getProperty(Name.usedStr)) {			
+							pageContext.setAttribute("used", "Yes");
+						} else {
+							pageContext.setAttribute("used", "");
+						}
+						%>
+            <td>${fn:escapeXml(name)}</td>
+            <td>${fn:escapeXml(rnd)}</td>
+            <td>${fn:escapeXml(used)}</td>
 			</tr>
             <%
         }
@@ -63,11 +65,9 @@
 	</table>
   </div>
   <div calss="row">
-    <form action="/score" method="post">
-      <div>Player ID: <input type="text" name="playerID" /></div>
-      <div>GameID: <input type="text" name="gameID" /></div>
-      <div>Score: <input type="text" name="playerScore" /></div>
-      <div><input type="submit" value="Add Score" class="btn btn-primary"/></div>
+    <form action="/names" method="post">
+      <div>Name: <input type="text" name="nameval" /></div>
+      <div><input type="submit" value="Add Name" class="btn btn-primary"/></div>
     </form>
     </div>
 	</div>

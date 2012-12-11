@@ -29,15 +29,17 @@
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
     Query query = new Query(Game.entityKind, gameKey).addSort(Game.gameNameName, Query.SortDirection.DESCENDING);
-    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
+    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (games.isEmpty()) {
         %>
-        <p>There are no games</p>
+        <p class="text-error">There are no games</p>
         <%
     } else {
         %>
         <table class="table table-hover">
-        <tr><td>GameID</td><td>GameName</td><td>scoreType</td></tr>
+        <thead>
+        <tr><th>GameID</th><th>GameName</th><th>scoreType</th></tr>
+        </thead><tbody>
         <%
         for (Entity game : games) {
 			%>
@@ -59,6 +61,7 @@
         }
     }
 %>
+</tbody>
 	</table>
   </div>
   <div class="row">
@@ -67,7 +70,7 @@
       <div>Game Name: <input type="text" name="gameName" /></div>
       <div>Score Type: <input type="radio" name="scoreType" value="true" checked> High
 	  <input type="radio" name="scoreType" value="false"> Low</div>
-      <div><input type="submit" value="Add Game" /></div>
+      <div><input type="submit" value="Add Game" class="btn btn-primary"/></div>
     </form>
     </div>
 	</div>

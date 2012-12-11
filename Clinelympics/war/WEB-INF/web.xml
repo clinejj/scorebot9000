@@ -24,6 +24,14 @@
         <url-pattern>/games</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>names</servlet-name>
+        <servlet-class>com.csoft.clinelympics.NameServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>names</servlet-name>
+        <url-pattern>/names</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>inbound</servlet-name>
         <servlet-class>com.csoft.clinelympics.InboundServlet</servlet-class>
     </servlet>

@@ -37,7 +37,7 @@
 						HashMap<String, HashMap> teams = new HashMap<String, HashMap>();
             Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
             Query gameQuery = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
-            List<Entity> games = datastore.prepare(gameQuery).asList(FetchOptions.Builder.withLimit(100));
+            List<Entity> games = datastore.prepare(gameQuery).asList(FetchOptions.Builder.withDefaults());
             if (games.isEmpty()) {
                 %>
                 <tr class="error"><th>There was an error accessing the game list.</th></tr>
@@ -63,10 +63,10 @@
         <%
 		    Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
 			Query playerQuery = new Query(Player.entityKind, playerKey).addSort(Player.playerIDName, Query.SortDirection.DESCENDING);
-			List<Entity> players = datastore.prepare(playerQuery).asList(FetchOptions.Builder.withLimit(100));
+			List<Entity> players = datastore.prepare(playerQuery).asList(FetchOptions.Builder.withDefaults());
 			Key scoreKey = KeyFactory.createKey(Score.keyKind, Score.keyName);
 			Query scoreQuery = new Query(Score.entityKind, scoreKey).addSort(Score.gameIDName, Query.SortDirection.ASCENDING);
-			List<Entity> scores = datastore.prepare(scoreQuery).asList(FetchOptions.Builder.withLimit(players.size() * games.size()));
+			List<Entity> scores = datastore.prepare(scoreQuery).asList(FetchOptions.Builder.withDefaults());
 			if (players.isEmpty() || scores.isEmpty()) {
 				%>
                 <tr class="error">Error accessing players.</tr>
