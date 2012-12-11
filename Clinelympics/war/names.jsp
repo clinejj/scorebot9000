@@ -25,10 +25,17 @@
   <div class="container">
   <div class="row">	<h2>Names:</h2></div>
   <div class="row">
+<% pageContext.setAttribute("nameval", Name.nameStr); %>
+  <form action="/names" method="post">
+    Name: <input type="text" name="${fn:escapeXml(nameval)}" />
+    <input type="submit" value="Add Name" class="btn btn-primary"/>
+  </form>
+  </div>
+  <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key nameKey = KeyFactory.createKey(Name.keyKind, Name.keyName);
-    Query query = new Query(Name.entityKind, nameKey).addSort(Name.nameStr, Query.SortDirection.DESCENDING);
+    Query query = new Query(Name.entityKind, nameKey).addSort(Name.nameStr, Query.SortDirection.ASCENDING);
     List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (names.isEmpty()) {
         %>
@@ -64,13 +71,6 @@
 </tbody>
 	</table>
   </div>
-  <div class="row">
-  <% pageContext.setAttribute("nameval", name.getProperty(Name.nameStr)); %>
-    <form action="/names" method="post">
-      <div>Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
-      <div><input type="submit" value="Add Name" class="btn btn-primary"/></div>
-    </form>
-    </div>
 	</div>
   </body>
 </html>

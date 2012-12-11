@@ -13,7 +13,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 public class NameServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
-		Name n = new Name(req.getParameter(Name.nameStr));
+		Name n = new Name(req.getParameter(Name.nameStr).trim());
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(n.createEntity());
