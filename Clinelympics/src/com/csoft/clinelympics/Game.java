@@ -32,7 +32,7 @@ public class Game {
 		gameKey = KeyFactory.createKey(keyKind, keyName);
 		gameID = ((Long) eGame.getProperty(gameIDName)).intValue();
 		gameName = (String) eGame.getProperty(gameNameName);
-		scoreType = (Boolean) eGame.getProperty(scoreTypeName);;
+		scoreType = (Boolean) eGame.getProperty(scoreTypeName);
 	}
 	
 	public void setGameID(int gameID) {
