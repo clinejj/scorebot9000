@@ -10,6 +10,7 @@ public class Player {
 	private String playerID;
 	private String playerName;
 	private String teamName;
+	private int eventID;
 	private Key playerKey;
 	private HashMap<Integer, Score> scores;
 	
@@ -18,6 +19,7 @@ public class Player {
 	public static final String entityKind = "player";
 	public static final String playerIDName = "playerID";
 	public static final String playerNameName = "playerName";
+	public static final String eventIDName = "eventID";
 	public static final String teamNameName = "teamName";
 	
 	public Player() {
@@ -25,11 +27,12 @@ public class Player {
 		scores = new HashMap<Integer, Score>();
 	}
 	
-	public Player(String pID, String pName, String tName) {
+	public Player(String pID, String pName, String tName, int eID) {
 		playerKey = KeyFactory.createKey(keyKind, keyName);
 		playerID = pID;
 		playerName = pName;
 		teamName = tName;
+		eventID = eID;
 		scores = new HashMap<Integer, Score>();
 	}
 	
@@ -37,6 +40,7 @@ public class Player {
 		playerID = (String) pA.getProperty(playerIDName);
 		playerName = (String) pA.getProperty(playerNameName);
 		teamName = (String) pA.getProperty(teamNameName);
+		eventID = ((Long) pA.getProperty(eventIDName)).intValue();
 		playerKey = KeyFactory.createKey(keyKind, keyName);
 		scores = new HashMap<Integer, Score>();
 	}
@@ -85,6 +89,7 @@ public class Player {
 		player.setProperty(playerIDName, playerID);
 		player.setProperty(playerNameName, playerName);
 		player.setProperty(teamNameName, teamName);
+		player.setProperty(eventIDName, eventID);
 		
 		return player;
 	}
@@ -95,5 +100,13 @@ public class Player {
 	
 	public void setPlayerKey(Key k) {
 		playerKey = k;
+	}
+
+	public void setEventID(int eventID) {
+		this.eventID = eventID;
+	}
+
+	public int getEventID() {
+		return eventID;
 	}
 }
