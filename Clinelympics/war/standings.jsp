@@ -22,7 +22,16 @@
   </head>
 
   <body>
-  <c:import url="/components/nav.html" />
+    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <a class="brand" href="/">Clinelympics</a>
+      <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/standings.jsp">Standings</a></li>
+        <li><a href="/medals.jsp">Medals</a></li>
+      </ul>
+    </div>
+  </div>
   <div class="container">
   	<div class="row"><h1 style="text-align: center;">Standings</h1></div>
   	<div class="row"><h3>By Player:</h3></div>
