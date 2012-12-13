@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.google.appengine.api.users.User" %>
+<%@ page import="com.google.appengine.api.users.UserService" %>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
 <%@ page import="com.google.appengine.api.datastore.Query" %>
@@ -8,23 +11,22 @@
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="com.csoft.clinelympics.Game" %>
+<%@ page import="com.csoft.clinelympics.Settings" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  	<title>Games - Clinelympics</title>
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.min.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-    <script type="application/javascript" src="js/bootstrap.min.js"></script>
-  </head>
-
-  <body>
-  <div class="container">
-  <div class="row">	<h2>Games:</h2></div>
-    <div class="row">
+<%
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
+	Query query = new Query(Settings.entityKind, settingsKey);
+	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+	if (!settings.isEmpty()) {
+		Settings s = new Settings(settings.get(0));
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		if (user != null) {
+			if (user.getNickname().equals(s.getAdmin())) {
+				%>
+    <div>
   <%
 		pageContext.setAttribute("nameval", Game.gameNameName);
 		pageContext.setAttribute("scoreval", Game.scoreTypeName);
@@ -41,11 +43,10 @@
       <input type="submit" value="Add Game" class="btn btn-primary"/>
     </form>
     </div>
-  <div class="row">
+  <div>
 <%
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-    Query query = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
+    query = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
     List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (games.isEmpty()) {
         %>
@@ -81,6 +82,8 @@
 </tbody>
 	</table>
   </div>
-	</div>
-  </body>
-</html>
+      <%
+			}
+		}
+	}
+	%>

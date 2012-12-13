@@ -11,21 +11,19 @@
 <%@ page import="com.google.appengine.api.datastore.Key" %>
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="com.csoft.clinelympics.Settings" %>
+<%@ page import="com.csoft.clinelympics.Event" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>Admin - Clinelympics</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.min.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+    <c:import url="/components/head.html" />
   </head>
 
   <body>
+  <c:import url="/components/nav.html" />
 	<div class="container">
   <%
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -33,61 +31,67 @@
 		Query query = new Query(Settings.entityKind, settingsKey);
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		if (settings.isEmpty()) {
-	%>
-  <div class="row"><h2>Hello!</h2></div>
-  <div class="row">
-	<%
-      UserService userService = UserServiceFactory.getUserService();
-      User user = userService.getCurrentUser();
-      if (user != null) {
-        pageContext.setAttribute("user", user);
-  %>
-  <p>Thanks, ${fn:escapeXml(user.nickname)}! <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">(That's not me)</a></p> 
-  </div>
-  <div class="row"><p>Let's get started.</p></div>
-  <div class="row">
-      <%
-		pageContext.setAttribute("admin", Settings.adminName);
-		pageContext.setAttribute("adminnum", Settings.adminNumName);
-		pageContext.setAttribute("curevent", Settings.curEventName);
 		%>
-  <form action="/install" method="post" class="form-horizontal">
-    <div class="control-group">
-    <div class="controls">
-  		<input type="hidden" name="${fn:escapeXml(admin)}" value="${fn:escapeXml(user.nickname)}"/>
-    </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label" for="${fn:escapeXml(adminnum)}">Phone number?</label>
-      <div class="controls">
-        <input type="text" id="${fn:escapeXml(adminnum)}" name="${fn:escapeXml(adminnum)}" placeholder="1234567890">
-      </div>
-    </div>
-    <div class="control-group">
-      <div class="controls">
-        10 digits, no extra characters. This is used to recognize you via the text interface.
-      </div>
-    </div>
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="btn btn-primary">Install</button>
-      </div>
-    </div>
-  </form>
-  </div>
-  <%
-      } else {
-  %>
-  <p>Please <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">sign in</a> to begin.</p>
-  </div>
-  <%
-      }
+			<div class="row"><p class="text-error">Please <a href="/install.jsp">install</a> Clinelympics.</p></div>
+		<%
 		} else {
-  %>
-  <div class="row">
-  Site has already been installed. <a href="/">Return home</a>
-  </div>
-  <%
+			Settings s = new Settings(settings.get(0));
+			UserService userService = UserServiceFactory.getUserService();
+      User user = userService.getCurrentUser();
+			if (user != null) {
+			%>
+        <div class="row"><h2>Admin Panel</h2></div>
+        <div class="row">
+				<%
+				if (user.getNickname().equals(s.getAdmin())) {
+					pageContext.setAttribute("admin_name", s.getAdmin());
+					pageContext.setAttribute("admin_num", s.getAdminNum());
+					%>
+          Hello, ${fn:escapeXml(admin_name)}! <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">(That's not me)</a>
+          </div>
+          <div class="row">
+          <p>Your current number is: ${fn:escapeXml(admin_num)}</p>
+          </div>
+          <div class="row">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#home" data-toggle="tab">Dashboard</a></li>
+              <li><a href="#events" data-toggle="tab">Events</a></li>
+              <li><a href="#games" data-toggle="tab">Games</a></li>
+              <li><a href="#players" data-toggle="tab">Players</a></li>
+              <li><a href="#names" data-toggle="tab">Names</a></li>
+              <li><a href="#scores" data-toggle="tab">Scores</a></li>
+              <li><a href="#texts" data-toggle="tab">Texts</a></li>
+            </ul>
+          </div>
+          <div class="row">
+            <div class="tab-content">
+              <div class="tab-pane active" id="home">...</div>
+              <div class="tab-pane" id="events"><c:import url="/admin/events.jsp" /></div>
+              <div class="tab-pane" id="games"><c:import url="/admin/games.jsp" /></div>
+              <div class="tab-pane" id="players"><c:import url="/admin/players.jsp" /></div>
+              <div class="tab-pane" id="names"><c:import url="/admin/names.jsp" /></div>
+              <div class="tab-pane" id="scores"><c:import url="/admin/scores.jsp" /></div>
+              <div class="tab-pane" id="texts"><c:import url="/admin/texts.jsp" /></div>
+            </div>
+          </div>
+				<%
+        } else {
+        %>
+        	<div class="row">
+          <p class="text-error">You do not have permission to view this page.    </p><a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Logout</a>
+          </div>
+          <%
+      	}
+			} else {
+			%>
+      <div class="row">
+				<h2>Admin Panel</h2>      
+      </div>
+      <div class="row">
+      <p>Please <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">sign in</a>.</p>
+      </div>
+			<%
+			}
 		}
 		%>
   </body>

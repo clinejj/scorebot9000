@@ -12,22 +12,19 @@
 <%@ page import="com.csoft.clinelympics.Score"%>
 <%@ page import="com.csoft.clinelympics.Game"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  	<title>Clinelympics</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.min.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+  	<title>Standings - Clinelympics</title>
+    <c:import url="/components/head.html" />
   </head>
 
   <body>
-  <h1 style="text-align: center;">Clinelympics</h1>
+  <c:import url="/components/nav.html" />
   <div class="container">
+  	<div class="row"><h1 style="text-align: center;">Standings</h1></div>
   	<div class="row"><h3>By Player:</h3></div>
     <div class = "row">
   	<table class="table table-hover table-bordered">
