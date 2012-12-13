@@ -39,6 +39,14 @@
         <servlet-name>inbound</servlet-name>
         <url-pattern>/inbound</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>install</servlet-name>
+        <servlet-class>com.csoft.clinelympics.InstallServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>install</servlet-name>
+        <url-pattern>/install</url-pattern>
+    </servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

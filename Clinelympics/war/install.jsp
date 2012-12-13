@@ -27,6 +27,13 @@
 
   <body>
 	<div class="container">
+  <%
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
+		Query query = new Query(Settings.entityKind, settingsKey);
+		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		if (settings.isEmpty()) {
+	%>
   <div class="row"><h2>Hello!</h2></div>
   <div class="row">
 	<%
@@ -45,31 +52,25 @@
 		pageContext.setAttribute("curevent", Settings.curEventName);
 		%>
   <form action="/install" method="post" class="form-horizontal">
-  <div class="control-group">
-  	<div class="control">
+    <div class="control-group">
+    <div class="controls">
   		<input type="hidden" name="${fn:escapeXml(admin)}" value="${fn:escapeXml(user.nickname)}"/>
     </div>
     </div>
     <div class="control-group">
-      <label class="control-label" for="${fn:escapeXml(adminnum)}">What's your phone number (10 digits, no extra characters): </label>
-      <div class="control">
-        <input type="text" name="${fn:escapeXml(adminnum)}" placeholder="1234567890" />
+      <label class="control-label" for="${fn:escapeXml(adminnum)}">Phone number?</label>
+      <div class="controls">
+        <input type="text" id="${fn:escapeXml(adminnum)}" name="${fn:escapeXml(adminnum)}" placeholder="1234567890">
       </div>
     </div>
     <div class="control-group">
-  	<label class="control-label" for="${fn:escapeXml(curevent)}">Would you like to automatically create an event?: </label>
-    <div class="control">
-      <label class="radio">
-          <input type="radio" name="${fn:escapeXml(curevent)}" value="1" checked> Yes
-        </label>
-        <label class="radio">
-          <input type="radio" name="${fn:escapeXml(curevent)}" value="0"> No
-        </label>
-    </div>
+      <div class="controls">
+        10 digits, no extra characters. This is used to recognize you via the text interface.
+      </div>
     </div>
     <div class="control-group">
-    	<div class="control">
-  			<input type="submit" value="Submit" class="btn btn-primary" />
+      <div class="controls">
+        <button type="submit" class="btn btn-primary">Install</button>
       </div>
     </div>
   </form>
@@ -81,6 +82,13 @@
   </div>
   <%
       }
+		} else {
   %>
+  <div class="row">
+  Site has already been installed. <a href="/">Return home</a>
+  </div>
+  <%
+		}
+		%>
   </body>
 </html>

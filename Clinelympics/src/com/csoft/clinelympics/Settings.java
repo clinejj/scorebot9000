@@ -3,10 +3,9 @@ package com.csoft.clinelympics;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.users.User;
 
 public class Settings {
-	private User admin;
+	private String admin;
 	private String adminNum;
 	private int curEventID;
 	private Key settingsKey;
@@ -22,7 +21,7 @@ public class Settings {
 		settingsKey = KeyFactory.createKey(keyKind, keyName);
 	}
 	
-	public Settings(User a, String n, int e) {
+	public Settings(String a, String n, int e) {
 		settingsKey = KeyFactory.createKey(keyKind, keyName);
 		setAdmin(a);
 		setAdminNum(n);
@@ -30,16 +29,16 @@ public class Settings {
 	}
 	
 	public Settings(Entity e) {
-		setAdmin((User) e.getProperty(adminName));
+		setAdmin((String) e.getProperty(adminName));
 		setAdminNum((String) e.getProperty(adminNumName));
 		setCurEventID(((Long) e.getProperty(curEventName)).intValue());
 		settingsKey = KeyFactory.createKey(keyKind, keyName);
 	}
 	
-	public void setAdmin(User admin) {
+	public void setAdmin(String admin) {
 		this.admin = admin;
 	}
-	public User getAdmin() {
+	public String getAdmin() {
 		return admin;
 	}
 	public void setAdminNum(String adminNum) {
