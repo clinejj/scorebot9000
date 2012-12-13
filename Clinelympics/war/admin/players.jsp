@@ -25,21 +25,24 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				%>
-    <div>
-    <%
-		pageContext.setAttribute("idval", Player.playerIDName);
-		pageContext.setAttribute("nameval", Player.playerNameName);
-		pageContext.setAttribute("teamval", Player.teamNameName);
+				pageContext.setAttribute("idval", Player.playerIDName);
+				pageContext.setAttribute("nameval", Player.playerNameName);
+				pageContext.setAttribute("teamval", Player.teamNameName);
+				pageContext.setAttribute("user_email", s.getAdmin()); 
+				pageContext.setAttribute("type_val", Player.entityKind);
 		%>
-    <form action="/register" method="post" class="form-inline">
+    <div id="player_response"></div>
+  	<div id="player_form">
+    <form action="" id="addPlayerForm" class="form-inline">
       Player ID: <input type="text" name="${fn:escapeXml(idval)}" />
       Player Name: <input type="text" name="${fn:escapeXml(nameval)}" />
       Team Name: <input type="text" name="${fn:escapeXml(teamval)}" />
+      <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
+    	<input type="hidden" id="playerType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add Player" class="btn btn-primary" />
     </form>
     </div>
-  <div>
+  <div id="player_table">
 <%
     Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
     query = new Query(Player.entityKind, playerKey).addSort(Player.playerIDName, Query.SortDirection.DESCENDING);

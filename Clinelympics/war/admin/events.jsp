@@ -24,20 +24,23 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				%>
-<div>
-  <%
-		pageContext.setAttribute("nameval", Event.eventNameName);
-		pageContext.setAttribute("medalval", Event.medalsName);
+				pageContext.setAttribute("nameval", Event.eventNameName);
+				pageContext.setAttribute("medalval", Event.medalsName);
+				pageContext.setAttribute("user_email", s.getAdmin()); 
+				pageContext.setAttribute("type_val", Event.entityKind);
 	%>
-    <form action="/events" method="post" class="form-inline">
+  <div id="event_response"></div>
+  <div id="event_form">
+    <form action="" id="addEventForm" class="form-inline">
       <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" />
       <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" placeholder="Gold,Silver,Bronze"/>
       Medals must be comma separated, best to worst
+      <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
+    	<input type="hidden" id="eventType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add Event" class="btn btn-primary"/>
     </form>
     </div>
-<div>
+<div id="event_table">
 <%
     Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
     query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);

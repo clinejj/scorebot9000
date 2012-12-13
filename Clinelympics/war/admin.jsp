@@ -55,34 +55,39 @@
 				if (user.getNickname().equals(s.getAdmin())) {
 					pageContext.setAttribute("admin_name", s.getAdmin());
 					pageContext.setAttribute("admin_num", s.getAdminNum());
+					pageContext.setAttribute("cur_event", s.getCurEventID());
 					%>
           Hello, ${fn:escapeXml(admin_name)}! <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">(That's not me)</a>
           </div>
           <div class="row">
-          <p>Your current number is: ${fn:escapeXml(admin_num)}</p>
+         	Your current number is: ${fn:escapeXml(admin_num)}
+          </div>
+          <div class="row">
+          <p>The current event is: ${fn:escapeXml(cur_event)}</p>
           </div>
           <div class="row">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#home" data-toggle="tab">Dashboard</a></li>
-              <li><a href="#events" data-toggle="tab">Events</a></li>
-              <li><a href="#games" data-toggle="tab">Games</a></li>
-              <li><a href="#players" data-toggle="tab">Players</a></li>
-              <li><a href="#names" data-toggle="tab">Names</a></li>
-              <li><a href="#scores" data-toggle="tab">Scores</a></li>
-              <li><a href="#texts" data-toggle="tab">Texts</a></li>
+              <li class="active"><a href="#dashboard" data-toggle="tab">Dashboard</a></li>
+              <li><a href="#event" data-toggle="tab">Events</a></li>
+              <li><a href="#game" data-toggle="tab">Games</a></li>
+              <li><a href="#player" data-toggle="tab">Players</a></li>
+              <li><a href="#name" data-toggle="tab">Names</a></li>
+              <li><a href="#score" data-toggle="tab">Scores</a></li>
+              <li><a href="#text" data-toggle="tab">Texts</a></li>
             </ul>
           </div>
           <div class="row">
             <div class="tab-content">
-              <div class="tab-pane active" id="home">...</div>
-              <div class="tab-pane" id="events"><c:import url="/admin/events.jsp" /></div>
-              <div class="tab-pane" id="games"><c:import url="/admin/games.jsp" /></div>
-              <div class="tab-pane" id="players"><c:import url="/admin/players.jsp" /></div>
-              <div class="tab-pane" id="names"><c:import url="/admin/names.jsp" /></div>
-              <div class="tab-pane" id="scores"><c:import url="/admin/scores.jsp" /></div>
-              <div class="tab-pane" id="texts"><c:import url="/admin/texts.jsp" /></div>
+              <div class="tab-pane active" id="dashboard">Coming Soon</div>
+              <div class="tab-pane" id="event"><c:import url="/admin/events.jsp" /></div>
+              <div class="tab-pane" id="game"><c:import url="/admin/games.jsp" /></div>
+              <div class="tab-pane" id="player"><c:import url="/admin/players.jsp" /></div>
+              <div class="tab-pane" id="name"><c:import url="/admin/names.jsp" /></div>
+              <div class="tab-pane" id="score"><c:import url="/admin/scores.jsp" /></div>
+              <div class="tab-pane" id="text"><c:import url="/admin/texts.jsp" /></div>
             </div>
           </div>
+          <c:import url="/components/footer.html" />
 				<%
         } else {
         %>

@@ -1,40 +1,45 @@
-<!-- Indices written at Thu, 13 Dec 2012 12:12:42 MST -->
+<!-- Indices written at Thu, 13 Dec 2012 16:25:15 MST -->
 
 <datastore-indexes>
 
-    <!-- Used 8 times in query history -->
-    <datastore-index kind="event" ancestor="true" source="auto">
-        <property name="eventID" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 5 times in query history -->
-    <datastore-index kind="game" ancestor="true" source="auto">
-        <property name="gameID" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 5 times in query history -->
-    <datastore-index kind="player" ancestor="true" source="auto">
-        <property name="playerID" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 4 times in query history -->
+    <!-- Used 35 times in query history -->
     <datastore-index kind="name" ancestor="true" source="auto">
         <property name="Name" direction="asc"/>
     </datastore-index>
 
-    <!-- Used 4 times in query history -->
+    <!-- Used 32 times in query history -->
+    <datastore-index kind="event" ancestor="true" source="auto">
+        <property name="eventID" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 33 times in query history -->
+    <datastore-index kind="game" ancestor="true" source="auto">
+        <property name="gameID" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 31 times in query history -->
+    <datastore-index kind="player" ancestor="true" source="auto">
+        <property name="playerID" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 30 times in query history -->
     <datastore-index kind="score" ancestor="true" source="auto">
         <property name="date" direction="desc"/>
     </datastore-index>
 
-    <!-- Used 3 times in query history -->
+    <!-- Used 30 times in query history -->
     <datastore-index kind="text" ancestor="true" source="auto">
         <property name="date" direction="desc"/>
     </datastore-index>
 
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="score" ancestor="true" source="auto">
-        <property name="gameID" direction="asc"/>
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="event" ancestor="true" source="auto">
+        <property name="eventID" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="game" ancestor="true" source="auto">
+        <property name="gameID" direction="desc"/>
     </datastore-index>
 
 </datastore-indexes>

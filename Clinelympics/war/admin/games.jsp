@@ -25,13 +25,14 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				%>
-    <div>
-  <%
-		pageContext.setAttribute("nameval", Game.gameNameName);
-		pageContext.setAttribute("scoreval", Game.scoreTypeName);
+				pageContext.setAttribute("nameval", Game.gameNameName);
+				pageContext.setAttribute("scoreval", Game.scoreTypeName);
+				pageContext.setAttribute("user_email", s.getAdmin()); 
+				pageContext.setAttribute("type_val", Game.entityKind);
 	%>
-    <form action="/games" method="post" class="form-inline">
+  <div id="game_response"></div>
+  <div id="game_form">
+    <form action="" id="addGameForm" class="form-inline">
       <label for="${fn:escapeXml(nameval)}">Game Name:</label><input type="text" name="${fn:escapeXml(nameval)}" />
       <label>Score Type:</label>
       <label class="radio">
@@ -40,10 +41,12 @@
       <label class="radio">
         <input type="radio" name="${fn:escapeXml(scoreval)}" value="false"> Low
       </label>
+      <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
+    	<input type="hidden" id="gameType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add Game" class="btn btn-primary"/>
     </form>
     </div>
-  <div>
+  <div id="game_table">
 <%
     Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
     query = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);

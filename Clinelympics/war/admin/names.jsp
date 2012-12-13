@@ -13,7 +13,6 @@
 <%@ page import="com.csoft.clinelympics.Name" %>
 <%@ page import="com.csoft.clinelympics.Settings" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
@@ -25,15 +24,19 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				%>
-  <div>
-<% pageContext.setAttribute("nameval", Name.nameStr); %>
-  <form action="/names" method="post" class="form-inline">
+				pageContext.setAttribute("nameval", Name.nameStr);
+				pageContext.setAttribute("user_email", s.getAdmin()); 
+			pageContext.setAttribute("type_val", Name.entityKind); %>
+  <div id="name_response"></div>
+  <div id="name_form">
+  <form id="addNameForm" action="" class="form-inline">
     Name: <input type="text" name="${fn:escapeXml(nameval)}" />
+    <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
+    <input type="hidden" id="nameType" name="type" value="${fn:escapeXml(type_val)}" />
     <input type="submit" value="Add Name" class="btn btn-primary"/>
   </form>
   </div>
-  <div>
+  <div id="nametable">
 <%
     Key nameKey = KeyFactory.createKey(Name.keyKind, Name.keyName);
     query = new Query(Name.entityKind, nameKey).addSort(Name.nameStr, Query.SortDirection.ASCENDING);

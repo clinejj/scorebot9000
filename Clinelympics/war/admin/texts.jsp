@@ -25,19 +25,18 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				%>
-<div>
-    <%
-		pageContext.setAttribute("fromval", Text.fromName);
-		pageContext.setAttribute("bodyval", Text.bodyName);
+				pageContext.setAttribute("fromval", Text.fromName);
+				pageContext.setAttribute("bodyval", Text.bodyName);
 		%>
-  <form action="/inbound" method="post" class="form-inline">
+  <div id="text_response"></div>
+  <div id="text_form">
+  <form id="textForm" action="" class="form-inline">
   	From: <input type="text" name="${fn:escapeXml(fromval)}" />
   	Content: <input type="text" name="${fn:escapeXml(bodyval)}" size="60" />
   	<input type="submit" value="Send text" class="btn btn-primary" />
   </form>
     </div>
-  <div>
+  <div id="text_table">
 <%
     Key textKey = KeyFactory.createKey(Text.keyKind, Text.keyName);
     query = new Query(Text.entityKind, textKey).addSort(Text.sentDateName, Query.SortDirection.DESCENDING);

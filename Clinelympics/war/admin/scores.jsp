@@ -25,21 +25,24 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				%>
-    <div>
-    <%
-		pageContext.setAttribute("idval", Score.playerIDName);
-		pageContext.setAttribute("nameval", Score.gameIDName);
-		pageContext.setAttribute("scoreval", Score.playerScoreName);
+				pageContext.setAttribute("idval", Score.playerIDName);
+				pageContext.setAttribute("nameval", Score.gameIDName);
+				pageContext.setAttribute("scoreval", Score.playerScoreName);
+				pageContext.setAttribute("user_email", s.getAdmin()); 
+				pageContext.setAttribute("type_val", Score.entityKind);
 		%>
-    <form action="/score" method="post" class="form-inline">
+    <div id="score_response"></div>
+    <div id="score_form">
+    <form action="" id="addScoreForm" class="form-inline">
       Player ID: <input type="text" name="${fn:escapeXml(idval)}" />
       GameID: <input type="text" name="${fn:escapeXml(nameval)}" />
       Score: <input type="text" name="${fn:escapeXml(scoreval)}" />
+      <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
+    	<input type="hidden" id="scoreType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add Score" class="btn btn-primary"/>
     </form>
     </div>
-  <div>
+  <div id="score_table">
 <%
     Key scoreKey = KeyFactory.createKey(Score.keyKind, Score.keyName);
     query = new Query(Score.entityKind, scoreKey).addSort(Score.dateName, Query.SortDirection.DESCENDING);
