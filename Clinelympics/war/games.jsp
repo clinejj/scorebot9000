@@ -24,6 +24,23 @@
   <body>
   <div class="container">
   <div class="row">	<h2>Games:</h2></div>
+    <div class="row">
+  <%
+		pageContext.setAttribute("nameval", Game.gameNameName);
+		pageContext.setAttribute("scoreval", Game.scoreTypeName);
+	%>
+    <form action="/games" method="post" class="form-inline">
+      <label for="${fn:escapeXml(nameval)}">Game Name:</label><input type="text" name="${fn:escapeXml(nameval)}" />
+      <label>Score Type:</label>
+      <label class="radio">
+        <input type="radio" name="${fn:escapeXml(scoreval)}" value="true" checked> High
+      </label>
+      <label class="radio">
+        <input type="radio" name="${fn:escapeXml(scoreval)}" value="false"> Low
+      </label>
+      <input type="submit" value="Add Game" class="btn btn-primary"/>
+    </form>
+    </div>
   <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -64,18 +81,6 @@
 </tbody>
 	</table>
   </div>
-  <div class="row">
-  <%
-		pageContext.setAttribute("nameval", Game.gameNameName);
-		pageContext.setAttribute("scoreval", Game.scoreTypeName);
-	%>
-    <form action="/games" method="post">
-      <div>Game Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
-      <div>Score Type: <input type="radio" name="${fn:escapeXml(scoreval)}" value="true" checked> High
-	  <input type="radio" name="${fn:escapeXml(scoreval)}" value="false"> Low</div>
-      <div><input type="submit" value="Add Game" class="btn btn-primary"/></div>
-    </form>
-    </div>
 	</div>
   </body>
 </html>

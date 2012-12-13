@@ -24,6 +24,17 @@
   <body>
   <div class="container">
   <div class="row">	<h2>Texts:</h2></div>
+    <div class="row">
+    <%
+		pageContext.setAttribute("fromval", Text.fromName);
+		pageContext.setAttribute("bodyval", Text.bodyName);
+		%>
+  <form action="/inbound" method="post" class="form-inline">
+  	From: <input type="text" name="${fn:escapeXml(fromval)}" />
+  	Content: <input type="text" name="${fn:escapeXml(bodyval)}" size="60" />
+  	<input type="submit" value="Send text" class="btn btn-primary" />
+  </form>
+    </div>
   <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -64,17 +75,6 @@
 	</tbody>
 	</table>
   </div>
-  <div class="row">
-    <%
-		pageContext.setAttribute("fromval", Text.fromName);
-		pageContext.setAttribute("bodyval", Text.bodyName);
-		%>
-  <form action="/inbound" method="post">
-  	From: <input type="text" name="${fn:escapeXml(fromval)}" />
-  	Content: <input type="text" name="${fn:escapeXml(bodyval)}" size="60" />
-  	<input type="submit" value="Send text" class="btn btn-primary" />
-  </form>
-    </div>
 	</div>
   </body>
 </html>

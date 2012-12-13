@@ -24,6 +24,19 @@
   <body>
   <div class="container">
   <div class="row">	<h2>Players:</h2></div>
+    <div class="row">
+    <%
+		pageContext.setAttribute("idval", Player.playerIDName);
+		pageContext.setAttribute("nameval", Player.playerNameName);
+		pageContext.setAttribute("teamval", Player.teamNameName);
+		%>
+    <form action="/register" method="post" class="form-inline">
+      Player ID: <input type="text" name="${fn:escapeXml(idval)}" />
+      Player Name: <input type="text" name="${fn:escapeXml(nameval)}" />
+      Team Name: <input type="text" name="${fn:escapeXml(teamval)}" />
+      <input type="submit" value="Add Player" class="btn btn-primary" />
+    </form>
+    </div>
   <div class="row">
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -60,19 +73,6 @@
 </tbody>
 	</table>
   </div>
-  <div class="row">
-    <%
-		pageContext.setAttribute("idval", Player.playerIDName);
-		pageContext.setAttribute("nameval", Player.playerNameName);
-		pageContext.setAttribute("teamval", Player.teamNameName);
-		%>
-    <form action="/register" method="post">
-      <div>Player ID: <input type="text" name="${fn:escapeXml(idval)}" /></div>
-      <div>Player Name: <input type="text" name="${fn:escapeXml(nameval)}" /></div>
-      <div>Team Name: <input type="text" name="${fn:escapeXml(teamval)}" /></div>
-      <div><input type="submit" value="Add Player" class="btn btn-primary" /></div>
-    </form>
-    </div>
 	</div>
   </body>
 </html>

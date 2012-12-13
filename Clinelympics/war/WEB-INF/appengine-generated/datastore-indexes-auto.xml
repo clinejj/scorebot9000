@@ -1,35 +1,35 @@
-<!-- Indices written at Wed, 12 Dec 2012 16:12:46 MST -->
+<!-- Indices written at Wed, 12 Dec 2012 17:36:22 MST -->
 
 <datastore-indexes>
 
-    <!-- Used 11 times in query history -->
-    <datastore-index kind="game" ancestor="true" source="auto">
-        <property name="gameID" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 10 times in query history -->
-    <datastore-index kind="player" ancestor="true" source="auto">
-        <property name="playerID" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 9 times in query history -->
-    <datastore-index kind="score" ancestor="true" source="auto">
-        <property name="gameID" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="score" ancestor="true" source="auto">
-        <property name="date" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 1 time in query history -->
+    <!-- Used 2 times in query history -->
     <datastore-index kind="text" ancestor="true" source="auto">
         <property name="date" direction="desc"/>
     </datastore-index>
 
-    <!-- Used 1 time in query history -->
+    <!-- Used 2 times in query history -->
     <datastore-index kind="name" ancestor="true" source="auto">
         <property name="Name" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 7 times in query history -->
+    <datastore-index kind="game" ancestor="true" source="auto">
+        <property name="gameID" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 2 times in query history -->
+    <datastore-index kind="player" ancestor="true" source="auto">
+        <property name="playerID" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="score" ancestor="true" source="auto">
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="score" ancestor="true" source="auto">
+        <property name="gameID" direction="asc"/>
     </datastore-index>
 
 </datastore-indexes>

@@ -26,7 +26,7 @@
   <div class="row">	<h2>Names:</h2></div>
   <div class="row">
 <% pageContext.setAttribute("nameval", Name.nameStr); %>
-  <form action="/names" method="post">
+  <form action="/names" method="post" class="form-inline">
     Name: <input type="text" name="${fn:escapeXml(nameval)}" />
     <input type="submit" value="Add Name" class="btn btn-primary"/>
   </form>
