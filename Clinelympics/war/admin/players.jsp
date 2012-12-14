@@ -28,6 +28,7 @@
 				pageContext.setAttribute("idval", Player.playerIDName);
 				pageContext.setAttribute("nameval", Player.playerNameName);
 				pageContext.setAttribute("teamval", Player.teamNameName);
+				pageContext.setAttribute("eventval", Player.eventIDName);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
 				pageContext.setAttribute("type_val", Player.entityKind);
 		%>
@@ -37,6 +38,7 @@
       Player ID: <input type="text" name="${fn:escapeXml(idval)}" />
       Player Name: <input type="text" name="${fn:escapeXml(nameval)}" />
       Team Name: <input type="text" name="${fn:escapeXml(teamval)}" />
+      Event ID: <input type="text" name="${fn:escapeXml(eventval)}" />
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     	<input type="hidden" id="playerType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add Player" class="btn btn-primary" />
@@ -55,7 +57,7 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>PlayerID</th><th>PlayerName</th><th>TeamName</th></tr>
+        <tr><th>PlayerID</th><th>PlayerName</th><th>TeamName</th><th>Event ID</th></tr>
         </thead><tbody>
         <%
         for (Entity player : players) {
@@ -63,12 +65,14 @@
             <tr>
             <%
             pageContext.setAttribute("player_id", player.getProperty(Player.playerIDName));
-			pageContext.setAttribute("player_name", player.getProperty(Player.playerNameName));
-			pageContext.setAttribute("team_name", player.getProperty(Player.teamNameName));
-			%>
+						pageContext.setAttribute("player_name", player.getProperty(Player.playerNameName));
+						pageContext.setAttribute("team_name", player.getProperty(Player.teamNameName));
+						pageContext.setAttribute("event_id", player.getProperty(Player.eventIDName));
+						%>
             <td>${fn:escapeXml(player_id)}</td>
             <td>${fn:escapeXml(player_name)}</td>
             <td>${fn:escapeXml(team_name)}</td>
+            <td>${fn:escapeXml(event_id)}</td>
 			</tr>
             <%
         }

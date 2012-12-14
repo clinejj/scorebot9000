@@ -15,17 +15,32 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+  <%
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
+		Query query = new Query(Settings.entityKind, settingsKey);
+		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Admin - Clinelympics</title>
+  <% if (settings.isEmpty()) { %>
+    	<title>Admin</title>
+  <% } else {
+			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.siteNameName)); %>
+      <title>Admin - ${fn:escapeXml(site_name)}</title>
+  <% } %>
     <c:import url="/components/head.html" />
   </head>
 
   <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
-      <a class="brand" href="/">Clinelympics</a>
+      <% if (settings.isEmpty()) { %>
+          <a class="brand" href="/">Clinelympics</a>
+      <% } else { %>
+          <a class="brand" href="/">${fn:escapeXml(site_name)}</a>
+      <% } %>
       <ul class="nav">
         <li><a href="/">Home</a></li>
         <li><a href="/standings.jsp">Standings</a></li>
@@ -35,13 +50,9 @@
   </div>
 	<div class="container">
   <%
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-		Query query = new Query(Settings.entityKind, settingsKey);
-		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		if (settings.isEmpty()) {
 		%>
-			<div class="row"><p class="text-error">Please <a href="/install.jsp">install</a> Clinelympics.</p></div>
+			<div class="row"><p class="text-error">Please <a href="/install.jsp">install</a> Scorebot 9000.</p></div>
 		<%
 		} else {
 			Settings s = new Settings(settings.get(0));

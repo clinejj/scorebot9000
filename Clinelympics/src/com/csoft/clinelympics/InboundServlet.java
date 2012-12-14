@@ -54,27 +54,34 @@ public class InboundServlet extends HttpServlet {
 			String[] split = inText.getBody().split(" ");
 			if (split[0].equalsIgnoreCase(cmdReg)) {
 				if (split.length >= 2) {
-					String teamName = inText.getBody().substring(inText.getBody().indexOf(" ")+1).trim().toUpperCase();
-					Random r = new Random(System.currentTimeMillis());
-					query = new Query(Name.entityKind, new Name().getNameKey());
-					
-					if (r.nextInt() > 0) {
-						query.addSort(Name.rndStr, Query.SortDirection.ASCENDING);
-					} else {
-						query.addSort(Name.rndStr, Query.SortDirection.DESCENDING);
-					}
-					Filter notUsed = new FilterPredicate(Name.usedStr, FilterOperator.EQUAL, false);
-				    query.setFilter(notUsed);
-				    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
-				    int curEnt = r.nextInt(names.size());
-				    String newName = (String) names.get(curEnt).getProperty(Name.nameStr);
-				    
-					Player player = new Player(inText.getFrom(), newName, teamName, curEvent);
-					datastore.put(player.createEntity());
-					names.get(curEnt).setProperty(Name.usedStr, true);
-					datastore.put(names.get(curEnt));
-					
-					smsresp = "Welcome to team " + teamName + ", "  + newName;
+				    query = new Query(Player.entityKind, new Player().getPlayerKey());
+					Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName).trim());
+					Filter feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, curEvent);
+					query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
+				    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+				    if (players.isEmpty()) {
+						String teamName = inText.getBody().substring(inText.getBody().indexOf(" ")+1).trim().toUpperCase();
+						Random r = new Random(System.currentTimeMillis());
+						query = new Query(Name.entityKind, new Name().getNameKey());
+						
+						if (r.nextInt() > 0) {
+							query.addSort(Name.rndStr, Query.SortDirection.ASCENDING);
+						} else {
+							query.addSort(Name.rndStr, Query.SortDirection.DESCENDING);
+						}
+						Filter notUsed = new FilterPredicate(Name.usedStr, FilterOperator.EQUAL, false);
+					    query.setFilter(notUsed);
+					    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+					    int curEnt = r.nextInt(names.size());
+					    String newName = (String) names.get(curEnt).getProperty(Name.nameStr);
+					    
+						Player player = new Player(inText.getFrom(), newName, teamName, curEvent);
+						datastore.put(player.createEntity());
+						names.get(curEnt).setProperty(Name.usedStr, true);
+						datastore.put(names.get(curEnt));
+						
+						smsresp = "Welcome to team " + teamName + ", "  + newName;
+				    }
 				} else {
 					isValid = false;
 				}
@@ -82,10 +89,11 @@ public class InboundServlet extends HttpServlet {
 				if (split.length == 3) {
 					query = new Query(Player.entityKind, new Player().getPlayerKey());
 					Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
-					query.setFilter(isPlayer);
+					Filter feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, curEvent);
+					query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 				    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				    if (players.size() > 0) {
-				    	if (players.size() > 1) System.out.println("Multiple players for player with ID " + inText.getFrom());
+				    	if (players.size() > 1) System.out.println("Multiple players for player ID " + inText.getFrom());
 				    	query = new Query(Game.entityKind, new Game().getGameKey());
 						Filter isGame = new FilterPredicate(Game.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
 						query.setFilter(isGame);
@@ -96,7 +104,8 @@ public class InboundServlet extends HttpServlet {
 							query.addSort(Score.dateName, Query.SortDirection.DESCENDING);
 							Filter fpID = new FilterPredicate(Score.playerIDName, FilterOperator.EQUAL, inText.getFrom());
 							Filter fgID = new FilterPredicate(Score.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
-							query.setFilter(CompositeFilterOperator.and(fpID,fgID));
+							feID = new FilterPredicate(Score.eventIDName, FilterOperator.EQUAL, curEvent);
+							query.setFilter(CompositeFilterOperator.and(fpID,fgID,feID));
 							List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 							if (scores.size() == 0) {
 								Score score = new Score(inText.getFrom(), Integer.parseInt(split[1]), Integer.parseInt(split[2]), curEvent);
@@ -122,13 +131,14 @@ public class InboundServlet extends HttpServlet {
 				// return player name
 				query = new Query(Player.entityKind, new Player().getPlayerKey());
 				Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
-				query.setFilter(isPlayer);
+				Filter feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, curEvent);
+				query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 			    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-			    if (players.size() > 1 || players.size() <= 0) {
+			    if (players.size() == 1) {
+			    	smsresp = "You are " + (String) players.get(0).getProperty(Player.playerNameName);
+			    } else {
 			    	if (players.size() > 1) System.out.println("Multiple who answers for player with ID " + inText.getFrom());
 			    	smsresp = "You could not be found. Have you registered yet?";
-			    } else {
-			    	smsresp = "You are " + (String) players.get(0).getProperty(Player.playerNameName);
 			    }
 			} else if (split[0].equalsIgnoreCase(cmdAdmin)) {
 				if (inText.getFrom().equalsIgnoreCase((String) settings.get(0).getProperty(Settings.adminNumName))) {

@@ -6,73 +6,69 @@ import java.util.HashMap;
 public class Medal {
 	private HashMap<String, MedalScore> scores;
 	private ArrayList<String> medalNames;
+	private String rawMedals;
+
 	private boolean scoreType; // True = high score wins
-	
-	public static final String BRONZE = "bronze";
-	public static final String SILVER = "silver";
-	public static final String GOLD = "gold";
-	public static final int TOTAL_MEDALS = 3;
 	
 	public Medal() {
 		scores = new HashMap<String, MedalScore>();
 		medalNames = new ArrayList<String>();
 		setScoreType(true);
+		setRawMedals("Gold,Silver,Bronze");
+		setMedalNames();	
 		zeroScores();
-		setMedalNames();
 	}
 	
 	private void setMedalNames() {
-		medalNames.add("Gold");
-		medalNames.add("Silver");
-		medalNames.add("Bronze");
+		String[] names = rawMedals.split(",");
+		for (String n : names) {
+			medalNames.add(n);
+		}
 	}
 
-	public Medal(boolean t) {
+	public Medal(String medals, boolean t) {
 		scores = new HashMap<String,MedalScore>();
 		medalNames = new ArrayList<String>();
+		setRawMedals(medals);
 		setScoreType(t);
-		zeroScores();
 		setMedalNames();
+		zeroScores();
 	}
 	
 	public void addScore(MedalScore s) {
-		if (s.score == scores.get(GOLD).score) {
-			s.displayName = s.displayName + ", " + scores.get(GOLD).displayName;
-			scores.put(GOLD, s);
-		} else if (s.score == scores.get(SILVER).score) {
-			s.displayName = s.displayName + ", " + scores.get(SILVER).displayName;
-			scores.put(SILVER, s);
-		} else if (s.score == scores.get(BRONZE).score) {
-			s.displayName = s.displayName + ", " + scores.get(BRONZE).displayName;
-			scores.put(BRONZE, s);
-		} else {	
-			if (scoreType) {
-				if (s.score > scores.get(GOLD).score) {
-					scores.put(BRONZE, scores.get(SILVER));
-					scores.put(SILVER, scores.get(GOLD));
-					scores.put(GOLD, s);
-				} else if ((s.score < scores.get(GOLD).score) && (s.score > scores.get(SILVER).score)) {
-					scores.put(BRONZE, scores.get(SILVER));
-					scores.put(SILVER, s);
-				} else if ((s.score < scores.get(SILVER).score) && (s.score > scores.get(BRONZE).score)) {
-					scores.put(BRONZE, s);
-				}
+		if ((s.score == Integer.MAX_VALUE) || (s.score == Integer.MIN_VALUE)) return;
+		for (String n : medalNames) {
+			if (s.score == scores.get(n).score) {
+				s.displayName = s.displayName + ", " + scores.get(n).displayName;
+				scores.put(n, s);
 			} else {
-				if (s.score < scores.get(GOLD).score) {
-					scores.put(BRONZE, scores.get(SILVER));
-					scores.put(SILVER, scores.get(GOLD));
-					scores.put(GOLD, s);
-				} else if ((s.score > scores.get(GOLD).score) && (s.score < scores.get(SILVER).score)) {
-					scores.put(BRONZE, scores.get(SILVER));
-					scores.put(SILVER, s);
-				} else if ((s.score > scores.get(SILVER).score) && (s.score < scores.get(BRONZE).score)) {
-					scores.put(BRONZE, s);
+				if (scoreType) {
+					if (s.score > scores.get(n).score) {
+						MedalScore o = scores.get(n);
+						scores.put(n, s);
+						for (int i=(medalNames.indexOf(n)+1);i<medalNames.size();i++) {
+							s = scores.get(medalNames.get(i));
+							scores.put(medalNames.get(i), o);
+							o = s;
+						}
+					}
+				} else {
+					if (s.score < scores.get(n).score) {
+						MedalScore o = scores.get(n);
+						scores.put(n, s);
+						for (int i=(medalNames.indexOf(n)+1);i<medalNames.size();i++) {
+							s = scores.get(medalNames.get(i));
+							scores.put(medalNames.get(i), o);
+							o = s;
+						}
+					}
 				}
 			}
 		}
 	}
 	
 	public void addScore(String type, MedalScore s) {
+		if ((s.score == Integer.MAX_VALUE) || (s.score == Integer.MIN_VALUE)) return;
 		if (isValidType(type)) {
 			if (s.score > scores.get(type).score) {
 				scores.put(type, s);
@@ -102,16 +98,7 @@ public class Medal {
 	}
 	
 	public boolean isValidType(String type) {
-		type = type.toLowerCase();
-		if (type.equals(BRONZE)) {
-			return true;
-		} else if (type.equals(SILVER)) {
-			return true;
-		} else if (type.equals(GOLD)) {
-			return true;
-		} else {
-			return false;
-		}
+		return medalNames.contains(type);
 	}
 
 	public void setScoreType(boolean scoreType) {
@@ -123,16 +110,12 @@ public class Medal {
 	}
 	
 	private void zeroScores() {
-		MedalScore s = new MedalScore("", Integer.MIN_VALUE);
-		if (scoreType) {
-			scores.put(BRONZE, s);
-			scores.put(SILVER, s);
-			scores.put(GOLD, s);
-		} else {
-			s.score = Integer.MAX_VALUE;
-			scores.put(BRONZE, s);
-			scores.put(SILVER, s);
-			scores.put(GOLD, s);
+		for (String n : medalNames) {
+			if (scoreType) {
+				scores.put(n, new MedalScore("", Integer.MIN_VALUE));
+			} else {
+				scores.put(n, new MedalScore("", Integer.MAX_VALUE));
+			}
 		}
 	}
 
@@ -142,5 +125,17 @@ public class Medal {
 
 	public ArrayList<String> getMedalNames() {
 		return medalNames;
+	}
+	
+	public String getRawMedals() {
+		return rawMedals;
+	}
+
+	public void setRawMedals(String rawMedals) {
+		this.rawMedals = rawMedals;
+	}
+	
+	public int getTotalMedals() {
+		return medalNames.size();
 	}
 }

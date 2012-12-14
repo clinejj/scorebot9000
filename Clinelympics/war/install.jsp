@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Clinelympics Installation</title>
+    <title>Scorebot 9000 Installation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.min.css" />
@@ -50,6 +50,7 @@
 		pageContext.setAttribute("admin", Settings.adminName);
 		pageContext.setAttribute("adminnum", Settings.adminNumName);
 		pageContext.setAttribute("curevent", Settings.curEventName);
+		pageContext.setAttribute("sitename", Settings.siteNameName);
 		%>
   <form action="/install" method="post" class="form-horizontal">
     <div class="control-group">
@@ -66,6 +67,12 @@
     <div class="control-group">
       <div class="controls">
         10 digits, no extra characters. This is used to recognize you via the text interface.
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="${fn:escapeXml(sitename)}">Site Name</label>
+      <div class="controls">
+        <input type="text" id="${fn:escapeXml(sitename)}" name="${fn:escapeXml(sitename)}" placeholder="Clinelympics">
       </div>
     </div>
     <div class="control-group">

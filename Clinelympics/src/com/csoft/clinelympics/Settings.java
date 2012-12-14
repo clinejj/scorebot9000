@@ -8,6 +8,7 @@ public class Settings {
 	private String admin;
 	private String adminNum;
 	private int curEventID;
+	private String siteName;
 	private Key settingsKey;
 	
 	public static final String keyName = "settingsList";
@@ -15,23 +16,26 @@ public class Settings {
 	public static final String entityKind = "setting";
 	public static final String adminName = "adminName";
 	public static final String adminNumName = "adminNumName";
-	public static final String curEventName = "eventsIDName";
+	public static final String curEventName = "eventID";
+	public static final String siteNameName = "siteName";
 	
 	public Settings() {
 		settingsKey = KeyFactory.createKey(keyKind, keyName);
 	}
 	
-	public Settings(String a, String n, int e) {
+	public Settings(String a, String n, int e, String s) {
 		settingsKey = KeyFactory.createKey(keyKind, keyName);
 		setAdmin(a);
 		setAdminNum(n);
 		setCurEventID(e);
+		setSiteName(s);
 	}
 	
 	public Settings(Entity e) {
 		setAdmin((String) e.getProperty(adminName));
 		setAdminNum((String) e.getProperty(adminNumName));
 		setCurEventID(((Long) e.getProperty(curEventName)).intValue());
+		setSiteName((String) e.getProperty(siteNameName));
 		settingsKey = KeyFactory.createKey(keyKind, keyName);
 	}
 	
@@ -62,8 +66,17 @@ public class Settings {
 		setting.setProperty(adminName, admin);
 		setting.setProperty(adminNumName, adminNum);
 		setting.setProperty(curEventName, curEventID);
+		setting.setProperty(siteNameName, siteName);
 		
 		return setting;
+	}
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+
+	public String getSiteName() {
+		return siteName;
 	}
 	
 }

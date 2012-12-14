@@ -28,6 +28,7 @@
 				pageContext.setAttribute("idval", Score.playerIDName);
 				pageContext.setAttribute("nameval", Score.gameIDName);
 				pageContext.setAttribute("scoreval", Score.playerScoreName);
+				pageContext.setAttribute("eventval", Score.playerScoreName);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
 				pageContext.setAttribute("type_val", Score.entityKind);
 		%>
@@ -35,8 +36,9 @@
     <div id="score_form">
     <form action="" id="addScoreForm" class="form-inline">
       Player ID: <input type="text" name="${fn:escapeXml(idval)}" />
-      GameID: <input type="text" name="${fn:escapeXml(nameval)}" />
+      Game ID: <input type="text" name="${fn:escapeXml(nameval)}" />
       Score: <input type="text" name="${fn:escapeXml(scoreval)}" />
+      Event ID: <input type="text" name="${fn:escapeXml(eventval)}" />
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     	<input type="hidden" id="scoreType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add Score" class="btn btn-primary"/>
@@ -55,7 +57,7 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>Date</td><th>Player</th><th>Game</th><th>Score</th></tr></thead>
+        <tr><th>Date</td><th>Player</th><th>Game</th><th>Event</th><th>Score</th></tr></thead>
         <tbody>
         <%
         for (Entity score : scores) {
@@ -63,13 +65,15 @@
             <tr>
             <%
             pageContext.setAttribute("player_id", score.getProperty(Score.playerIDName));
-			pageContext.setAttribute("game_id", score.getProperty(Score.gameIDName));
-			pageContext.setAttribute("player_score", score.getProperty(Score.playerScoreName));
-			pageContext.setAttribute("date", score.getProperty(Score.dateName));
-			%>
+						pageContext.setAttribute("game_id", score.getProperty(Score.gameIDName));
+						pageContext.setAttribute("player_score", score.getProperty(Score.playerScoreName));
+						pageContext.setAttribute("event_id", score.getProperty(Score.eventIDName));
+						pageContext.setAttribute("date", score.getProperty(Score.dateName));
+						%>
             <td>${fn:escapeXml(date)}</td>
             <td>${fn:escapeXml(player_id)}</td>
             <td>${fn:escapeXml(game_id)}</td>
+            <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(player_score)}</td>
 			</tr>
             <%

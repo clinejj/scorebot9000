@@ -20,7 +20,8 @@ public class InstallServlet extends HttpServlet {
 	throws IOException {
 		Settings s = new Settings((String) req.getParameter(Settings.adminName),
 				(String) req.getParameter(Settings.adminNumName), 
-				-1);
+				-1,
+				(String) req.getParameter(Settings.siteNameName));
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query query = new Query(Settings.entityKind, s.getSettingsKey());

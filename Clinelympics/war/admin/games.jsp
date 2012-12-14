@@ -25,6 +25,7 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
+				pageContext.setAttribute("eventval", Game.eventIDName);
 				pageContext.setAttribute("nameval", Game.gameNameName);
 				pageContext.setAttribute("scoreval", Game.scoreTypeName);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
@@ -33,6 +34,7 @@
   <div id="game_response"></div>
   <div id="game_form">
     <form action="" id="addGameForm" class="form-inline">
+    	<label for="${fn:escapeXml(eventval)}">Event ID:</label><input type="text" name="${fn:escapeXml(eventval)}" />
       <label for="${fn:escapeXml(nameval)}">Game Name:</label><input type="text" name="${fn:escapeXml(nameval)}" />
       <label>Score Type:</label>
       <label class="radio">
@@ -59,21 +61,23 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>GameID</th><th>GameName</th><th>scoreType</th></tr>
+        <tr><th>EventID</th><th>GameID</th><th>GameName</th><th>scoreType</th></tr>
         </thead><tbody>
         <%
         for (Entity game : games) {
 			%>
             <tr>
             <%
+						pageContext.setAttribute("event_id", game.getProperty(Game.eventIDName));
             pageContext.setAttribute("game_id", game.getProperty(Game.gameIDName));
-			pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
-			if ((Boolean) game.getProperty(Game.scoreTypeName)) {			
-				pageContext.setAttribute("score_type", "high");
-			} else {
-				pageContext.setAttribute("score_type", "low");
-			}
-			%>
+						pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+						if ((Boolean) game.getProperty(Game.scoreTypeName)) {			
+							pageContext.setAttribute("score_type", "high");
+						} else {
+							pageContext.setAttribute("score_type", "low");
+						}
+						%>
+            <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(game_id)}</td>
             <td>${fn:escapeXml(game_name)}</td>
             <td>${fn:escapeXml(score_type)}</td>

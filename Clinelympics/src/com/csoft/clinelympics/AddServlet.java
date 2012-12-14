@@ -33,43 +33,40 @@ public class AddServlet extends HttpServlet {
 		if (!settings.isEmpty()) {
 			if (settings.size() > 1) System.out.println("Settings has multiple entries.");
 			int curEvent = ((Long) settings.get(0).getProperty(Settings.curEventName)).intValue();
+			int storeEvent = curEvent;
+			if (req.getParameter(Score.eventIDName) != null) {
+				storeEvent = Integer.parseInt(req.getParameter(Score.eventIDName));
+			}
 			String type = req.getParameter(TYPE_NAME);
 			if (((String) settings.get(0).getProperty(Settings.adminName)).equals(req.getHeader(USER_HEADER))) {
 				if (type.equals(Player.entityKind)) {
 					// Add a player
 					query = new Query(Player.entityKind, new Player().getPlayerKey());
 					Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName).trim());
-					query.setFilter(isPlayer);
+					Filter feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, storeEvent);
+					query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 				    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				    if (players.isEmpty()) {
 						Player player = new Player(req.getParameter(Player.playerIDName), 
 								req.getParameter(Player.playerNameName).trim(), 
 								req.getParameter(Player.teamNameName).trim(),
-								curEvent);
+								storeEvent);
 						datastore.put(player.createEntity());
 						strResp = "New player created.";
 				    } else {
 				    	if (players.size() > 1) System.out.println("Multiple players with ID " + req.getParameter(Player.playerIDName));
 				    	players.get(0).setProperty(Player.playerNameName, req.getParameter(Player.playerNameName));
 				    	players.get(0).setProperty(Player.teamNameName, req.getParameter(Player.teamNameName));
-				    	players.get(0).setProperty(Player.eventIDName, req.getParameter(Player.eventIDName));
+			    		players.get(0).setProperty(Player.eventIDName, storeEvent);
 				    	datastore.put(players.get(0));
 				    	strResp = "Player updated.";
 				    }
 				} else if (type.equals(Score.entityKind)) {
-					// Add a score
-					/*
-					Score score = new Score(req.getParameter(Score.playerIDName), 
-							Integer.parseInt(req.getParameter(Score.gameIDName).trim()), 
-							Integer.parseInt(req.getParameter(Score.playerScoreName).trim()),
-							curEvent);
-					datastore.put(score.createEntity());
-					strResp = "1";
-					*/
-					
+					// Add a score		
 					query = new Query(Player.entityKind, new Player().getPlayerKey());
 					Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName));
-					query.setFilter(isPlayer);
+					Filter feID = new FilterPredicate(Score.eventIDName, FilterOperator.EQUAL, storeEvent);
+					query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 				    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				    if (players.size() > 0) {
 				    	if (players.size() > 1) System.out.println("Multiple players for player with ID " + req.getParameter(Player.playerIDName));
@@ -83,19 +80,18 @@ public class AddServlet extends HttpServlet {
 							query.addSort(Score.dateName, Query.SortDirection.DESCENDING);
 							Filter fpID = new FilterPredicate(Score.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName));
 							Filter fgID = new FilterPredicate(Score.gameIDName, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Game.gameIDName)));
-							Filter feID = new FilterPredicate(Score.eventIDName, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Event.eventIDName)));
 							query.setFilter(CompositeFilterOperator.and(fpID,fgID,feID));
 							List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 							if (scores.size() == 0) {
 								Score score = new Score(req.getParameter(Score.playerIDName), 
 										Integer.parseInt(req.getParameter(Score.gameIDName).trim()), 
 										Integer.parseInt(req.getParameter(Score.playerScoreName).trim()),
-										curEvent);
+										storeEvent);
 								datastore.put(score.createEntity());
 							} else {
 								scores.get(0).setProperty(Score.playerScoreName, Integer.parseInt(req.getParameter(Score.playerScoreName).trim()));
 								scores.get(0).setProperty(Score.dateName, new Date());
-								scores.get(0).setProperty(Score.eventIDName, req.getParameter(Score.eventIDName));
+								scores.get(0).setProperty(Score.eventIDName, storeEvent);
 								datastore.put(scores.get(0));
 								if (scores.size() > 1) {
 									System.out.println("Multiple scores for player " + req.getParameter(Player.playerIDName) + " and game " + req.getParameter(Game.gameIDName));
@@ -112,20 +108,22 @@ public class AddServlet extends HttpServlet {
 					// Add a game
 					query = new Query(Game.entityKind, new Game().getGameKey());
 					Filter isGame = new FilterPredicate(Game.gameNameName, FilterOperator.EQUAL, req.getParameter(Game.gameNameName).trim());
-					query.setFilter(isGame);
+					Filter feID = new FilterPredicate(Game.eventIDName, FilterOperator.EQUAL, storeEvent);
+					query.setFilter(CompositeFilterOperator.and(isGame,feID));
 				    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				    
 				    if (games.size() == 0) {
 						int newID = 1;
 				    	query = new Query(Game.entityKind, new Game().getGameKey()).addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
-					    games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+				    	query.setFilter(feID);
+				    	games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    if (games.size() > 0) {
 					    	newID = ((Long) games.get(0).getProperty(Game.gameIDName)).intValue() + 1;
 					    }
 						Game game = new Game(newID, 
 								req.getParameter(Game.gameNameName).trim(), 
 								Boolean.parseBoolean(req.getParameter(Game.scoreTypeName).trim()),
-								curEvent);
+								storeEvent);
 				
 						datastore.put(game.createEntity());
 						strResp = "New game created.";
