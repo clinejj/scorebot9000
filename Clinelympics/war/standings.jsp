@@ -172,5 +172,6 @@
       </table>
       </div>
     </div>
+    <c:import url="/components/footer.html" />
   </body>
 </html>
