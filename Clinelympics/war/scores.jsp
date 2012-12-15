@@ -15,6 +15,7 @@
 <%@ page import="com.csoft.clinelympics.Score"%>
 <%@ page import="com.csoft.clinelympics.Game"%>
 <%@ page import="com.csoft.clinelympics.Settings" %>
+<%@ page import="com.csoft.clinelympics.Event" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -23,15 +24,21 @@
 		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
 		Query query = new Query(Settings.entityKind, settingsKey);
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		
+		Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
+		query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);
+		Filter activeEvents = new FilterPredicate(Event.archivedName, FilterOperator.EQUAL, false);
+		query.setFilter(activeEvents);
+		List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
   <% if (settings.isEmpty()) { %>
-    	<title>Standings</title>
+    	<title>Scores</title>
   <% } else {
 			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.siteNameName)); %>
-      <title>Standings - ${fn:escapeXml(site_name)}</title>
+      <title>Scores - ${fn:escapeXml(site_name)}</title>
   <% } %>
     <c:import url="/components/head.html" />
   </head>
@@ -43,12 +50,57 @@
           <a class="brand" href="/">Clinelympics</a>
       <% } else { %>
           <a class="brand" href="/">${fn:escapeXml(site_name)}</a>
-      <% } %>
-      <ul class="nav">
-        <li><a href="/">Home</a></li>
-        <li class="active"><a href="/standings.jsp">Standings</a></li>
-        <li><a href="/medals.jsp">Medals</a></li>
-      </ul>
+          <% 
+					if (!events.isEmpty()) { %>
+            <ul class="nav">
+              <li class="divider-vertical"></li>
+              <%
+							if (events.size() == 1) {
+								%>
+              	<li><a href="/summary.jsp">Summary</a></li>
+                <%
+							} else {
+								%>
+                <li class="dropdown">
+                  <a href="/summary.jsp" class="dropdown-toggle" data-toggle="dropdown">
+                    Summary
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                  <%
+									for (Entity ce : events) {
+										pageContext.setAttribute("event_id", ce.getProperty(Event.eventIDName));
+										pageContext.setAttribute("event_name", ce.getProperty(Event.eventNameName));
+										%>
+                    <li><a href="/summary.jsp?e=${fn:escapeXml(event_id)}">${fn:escapeXml(event_name)}</a></li>
+                    <%
+									}
+									%>
+                  </ul>
+                </li>
+                <%
+							}
+							%>
+              <li class="active"><a href="/scores.jsp">Scores</a></li>
+              <li><a href="/medals.jsp">Medals</a></li>
+              <li class="divider-vertical"></li>
+            </ul>
+      			<% 
+					} 
+				}
+			%>
+      <div class="pull-right">
+      	<ul class="nav">
+         <li class="dropdown pull-right">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu pull-right">
+              <li><a href="/admin.jsp">Admin</a></li>
+            </ul>
+         </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="container">
