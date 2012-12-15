@@ -277,8 +277,8 @@
       </tbody>
       </table>
       </div>
-    </div>
         <% } } %>
     <c:import url="/components/footer.html" />
+    </div>
   </body>
 </html>

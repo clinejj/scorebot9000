@@ -119,7 +119,7 @@
 					events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					if (events.isEmpty()) {
 		%>
-    <div class="row"><p class="text-error">There is no current event.</p></div>
+    <div class="row"><p class="text-error">The event you wanted doesn't exist. Sorry!.</p></div>
     <%		} else { 		
 						Event e = new Event(events.get(0));
 						String[] medalNames = e.getEventMedals().split(",");
