@@ -28,7 +28,7 @@
 				pageContext.setAttribute("idval", Score.playerIDName);
 				pageContext.setAttribute("nameval", Score.gameIDName);
 				pageContext.setAttribute("scoreval", Score.playerScoreName);
-				pageContext.setAttribute("eventval", Score.playerScoreName);
+				pageContext.setAttribute("eventval", Score.eventIDName);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
 				pageContext.setAttribute("type_val", Score.entityKind);
 		%>
