@@ -144,7 +144,7 @@
                 <%
             } else {
                 %>
-                <tr><th>Player</th>
+                <tr><th>Player</th><th>Team</th>
                 <%
                 for (Entity game : games) {
 										playerMedals.put(game.getProperty(Game.gameIDName), new Medal(e.getEventMedals(),(Boolean) game.getProperty(Game.scoreTypeName)));
@@ -188,11 +188,12 @@
 							}
 							for (Object dp : displayPlayers.values()) {
 								pageContext.setAttribute("player_name", ((Player) dp).getPlayerName());
+								pageContext.setAttribute("team_name", ((Player) dp).getTeamName());
 								if (!teams.containsKey(((Player) dp).getTeamName())) {
 									teams.put(((Player) dp).getTeamName(), new HashMap<Object, Integer>());
 								}
 								%>
-                <tr><td>${fn:escapeXml(player_name)}</td>
+                <tr><td>${fn:escapeXml(player_name)}</td><td>${fn:escapeXml(team_name)}</td>
                 <%
 								for (Entity game : games) {
 									Integer sc = ((Player) dp).getScore(((Long) game.getProperty(Game.gameIDName)).intValue());

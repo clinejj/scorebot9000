@@ -39,8 +39,11 @@ public class Medal {
 		if ((s.score == Integer.MAX_VALUE) || (s.score == Integer.MIN_VALUE)) return;
 		for (String n : medalNames) {
 			if (s.score == scores.get(n).score) {
-				s.displayName = s.displayName + ", " + scores.get(n).displayName;
-				scores.put(n, s);
+				if (!scores.get(n).displayName.contains(s.displayName)) {
+					s.displayName = s.displayName + ", " + scores.get(n).displayName;
+					scores.put(n, s);
+				}
+				
 			} else {
 				if (scoreType) {
 					if (s.score > scores.get(n).score) {
@@ -73,8 +76,10 @@ public class Medal {
 			if (s.score > scores.get(type).score) {
 				scores.put(type, s);
 			} else if (s.score == scores.get(type).score) {
-				s.displayName = s.displayName + ", " + scores.get(type).displayName;
-				scores.put(type, s);
+				if (!scores.get(type).displayName.contains(s.displayName)) {
+					s.displayName = s.displayName + ", " + scores.get(type).displayName;
+					scores.put(type, s);
+				}
 			}
 		}
 	}

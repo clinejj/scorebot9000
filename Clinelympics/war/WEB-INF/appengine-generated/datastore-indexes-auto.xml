@@ -1,55 +1,29 @@
-<!-- Indices written at Sat, 15 Dec 2012 14:55:03 MST -->
+<!-- Indices written at Sat, 15 Dec 2012 15:45:44 MST -->
 
 <datastore-indexes>
 
-    <!-- Used 4 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="event" ancestor="true" source="auto">
         <property name="archived" direction="asc"/>
         <property name="eventID" direction="asc"/>
     </datastore-index>
 
-    <!-- Used 8 times in query history -->
-    <datastore-index kind="event" ancestor="true" source="auto">
-        <property name="eventID" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 4 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="game" ancestor="true" source="auto">
         <property name="eventID" direction="asc"/>
         <property name="gameID" direction="asc"/>
     </datastore-index>
 
-    <!-- Used 4 times in query history -->
-    <datastore-index kind="game" ancestor="true" source="auto">
-        <property name="gameID" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 5 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="player" ancestor="true" source="auto">
+        <property name="eventID" direction="asc"/>
         <property name="playerID" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 4 times in query history -->
-    <datastore-index kind="name" ancestor="true" source="auto">
-        <property name="Name" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 6 times in query history -->
-    <datastore-index kind="score" ancestor="true" source="auto">
-        <property name="date" direction="desc"/>
-    </datastore-index>
-
-    <!-- Used 4 times in query history -->
-    <datastore-index kind="text" ancestor="true" source="auto">
-        <property name="date" direction="desc"/>
     </datastore-index>
 
     <!-- Used 1 time in query history -->
     <datastore-index kind="score" ancestor="true" source="auto">
         <property name="eventID" direction="asc"/>
         <property name="gameID" direction="asc"/>
-        <property name="playerID" direction="asc"/>
-        <property name="date" direction="desc"/>
     </datastore-index>
 
 </datastore-indexes>
