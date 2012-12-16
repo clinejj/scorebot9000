@@ -177,7 +177,7 @@
         <div class="span4">
           <h2>2012 Results</h2>
           <p>Check out the results from last year's match.</p>
-          <p><a class="btn" href="/standings.jsp?e=1">View &raquo;</a></p>
+          <p><a class="btn" href="/summary.jsp?e=1">View &raquo;</a></p>
         </div>
     </div>
   <c:import url="/components/footer.html" />
