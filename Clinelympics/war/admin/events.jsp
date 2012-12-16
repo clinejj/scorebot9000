@@ -35,7 +35,7 @@
   <div id="event_form">
     <form action="" id="addEventForm" class="form-inline">
       <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" maxlength="50" size="50" />
-      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventNameIn" placeholder="Gold,Silver,Bronze" data-placement="bottom" data-original-title="Medals must be comma separated, best to worst" maxlength="70" size="70"/>
+      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventNameIn" placeholder="Gold,Silver,Bronze" data-placement="top" data-original-title="Medals must be comma separated, best to worst" maxlength="70" size="70"/>
       <label class="checkbox">Active:<input type="checkbox" name="${fn:escapeXml(activeval)}" value="true"></label>
 			<label class="checkbox">Archive:<input type="checkbox" name="${fn:escapeXml(archiveval)}" value="true"></label> 
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
