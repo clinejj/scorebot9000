@@ -132,7 +132,7 @@
          	Your current number is: ${fn:escapeXml(admin_num)}
           </div>
           <div class="row">
-          <p>The current event is: ${fn:escapeXml(cur_event)}</p>
+          <p>The current event is: <span id="current_event">${fn:escapeXml(cur_event)}</span></p>
           </div>
           <div class="row">
             <ul class="nav nav-tabs">

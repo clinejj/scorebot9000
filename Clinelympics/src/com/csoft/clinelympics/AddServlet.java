@@ -131,7 +131,7 @@ public class AddServlet extends HttpServlet {
 							int newID = 1;
 					    	query = new Query(Game.entityKind, new Game().getGameKey()).addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
 					    	query.setFilter(feID);
-					    	games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+					    	games = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(2));
 						    if (games.size() > 0) {
 						    	newID = ((Long) games.get(0).getProperty(Game.gameIDName)).intValue() + 1;
 						    }
@@ -166,42 +166,86 @@ public class AddServlet extends HttpServlet {
 				    }
 				} else if (type.equals(Event.entityKind)) {
 					// Add an event
-					int curID = 0;
-					query = new Query(Event.entityKind, new Event().getEventKey());
-					Filter isEvent = new FilterPredicate(Event.eventNameName, FilterOperator.EQUAL, req.getParameter(Event.eventNameName).trim());
-					query.setFilter(isEvent);
-				    List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-				    
-				    if (events.isEmpty()) {
-						int newID = 1;
-				    	query = new Query(Event.entityKind, new Event().getEventKey()).addSort(Event.eventIDName, Query.SortDirection.DESCENDING);
-					    events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-					    if (events.size() > 0) {
-					    	newID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue() + 1;
+					if (req.getParameter(Event.activeName).equals("true") && req.getParameter(Event.activeName).equals(req.getParameter(Event.archivedName))) {
+						strResp = "err: Cannot set an event both active and archived.";
+					} else {
+					    if (Boolean.parseBoolean(req.getParameter(Event.activeName))) {
+					    	query = new Query(Event.entityKind, new Event().getEventKey()).addSort(Event.eventIDName, Query.SortDirection.DESCENDING);
+						    Filter isActive = new FilterPredicate(Event.activeName, FilterOperator.EQUAL, true);
+						    query.setFilter(isActive);
+					    	List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+					    	for (Entity e : events) {
+					    		e.setProperty(Event.activeName, false);
+					    	}
+					    	datastore.put(events);
 					    }
 					    
-					    curID = newID;
+						int curID = 0;
+						query = new Query(Event.entityKind, new Event().getEventKey());
+						Filter isEvent = new FilterPredicate(Event.eventNameName, FilterOperator.EQUAL, req.getParameter(Event.eventNameName).trim());
+						query.setFilter(isEvent);
+					    List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    
-						Event e = new Event(newID, 
-								req.getParameter(Event.eventNameName).trim(), 
-								req.getParameter(Event.medalsName).trim());
-				
-						datastore.put(e.createEntity());
-						strResp = "New event added.";
-				    } else {
-				    	if (events.size() > 1) System.out.println("Multiple events with name " + req.getParameter(Event.eventNameName));
-				    	events.get(0).setProperty(Event.medalsName, req.getParameter(Event.medalsName).trim());
-				    	curID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue();
-				    	datastore.put(events.get(0));
-				    	strResp = "Event updated.";
-				    }
-				    settings.get(0).setProperty(Settings.curEventName, curID);
-				    datastore.put(settings.get(0));
-				    curEvent = curID;
+					    if (events.isEmpty()) {
+							int newID = 1;
+					    	query = new Query(Event.entityKind, new Event().getEventKey());
+						    events = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(2));
+						    if (events.size() > 0) {
+						    	newID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue() + 1;
+						    }
+						    
+						    curID = newID;
+						    
+							Event e = new Event(newID, 
+									req.getParameter(Event.eventNameName).trim(), 
+									req.getParameter(Event.medalsName).trim(),
+									Boolean.parseBoolean(req.getParameter(Event.archivedName)),
+									Boolean.parseBoolean(req.getParameter(Event.activeName)));
+					
+							datastore.put(e.createEntity());
+							strResp = "New event added.";
+					    } else {
+					    	if (events.size() > 1) System.out.println("Multiple events with name " + req.getParameter(Event.eventNameName));
+					    	events.get(0).setProperty(Event.medalsName, req.getParameter(Event.medalsName).trim());
+					    	events.get(0).setProperty(Event.archivedName, Boolean.parseBoolean(req.getParameter(Event.archivedName)));
+					    	events.get(0).setProperty(Event.activeName, Boolean.parseBoolean(req.getParameter(Event.activeName)));
+					    	curID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue();
+					    	datastore.put(events.get(0));
+					    	strResp = "Event updated.";
+					    }
+					   
+					    if (Boolean.parseBoolean(req.getParameter(Event.activeName))) {
+					    	settings.get(0).setProperty(Settings.curEventName, curID);
+						    datastore.put(settings.get(0));
+						    curEvent = curID;
+						    strResp = strResp + "&&" + Integer.toString(curEvent);
+						    resetNames();
+					    } else {
+					    	if (curID == curEvent) {
+					    		settings.get(0).setProperty(Settings.curEventName, -1);
+							    datastore.put(settings.get(0));
+							    curEvent = -1;
+							    strResp = strResp + "&&" + Integer.toString(curEvent);
+							    resetNames();
+					    	}
+					    }
+					}
 				}
 			}
 		}
 		
 		resp.getOutputStream().println(strResp);
 	}
+    
+    private void resetNames() {
+    	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    	Query query = new Query(Name.entityKind, new Name().getNameKey());
+    	Filter isName = new FilterPredicate(Name.usedStr, FilterOperator.EQUAL, true);
+		query.setFilter(isName);
+	    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+	    for (Entity n : names) {
+	    	n.setProperty(Name.usedStr, false);
+	    }
+	    datastore.put(names);
+    }
 }

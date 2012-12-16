@@ -9,6 +9,7 @@ public class Event {
 	private String eventName;
 	private String eventMedals; //comma-separated list in order from best to worst
 	private boolean isArchived;
+	private boolean isActive;
 	private Key eventKey;
 	
 	public static final String keyName = "eventList";
@@ -18,6 +19,7 @@ public class Event {
 	public static final String eventNameName = "eventName";
 	public static final String archivedName = "archived";
 	public static final String medalsName = "medals";
+	public static final String activeName = "active";
 	
 	public Event() {
 		eventKey = KeyFactory.createKey(keyKind, keyName);
@@ -29,6 +31,16 @@ public class Event {
 		eventName = eName;
 		eventMedals = eMedals;
 		isArchived = false;
+		setActive(false);
+	}
+	
+	public Event(int eID, String eName, String eMedals, boolean arc, boolean act) {
+		eventKey = KeyFactory.createKey(keyKind, keyName);
+		eventID = eID;
+		eventName = eName;
+		eventMedals = eMedals;
+		isArchived = arc;
+		setActive(act);
 	}
 	
 	public Event(Entity e) {
@@ -37,6 +49,7 @@ public class Event {
 		eventName = (String) e.getProperty(eventNameName);
 		eventMedals = (String) e.getProperty(medalsName);
 		isArchived = (Boolean) e.getProperty(archivedName);
+		setActive((Boolean) e.getProperty(activeName));
 	}
 	
 	public void setEventID(int eventID) {
@@ -73,7 +86,16 @@ public class Event {
 		e.setProperty(eventNameName, eventName);
 		e.setProperty(medalsName, eventMedals);
 		e.setProperty(archivedName, isArchived);
+		e.setProperty(activeName, isActive);
 		
 		return e;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public boolean isActive() {
+		return isActive;
 	}
 }

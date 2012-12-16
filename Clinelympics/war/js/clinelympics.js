@@ -2,7 +2,14 @@
 $('#addEventForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addEventForm').serialize();
+	if (a.indexOf("archived") == -1) {
+		a = a + "&archived=false";
+	}
+	if (a.indexOf("active") == -1) {
+		a = a + "&active=false";
+	}
 	addForm(a, $('#eventType').val());
+	
 }));
 
 $('#addPlayerForm').live('submit', (function(event) {
@@ -46,6 +53,16 @@ function addForm(params, type) {
 				if (resArgs.length > 1) {
 					newHTML = newHTML + 'alert-error">' + btnHTML + resArgs[1] + '</div>';
 				} else {
+					if (type === "event") {
+						if (res.indexOf("&&") !== -1) {
+							var cIDs = res.split("&&");
+							$('#current_event').html(cIDs[1]);
+							res = cIDs[0];
+							$.get('/admin/names.jsp').success(function(newdata) {
+								$('#name').html(newdata);
+							});
+						}
+					}
 					if (res.indexOf("update") !== -1) {
 						newHTML = newHTML + 'alert-info">' + btnHTML + res + '</div>';
 					} else {
@@ -71,6 +88,14 @@ $('#textForm').live('submit', (function(event) {
 			$.get('/admin/texts.jsp').success(function(data) {
 				$('#text').html(data);
 				$('#text_response').html('<div class=" alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>'+res+'</div>');
+				if (res.indexOf("Welcome to team") !== -1) {
+					$.get('/admin/names.jsp').success(function(newdata) {
+						$('#name').html(newdata);
+					});
+					$.get('/admin/players.jsp').success(function(newdata) {
+						$('#player').html(newdata);
+					});
+				}
 			});
 		}
 	});

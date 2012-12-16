@@ -42,6 +42,7 @@ public class Medal {
 				if (!scores.get(n).displayName.contains(s.displayName)) {
 					s.displayName = s.displayName + ", " + scores.get(n).displayName;
 					scores.put(n, s);
+					return;
 				}
 				
 			} else {
@@ -54,6 +55,7 @@ public class Medal {
 							scores.put(medalNames.get(i), o);
 							o = s;
 						}
+						return;
 					}
 				} else {
 					if (s.score < scores.get(n).score) {
@@ -64,6 +66,7 @@ public class Medal {
 							scores.put(medalNames.get(i), o);
 							o = s;
 						}
+						return;
 					}
 				}
 			}
