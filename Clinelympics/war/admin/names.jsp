@@ -30,10 +30,10 @@
   <div id="name_response"></div>
   <div id="name_form">
   <form id="addNameForm" action="" class="form-inline">
-    Name: <input type="text" name="${fn:escapeXml(nameval)}" />
+    Name: <input type="text" name="${fn:escapeXml(nameval)}" maxlength="80" size="80" />
     <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     <input type="hidden" id="nameType" name="type" value="${fn:escapeXml(type_val)}" />
-    <input type="submit" value="Add Name" class="btn btn-primary"/>
+    <input type="submit" value="Add" class="btn btn-primary"/>
   </form>
   </div>
   <div id="nametable">

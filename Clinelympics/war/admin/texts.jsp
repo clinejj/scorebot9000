@@ -31,9 +31,9 @@
   <div id="text_response"></div>
   <div id="text_form">
   <form id="textForm" action="" class="form-inline">
-  	From: <input type="text" name="${fn:escapeXml(fromval)}" />
-  	Content: <input type="text" name="${fn:escapeXml(bodyval)}" size="60" />
-  	<input type="submit" value="Send text" class="btn btn-primary" />
+  	From: <input type="text" name="${fn:escapeXml(fromval)}" maxlength="10" size="10"/>
+  	Content: <input type="text" name="${fn:escapeXml(bodyval)}" maxlength="160" size="100" />
+  	<input type="submit" value="Send" class="btn btn-primary" />
   </form>
     </div>
   <div id="text_table">

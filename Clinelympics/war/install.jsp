@@ -61,7 +61,7 @@
     <div class="control-group">
       <label class="control-label" for="${fn:escapeXml(adminnum)}">Phone number?</label>
       <div class="controls">
-        <input type="text" id="${fn:escapeXml(adminnum)}" name="${fn:escapeXml(adminnum)}" placeholder="1234567890">
+        <input type="text" id="${fn:escapeXml(adminnum)}" name="${fn:escapeXml(adminnum)}" placeholder="1234567890" maxlength="10" size="10">
       </div>
     </div>
     <div class="control-group">

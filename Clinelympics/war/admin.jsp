@@ -140,8 +140,8 @@
               <li><a href="#event" data-toggle="tab">Events</a></li>
               <li><a href="#game" data-toggle="tab">Games</a></li>
               <li><a href="#player" data-toggle="tab">Players</a></li>
-              <li><a href="#name" data-toggle="tab">Names</a></li>
               <li><a href="#score" data-toggle="tab">Scores</a></li>
+              <li><a href="#name" data-toggle="tab">Names</a></li>
               <li><a href="#text" data-toggle="tab">Texts</a></li>
             </ul>
           </div>
@@ -151,8 +151,8 @@
               <div class="tab-pane" id="event"><c:import url="/admin/events.jsp" /></div>
               <div class="tab-pane" id="game"><c:import url="/admin/games.jsp" /></div>
               <div class="tab-pane" id="player"><c:import url="/admin/players.jsp" /></div>
-              <div class="tab-pane" id="name"><c:import url="/admin/names.jsp" /></div>
               <div class="tab-pane" id="score"><c:import url="/admin/scores.jsp" /></div>
+              <div class="tab-pane" id="name"><c:import url="/admin/names.jsp" /></div>
               <div class="tab-pane" id="text"><c:import url="/admin/texts.jsp" /></div>
             </div>
           </div>

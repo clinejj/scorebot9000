@@ -35,13 +35,13 @@
     <div id="score_response"></div>
     <div id="score_form">
     <form action="" id="addScoreForm" class="form-inline">
-      Player ID: <input type="text" name="${fn:escapeXml(idval)}" />
-      Game ID: <input type="text" name="${fn:escapeXml(nameval)}" />
+      Event ID: <input type="text" name="${fn:escapeXml(eventval)}" maxlength="3" size="3"/>
+      Game ID: <input type="text" name="${fn:escapeXml(nameval)}" maxlength="3" size="3"/>
+      Player ID: <input type="text" name="${fn:escapeXml(idval)}" maxlength="10" size="10"/>
       Score: <input type="text" name="${fn:escapeXml(scoreval)}" />
-      Event ID: <input type="text" name="${fn:escapeXml(eventval)}" />
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     	<input type="hidden" id="scoreType" name="type" value="${fn:escapeXml(type_val)}" />
-      <input type="submit" value="Add Score" class="btn btn-primary"/>
+      <input type="submit" value="Add" class="btn btn-primary"/>
     </form>
     </div>
   <div id="score_table">
@@ -57,7 +57,7 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>Date</td><th>Player</th><th>Game</th><th>Event</th><th>Score</th></tr></thead>
+        <tr><th>Date</td><th>EventID</th><th>GameID</th><th>PlayerID</th><th>PlayerScore</th></tr></thead>
         <tbody>
         <%
         for (Entity score : scores) {
@@ -71,9 +71,9 @@
 						pageContext.setAttribute("date", score.getProperty(Score.dateName));
 						%>
             <td>${fn:escapeXml(date)}</td>
-            <td>${fn:escapeXml(player_id)}</td>
-            <td>${fn:escapeXml(game_id)}</td>
             <td>${fn:escapeXml(event_id)}</td>
+            <td>${fn:escapeXml(game_id)}</td>
+            <td>${fn:escapeXml(player_id)}</td>
             <td>${fn:escapeXml(player_score)}</td>
 			</tr>
             <%

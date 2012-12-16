@@ -34,8 +34,8 @@
   <div id="game_response"></div>
   <div id="game_form">
     <form action="" id="addGameForm" class="form-inline">
-    	<label for="${fn:escapeXml(eventval)}">Event ID:</label><input type="text" name="${fn:escapeXml(eventval)}" />
-      <label for="${fn:escapeXml(nameval)}">Game Name:</label><input type="text" name="${fn:escapeXml(nameval)}" />
+    	<label for="${fn:escapeXml(eventval)}">Event ID:</label><input type="text" name="${fn:escapeXml(eventval)}" maxlength="3" size="3" />
+      <label for="${fn:escapeXml(nameval)}">Game Name:</label><input type="text" name="${fn:escapeXml(nameval)}" maxlength="40" size="40"/>
       <label>Score Type:</label>
       <label class="radio">
         <input type="radio" name="${fn:escapeXml(scoreval)}" value="true" checked> High
@@ -45,13 +45,14 @@
       </label>
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     	<input type="hidden" id="gameType" name="type" value="${fn:escapeXml(type_val)}" />
-      <input type="submit" value="Add Game" class="btn btn-primary"/>
+      <input type="submit" value="Add" class="btn btn-primary"/>
     </form>
     </div>
   <div id="game_table">
 <%
     Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-    query = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
+    query = new Query(Game.entityKind, gameKey).addSort(Game.eventIDName, Query.SortDirection.DESCENDING);
+		query.addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
     List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (games.isEmpty()) {
         %>

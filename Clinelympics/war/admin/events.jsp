@@ -32,18 +32,17 @@
   <div id="event_response"></div>
   <div id="event_form">
     <form action="" id="addEventForm" class="form-inline">
-      <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" />
-      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" placeholder="Gold,Silver,Bronze"/>
-      Medals must be comma separated, best to worst
+      <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" maxlength="50" size="50" />
+      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventNameIn" placeholder="Gold,Silver,Bronze" data-placement="bottom" data-original-title="Medals must be comma separated, best to worst" maxlength="70" size="70"/>
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     	<input type="hidden" id="eventType" name="type" value="${fn:escapeXml(type_val)}" />
-      <input type="submit" value="Add Event" class="btn btn-primary"/>
+      <input type="submit" value="Add" class="btn btn-primary"/>
     </form>
     </div>
 <div id="event_table">
 <%
     Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
-    query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);
+    query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.DESCENDING);
     List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (events.isEmpty()) {
         %>
@@ -53,7 +52,7 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>eventID</th><th>eventName</th><th>medalsName</th><th>isArchived</th></tr>
+        <tr><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isArchived</th></tr>
         </thead><tbody>
         <%
         for (Entity event : events) {
