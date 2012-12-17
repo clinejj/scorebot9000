@@ -56,7 +56,11 @@ function addForm(params, type) {
 					if (type === "event") {
 						if (res.indexOf("&&") !== -1) {
 							var cIDs = res.split("&&");
-							$('#current_event').html(cIDs[1]);
+							if (cIDs === "-1") {
+								$('#current_event').html("N/A");
+							} else {
+								$('#current_event').html(cIDs[1]);
+							}
 							res = cIDs[0];
 							$.get('/admin/names.jsp').success(function(newdata) {
 								$('#name').html(newdata);

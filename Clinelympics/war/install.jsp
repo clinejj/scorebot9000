@@ -72,7 +72,7 @@
     <div class="control-group">
       <label class="control-label" for="${fn:escapeXml(sitename)}">Site Name</label>
       <div class="controls">
-        <input type="text" id="${fn:escapeXml(sitename)}" name="${fn:escapeXml(sitename)}" placeholder="Clinelympics">
+        <input type="text" id="${fn:escapeXml(sitename)}" name="${fn:escapeXml(sitename)}" placeholder="Scorebot 9000" maxlength="35" size="35">
       </div>
     </div>
     <div class="control-group">

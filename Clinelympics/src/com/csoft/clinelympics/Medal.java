@@ -7,7 +7,6 @@ public class Medal {
 	private HashMap<String, MedalScore> scores;
 	private ArrayList<String> medalNames;
 	private String rawMedals;
-
 	private boolean scoreType; // True = high score wins
 	
 	public Medal() {

@@ -46,7 +46,7 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <% if (settings.isEmpty()) { %>
-          <a class="brand" href="/">Clinelympics</a>
+          <a class="brand" href="/">Scorebot 9000</a>
       <% } else { %>
           <a class="brand" href="/">${fn:escapeXml(site_name)}</a>
           <% 

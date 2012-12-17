@@ -47,7 +47,7 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <% if (settings.isEmpty()) { %>
-          <a class="brand" href="/">Clinelympics</a>
+          <a class="brand" href="/">Scorebot 9000</a>
       <% } else { %>
           <a class="brand" href="/">${fn:escapeXml(site_name)}</a>
           <% 
@@ -105,7 +105,7 @@
   </div>
   <div class="container">
   <% if (settings.isEmpty()) {   %>
-    <div class="row"><p class="text-error">This site has not been configured.</p></div>
+    <div class="row"><div class="alert alert-error">This site has not been configured.</div></div>
     <% } else { %>
   	<div class="row"><h1 style="text-align: center;">Scores</h1></div>
   	<div class="row"><h3>By Player:</h3></div>
