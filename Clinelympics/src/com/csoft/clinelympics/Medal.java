@@ -3,10 +3,11 @@ package com.csoft.clinelympics;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Medal {
+public class Medal implements Comparable<Medal>{
 	private HashMap<String, MedalScore> scores;
 	private ArrayList<String> medalNames;
 	private String rawMedals;
+	private String displayName;
 	private boolean scoreType; // True = high score wins
 	
 	public Medal() {
@@ -16,6 +17,7 @@ public class Medal {
 		setRawMedals("Gold,Silver,Bronze");
 		setMedalNames();	
 		zeroScores();
+		setDisplayName("");
 	}
 	
 	private void setMedalNames() {
@@ -32,6 +34,17 @@ public class Medal {
 		setScoreType(t);
 		setMedalNames();
 		zeroScores();
+		setDisplayName("");
+	}
+	
+	public Medal(String medals, boolean t, String n) {
+		scores = new HashMap<String,MedalScore>();
+		medalNames = new ArrayList<String>();
+		setRawMedals(medals);
+		setScoreType(t);
+		setMedalNames();
+		zeroScores();
+		setDisplayName(n);
 	}
 	
 	public void addScore(MedalScore s) {
@@ -96,6 +109,22 @@ public class Medal {
 		addScore(type, m);
 	}
 	
+	public boolean containsScore(String type) {
+		if (isValidType(type)) {
+			if (scores.containsKey(type)) {
+				return true;
+			} else {
+				if ((scores.get(type).score == Integer.MAX_VALUE) || (scores.get(type).score == Integer.MIN_VALUE)) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		} else {
+			return false;
+		}
+	}
+	
 	public MedalScore getScore(String type) {
 		if (isValidType(type)) {
 			return scores.get(type);
@@ -144,5 +173,30 @@ public class Medal {
 	
 	public int getTotalMedals() {
 		return medalNames.size();
+	}
+
+	@Override
+	public int compareTo(Medal o) {
+		return compareRecur(o, 0);
+	}
+	
+	private int compareRecur(Medal o, int val) {
+		if ((val >= medalNames.size()) || (val >= o.medalNames.size()))
+			return o.displayName.compareToIgnoreCase(displayName);
+		else {
+			if (scores.get(medalNames.get(val)).score == o.getScore(medalNames.get(val)).score) {
+				return compareRecur(o, val + 1);
+			} else {
+				return Integer.compare(o.getScore(medalNames.get(val)).score, scores.get(medalNames.get(val)).score);
+			}
+		}
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	public String getDisplayName() {
+		return displayName;
 	}
 }
