@@ -165,7 +165,7 @@
 					}
 					for (Object dp : displayPlayers.values()) {
 						pageContext.setAttribute("player_name", ((Player) dp).getPlayerName());
-						pageContext.setAttribute("team_name", ((Player) dp).getTeamName());
+						pageContext.setAttribute("team_name", Player.humanize(((Player) dp).getTeamName()));
 						if (!teams.containsKey(((Player) dp).getTeamName())) {
 							teams.put(((Player) dp).getTeamName(), new HashMap<Object, Integer>());
 						}
@@ -227,7 +227,7 @@
       <tbody>
       <%
 			for (String tname : teams.keySet()) {
-				pageContext.setAttribute("team_name", tname);
+				pageContext.setAttribute("team_name", Player.humanize(tname));
 				%>
         <tr><td>${fn:escapeXml(team_name)}</td>
         <%

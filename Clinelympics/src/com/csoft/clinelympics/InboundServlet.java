@@ -88,7 +88,7 @@ public class InboundServlet extends HttpServlet {
 							names.get(curEnt).setProperty(Name.usedStr, true);
 							datastore.put(names.get(curEnt));
 							
-							smsresp = "Welcome to team " + teamName + ", "  + newName;
+							smsresp = "Welcome to team " + Player.humanize(teamName) + ", "  + newName;
 					    }
 					} else {
 						isValid = false;

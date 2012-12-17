@@ -188,7 +188,7 @@
 							}
 							for (Object dp : displayPlayers.values()) {
 								pageContext.setAttribute("player_name", ((Player) dp).getPlayerName());
-								pageContext.setAttribute("team_name", ((Player) dp).getTeamName());
+								pageContext.setAttribute("team_name", Player.humanize(((Player) dp).getTeamName()));
 								if (!teams.containsKey(((Player) dp).getTeamName())) {
 									teams.put(((Player) dp).getTeamName(), new HashMap<Object, Integer>());
 								}
