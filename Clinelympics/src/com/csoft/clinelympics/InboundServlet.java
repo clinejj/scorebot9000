@@ -35,9 +35,6 @@ public class InboundServlet extends HttpServlet {
 	private static final String CMD_STOP = "STOP";
 	private static final String CMD_TEAM = "TEAM";
 	private static final String CMD_NAME = "NAME";
-	private static final String CMD_ADD = "ADD";
-	private static final String CMD_GAME = "GAME";
-	private static final String CMD_EVENT = "EVENT";
 	private static final String CMD_HELP = "HELP";
     
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -66,8 +63,8 @@ public class InboundServlet extends HttpServlet {
 			List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 			
 			String[] split = inText.getBody().split(" ");
-			if (events.size() > 0 && (curEvent != -1)) {
-				isActive = true;
+			if (events.size() > 0) {
+				if ((Boolean) events.get(0).getProperty(Event.activeName)) isActive = true;
 				if (events.size() > 1) System.out.println("Multiple events with ID " + Integer.toString(curEvent));
 				if (split[0].equalsIgnoreCase(CMD_REG)) {
 					if (split.length >= 2) {
@@ -108,33 +105,37 @@ public class InboundServlet extends HttpServlet {
 						query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 					    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    if (players.size() > 0) {
-					    	if (players.size() > 1) System.out.println("Multiple players for player ID " + inText.getFrom());
-					    	query = new Query(Game.entityKind, new Game().getGameKey());
-							Filter isGame = new FilterPredicate(Game.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
-							query.setFilter(isGame);
-						    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-						    if (games.size() > 0) {
-						    	if (games.size() > 1) System.out.println("Multiple games found for game " + split[1]);
-								query = new Query(Score.entityKind, new Score().getScoreKey());
-								query.addSort(Score.dateName, Query.SortDirection.DESCENDING);
-								Filter fpID = new FilterPredicate(Score.playerIDName, FilterOperator.EQUAL, inText.getFrom());
-								Filter fgID = new FilterPredicate(Score.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
+					    	try {
+						    	if (players.size() > 1) System.out.println("Multiple players for player ID " + inText.getFrom());
+						    	query = new Query(Game.entityKind, new Game().getGameKey());
+								Filter isGame = new FilterPredicate(Game.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
 								feID = new FilterPredicate(Score.eventIDName, FilterOperator.EQUAL, curEvent);
-								query.setFilter(CompositeFilterOperator.and(fpID,fgID,feID));
-								List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-								if (scores.size() == 0) {
-									Score score = new Score(inText.getFrom(), Integer.parseInt(split[1]), Integer.parseInt(split[2]), curEvent);
-									datastore.put(score.createEntity());
-								} else {
-									scores.get(0).setProperty(Score.playerScoreName, Integer.parseInt(split[2]));
-									scores.get(0).setProperty(Score.dateName, new Date());
-									datastore.put(scores.get(0));
-									if (scores.size() > 1) {
-										System.out.println("Multiple scores for player " + inText.getFrom() + " and game " + split[1]);
+								query.setFilter(CompositeFilterOperator.and(isGame, feID));
+							    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+							    if (games.size() > 0) {
+							    	if (games.size() > 1) System.out.println("Multiple games found for game " + split[1]);
+									query = new Query(Score.entityKind, new Score().getScoreKey());
+									query.addSort(Score.dateName, Query.SortDirection.DESCENDING);
+									Filter fpID = new FilterPredicate(Score.playerIDName, FilterOperator.EQUAL, inText.getFrom());
+									Filter fgID = new FilterPredicate(Score.gameIDName, FilterOperator.EQUAL, Integer.parseInt(split[1]));
+									query.setFilter(CompositeFilterOperator.and(fpID,fgID,feID));
+									List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+									if (scores.size() == 0) {
+										Score score = new Score(inText.getFrom(), Integer.parseInt(split[1]), Integer.parseInt(split[2]), curEvent);
+										datastore.put(score.createEntity());
+									} else {
+										scores.get(0).setProperty(Score.playerScoreName, Integer.parseInt(split[2]));
+										scores.get(0).setProperty(Score.dateName, new Date());
+										datastore.put(scores.get(0));
+										if (scores.size() > 1) {
+											System.out.println("Multiple scores for player " + inText.getFrom() + " and game " + split[1]);
+										}
 									}
-								}
-						    } else {
-						    	smsresp = "Couldn't find that game ID.";
+							    } else {
+							    	smsresp = "Couldn't find that game ID.";
+							    }
+						    } catch (NumberFormatException e) {
+						    	smsresp = "Please ensure gameID and score are numbers.";
 						    }
 					    } else {
 					    	smsresp = "Could not find you as a player. Have you registered yet?";
@@ -217,8 +218,23 @@ public class InboundServlet extends HttpServlet {
 						isValid = false;
 					}
 				} else if (split[0].equalsIgnoreCase(CMD_HELP)) {
+					if (split.length > 1) {
+						if (split[1].equalsIgnoreCase(CMD_REG)) {
+							smsresp = "Register as a player. Usage: REGISTER <team name>";
+						} else if (split[1].equalsIgnoreCase(CMD_SCORE)) {
+							smsresp = "Enter your score for a game. Usage: SCORE <game id> <score>";
+						} else if (split[1].equalsIgnoreCase(CMD_WHO)) {
+							smsresp = "Tells you your name. Usage: WHO";
+						} else if (split[1].equalsIgnoreCase(CMD_CHANGE)) {
+							smsresp = "Either change names or change teams. Usage: CHANGE TEAM <team name> // CHANGE NAME";
+						} else { 
+							smsresp = "Available commands: " + CMD_REG + ", " + CMD_SCORE + ", " + CMD_WHO + ", " + CMD_CHANGE + ", " + CMD_HELP;
+						}
+					} else {
+						smsresp = "Available commands: " + CMD_REG + ", " + CMD_SCORE + ", " + CMD_WHO + ", " + CMD_CHANGE + ", " + CMD_HELP;
+					}
+				} else if (split[0].equalsIgnoreCase(CMD_ADMIN)) {
 					isValid = true;
-					smsresp = "Available commands: " + CMD_REG + ", " + CMD_SCORE + ", " + CMD_WHO + ", " + CMD_HELP;
 				} else {
 					isValid = false;
 				}
@@ -229,9 +245,78 @@ public class InboundServlet extends HttpServlet {
 			}
 			if (split[0].equalsIgnoreCase(CMD_ADMIN)) {
 				if (inText.getFrom().equalsIgnoreCase((String) settings.get(0).getProperty(Settings.adminNumName))) {
-					smsresp = "admin valid";
-					if (isActive) {
-						smsresp = "admin valid and event active";
+					if (split[1].equalsIgnoreCase(CMD_START)) {
+						if (inText.getBody().length() == (CMD_ADMIN.length() + CMD_START.length() + 1)) {
+							if (isActive) {
+								smsresp = "Event " + curEvent + " is already active.";
+							} else {
+								if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() == -1) {
+									smsresp = "Please specify an event, ie ADMIN START 1";
+								} else {
+									query = new Query(Event.entityKind, new Event().getEventKey()).addSort(Event.eventIDName, Query.SortDirection.DESCENDING);
+								    Filter activeEvents = new FilterPredicate(Event.activeName, FilterOperator.EQUAL, true);
+								    query.setFilter(activeEvents);
+							    	List<Entity> es = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+							    	for (Entity e : es) {
+							    		e.setProperty(Event.activeName, false);
+							    	}
+							    	datastore.put(es);
+							    	events.get(0).setProperty(Event.activeName, true);
+							    	datastore.put(events.get(0));
+							    	isActive = true;
+							    	smsresp = "Event " + curEvent + " has been started.";
+								}
+							}
+						} else {
+							try {
+								int eventID = Integer.parseInt(split[2]);
+								boolean eIsActive = false;
+								query = new Query(Event.entityKind, new Event().getEventKey());
+							    Filter activeEvents = new FilterPredicate(Event.activeName, FilterOperator.EQUAL, true);
+							    query.setFilter(activeEvents);
+						    	List<Entity> es = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+						    	for (Entity e : es) {
+						    		e.setProperty(Event.activeName, false);
+						    		if (((Long) e.getProperty(Event.eventIDName)).intValue() == eventID) eIsActive = true;
+						    	}
+						    	if (eIsActive) {
+						    		smsresp = "Event " + eventID + " is already active.";
+						    	} else {
+						    		datastore.put(es);
+						    		query = new Query(Event.entityKind, new Event().getEventKey());
+								    Filter iseID = new FilterPredicate(Event.eventIDName, FilterOperator.EQUAL, eventID);
+								    query.setFilter(iseID);
+							    	es = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+							    	if (es.size() > 1) System.out.println("Multiple events with ID " + eventID);
+							    	es.get(0).setProperty(Event.activeName, true);
+							    	settings.get(0).setProperty(Settings.curEventName, eventID);
+							    	datastore.put(es.get(0));
+							    	datastore.put(settings.get(0));
+							    	isActive = true;
+							    	smsresp = "Event " + eventID + " has been started.";
+						    	}
+							} catch (NumberFormatException e) {
+								smsresp = "I could not understand your event. Try using a number.";
+							}
+						}
+					} else if (split[1].equalsIgnoreCase(CMD_STOP)) {
+						if (!isActive) {
+							smsresp = "Event " + curEvent + " is not currently active.";
+						} else {
+							query = new Query(Event.entityKind, new Event().getEventKey());
+						    Filter iseID = new FilterPredicate(Event.eventIDName, FilterOperator.EQUAL, curEvent);
+						    query.setFilter(iseID);
+					    	List<Entity> es = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+					    	if (es.size() > 1) System.out.println("Multiple events with ID " + curEvent);
+					    	es.get(0).setProperty(Event.activeName, false);
+					    	settings.get(0).setProperty(Settings.curEventName, -1);
+					    	datastore.put(es.get(0));
+					    	datastore.put(settings.get(0));
+					    	isActive = false;
+					    	smsresp = "Event " + curEvent + " has been stopped.";
+						}
+					} else {
+						isValid = false;
 					}
 				}
 			}
