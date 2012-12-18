@@ -43,7 +43,7 @@
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
       <% if (settings.isEmpty()) { %>
-          <a class="brand" href="/">Clinelympics</a>
+          <a class="brand" href="/">Scorebot 9000</a>
       <% } else { %>
           <a class="brand" href="/">${fn:escapeXml(site_name)}</a>
           <% 
@@ -58,10 +58,24 @@
 							} else {
 								%>
                 <li class="dropdown">
-                  <a href="/summary.jsp" class="dropdown-toggle" data-toggle="dropdown">
-                    Summary
-                    <b class="caret"></b>
-                  </a>
+                	<%
+                  if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+										%>
+                    <a href="/summary.jsp" class="dropdown-toggle" data-toggle="dropdown">
+                      Summary
+                      <b class="caret"></b>
+                    </a>
+                    <%
+									} else {
+										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.eventIDName));
+										%>
+                    <a href="/summary.jsp?e=${fn:escapeXml(event_id)}" class="dropdown-toggle" data-toggle="dropdown">
+                      Summary
+                      <b class="caret"></b>
+                    </a>
+                    <%
+									}
+									%>
                   <ul class="dropdown-menu">
                   <%
 									for (Entity ce : events) {
@@ -76,9 +90,13 @@
                 </li>
                 <%
 							}
+							if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+								%>
+								<li><a href="/scores.jsp">Scores</a></li>
+								<li><a href="/medals.jsp">Medals</a></li>
+                <%
+							}
 							%>
-              <li><a href="/scores.jsp">Scores</a></li>
-              <li><a href="/medals.jsp">Medals</a></li>
               <li class="divider-vertical"></li>
             </ul>
       			<% 
