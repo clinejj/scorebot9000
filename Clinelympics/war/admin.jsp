@@ -147,7 +147,7 @@
           Hello, ${fn:escapeXml(admin_name)}! <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">(That's not me)</a>
           </div>
           <div class="row">
-         	Your current number is: ${fn:escapeXml(admin_num)}
+         	Your admin number is: ${fn:escapeXml(admin_num)}
           </div>
           <div class="row">
           <p>The current event is: <span id="current_event">${fn:escapeXml(cur_event)}</span></p>

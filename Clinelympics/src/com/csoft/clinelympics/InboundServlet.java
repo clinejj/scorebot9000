@@ -26,11 +26,19 @@ import org.w3c.dom.*;
 @SuppressWarnings("serial")
 public class InboundServlet extends HttpServlet {
 	
-	private static final String cmdReg = "REGISTER";
-	private static final String cmdScore = "SCORE";
-	private static final String cmdWho = "WHO";
-	private static final String cmdAdmin = "ADMIN";
-	private static final String cmdHelp = "HELP";
+	private static final String CMD_REG = "REGISTER";
+	private static final String CMD_SCORE = "SCORE";
+	private static final String CMD_WHO = "WHO";
+	private static final String CMD_ADMIN = "ADMIN";
+	private static final String CMD_CHANGE = "CHANGE";
+	private static final String CMD_START = "START";
+	private static final String CMD_STOP = "STOP";
+	private static final String CMD_TEAM = "TEAM";
+	private static final String CMD_NAME = "NAME";
+	private static final String CMD_ADD = "ADD";
+	private static final String CMD_GAME = "GAME";
+	private static final String CMD_EVENT = "EVENT";
+	private static final String CMD_HELP = "HELP";
     
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
@@ -58,10 +66,10 @@ public class InboundServlet extends HttpServlet {
 			List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 			
 			String[] split = inText.getBody().split(" ");
-			if (events.size() > 0) {
+			if (events.size() > 0 && (curEvent != -1)) {
 				isActive = true;
 				if (events.size() > 1) System.out.println("Multiple events with ID " + Integer.toString(curEvent));
-				if (split[0].equalsIgnoreCase(cmdReg)) {
+				if (split[0].equalsIgnoreCase(CMD_REG)) {
 					if (split.length >= 2) {
 					    query = new Query(Player.entityKind, new Player().getPlayerKey());
 						Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
@@ -93,7 +101,7 @@ public class InboundServlet extends HttpServlet {
 					} else {
 						isValid = false;
 					}
-				} else if (split[0].equalsIgnoreCase(cmdScore)) {
+				} else if (split[0].equalsIgnoreCase(CMD_SCORE)) {
 					if (split.length == 3) {
 						query = new Query(Player.entityKind, new Player().getPlayerKey());
 						Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
@@ -134,7 +142,7 @@ public class InboundServlet extends HttpServlet {
 					} else {
 						isValid = false;
 					}
-				} else if (split[0].equalsIgnoreCase(cmdWho)) {
+				} else if (split[0].equalsIgnoreCase(CMD_WHO)) {
 					// return player name
 					query = new Query(Player.entityKind, new Player().getPlayerKey());
 					Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
@@ -146,9 +154,71 @@ public class InboundServlet extends HttpServlet {
 				    	if (players.size() > 1) System.out.println("Multiple who answers for player with ID " + inText.getFrom());
 				    	smsresp = "You could not be found. Have you registered yet?";
 				    }
-				} else if (split[0].equalsIgnoreCase(cmdHelp)) {
+				} else if (split[0].equalsIgnoreCase(CMD_CHANGE)) {
+					if (split[1].equalsIgnoreCase(CMD_TEAM)) {
+						query = new Query(Player.entityKind, new Player().getPlayerKey());
+						Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
+						query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
+					    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+					    if (players.size() == 1) {
+					    	String teamName = inText.getBody().substring(inText.getBody().toUpperCase().indexOf(CMD_TEAM)+5).trim().toUpperCase();
+					    	players.get(0).setProperty(Player.teamNameName, teamName);
+					    	datastore.put(players.get(0));
+					    	smsresp = "You have been changed to team " + Player.humanize(teamName);
+					    } else {
+					    	if (players.size() > 1) System.out.println("Multiple players with ID " + inText.getFrom());
+					    	smsresp = "We ran into an error.";
+					    }
+					} else if (split[1].equalsIgnoreCase(CMD_NAME)) {
+						query = new Query(Player.entityKind, new Player().getPlayerKey());
+						Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, inText.getFrom());
+						query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
+					    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+					    if (players.size() == 1) {
+					    	String oldName = (String) players.get(0).getProperty(Player.playerNameName);
+					    	Random r = new Random(System.currentTimeMillis());
+							query = new Query(Name.entityKind, new Name().getNameKey());
+							
+							if (r.nextInt() > 0) {
+								query.addSort(Name.rndStr, Query.SortDirection.ASCENDING);
+							} else {
+								query.addSort(Name.rndStr, Query.SortDirection.DESCENDING);
+							}
+							Filter notUsed = new FilterPredicate(Name.usedStr, FilterOperator.EQUAL, false);
+						    query.setFilter(notUsed);
+						    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+						    int curEnt = r.nextInt(names.size());
+						    String newName = (String) names.get(curEnt).getProperty(Name.nameStr);
+						    players.get(0).setProperty(Player.playerNameName, newName);
+							datastore.put(players.get(0));
+							
+							smsresp = "Your new name is " + newName;
+							
+							names.get(curEnt).setProperty(Name.usedStr, true);
+							datastore.put(names.get(curEnt));
+							
+							query = new Query(Name.entityKind, new Name().getNameKey());
+							
+							Filter isOldName = new FilterPredicate(Name.nameStr, FilterOperator.EQUAL, oldName);
+						    query.setFilter(isOldName);
+						    names = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+						    if (names.size() == 1) {
+						    	names.get(0).setProperty(Name.usedStr, false);
+						    	datastore.put(names.get(0));
+						    } else {
+						    	if (names.size() > 1) System.out.println("Multiple names for " + oldName);
+						    	smsresp = "We ran into an error.";
+						    }
+					    } else {
+					    	if (players.size() > 1) System.out.println("Multiple players with ID " + inText.getFrom());
+					    	smsresp = "We ran into an error.";
+					    }
+					} else {
+						isValid = false;
+					}
+				} else if (split[0].equalsIgnoreCase(CMD_HELP)) {
 					isValid = true;
-					smsresp = "Available commands: " + cmdReg + ", " + cmdScore + ", " + cmdWho + ", " + cmdHelp;
+					smsresp = "Available commands: " + CMD_REG + ", " + CMD_SCORE + ", " + CMD_WHO + ", " + CMD_HELP;
 				} else {
 					isValid = false;
 				}
@@ -157,7 +227,7 @@ public class InboundServlet extends HttpServlet {
 					smsresp = "I didn't understand. Text HELP for a list of available commands.";
 				}
 			}
-			if (split[0].equalsIgnoreCase(cmdAdmin)) {
+			if (split[0].equalsIgnoreCase(CMD_ADMIN)) {
 				if (inText.getFrom().equalsIgnoreCase((String) settings.get(0).getProperty(Settings.adminNumName))) {
 					smsresp = "admin valid";
 					if (isActive) {
