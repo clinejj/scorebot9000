@@ -30,14 +30,21 @@
 				pageContext.setAttribute("activeval", Event.activeName);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
 				pageContext.setAttribute("type_val", Event.entityKind);
+				pageContext.setAttribute("team_val", Event.teamScoreName);
 	%>
   <div id="event_response"></div>
   <div id="event_form">
     <form action="" id="addEventForm" class="form-inline">
       <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" maxlength="50" size="50" />
-      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventNameIn" placeholder="Gold,Silver,Bronze" data-placement="top" data-original-title="Medals must be comma separated, best to worst" maxlength="70" size="70"/>
-      <label class="checkbox">Active:<input type="checkbox" name="${fn:escapeXml(activeval)}" value="true"></label>
-			<label class="checkbox">Archive:<input type="checkbox" name="${fn:escapeXml(archiveval)}" value="true"></label> 
+      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventMedalIn" placeholder="Gold,Silver,Bronze" data-placement="top" data-original-title="Medals must be comma separated, best to worst" maxlength="60" size="60"/>
+      <label class="checkbox">Active<input type="checkbox" name="${fn:escapeXml(activeval)}" value="true"></label>
+			<label class="checkbox">Archive<input type="checkbox" name="${fn:escapeXml(archiveval)}" value="true"></label> 
+      <label class="radio" id="teamRadio" data-placement="top" data-original-title="Combine player scores, medals won by team">
+        <input type="radio" name="${fn:escapeXml(team_val)}" value="true"> Team
+      </label>
+      <label class="radio" id="playerRadio" data-placement="top" data-original-title="Medals won by player">
+        <input type="radio" name="${fn:escapeXml(team_val)}" value="false" checked> Player
+      </label>
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>
     	<input type="hidden" id="eventType" name="type" value="${fn:escapeXml(type_val)}" />
       <input type="submit" value="Add" class="btn btn-primary"/>
@@ -56,7 +63,7 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isActive</th><th>isArchived</th></tr>
+        <tr><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isActive</th><th>isArchived</th><th>Score Type</th></tr>
         </thead><tbody>
         <%
         for (Entity event : events) {
@@ -76,12 +83,18 @@
 						} else {
 							pageContext.setAttribute("archived", "");
 						}
+						if ((Boolean) event.getProperty(Event.teamScoreName)) {			
+							pageContext.setAttribute("teamscore", "Team");
+						} else {
+							pageContext.setAttribute("teamscore", "Player");
+						}
 			%>
             <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(event_name)}</td>
             <td>${fn:escapeXml(medals_name)}</td>
             <td>${fn:escapeXml(active)}</td>
             <td>${fn:escapeXml(archived)}</td>
+            <td>${fn:escapeXml(teamscore)}</td>
 			</tr>
             <%
         }

@@ -47,7 +47,7 @@
 				Filter feID = new FilterPredicate(Game.eventIDName, FilterOperator.EQUAL, s.getCurEventID());
 				query.setFilter(feID);
 				List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-				if (games.isEmpty()) {
+				if (games.isEmpty() && (s.getCurEventID() != -1)) {
 				%>
         <div id="game_err_box" class="alert">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>

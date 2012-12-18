@@ -117,6 +117,7 @@
     <%	
 		if (settings.isEmpty()) {  
 			%>
+      <div class="row"><p></p></div>
     	<div class="row"><div class="alert alert-error">This site has not been configured.</div></div>
     	<% 
 		} else { 
@@ -130,6 +131,7 @@
 			events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 			if (events.isEmpty()) {
 				%>
+        <div class="row"><p></p></div>
 				<div class="row"><div class="alert alert-error">The event you wanted doesn't exist. Sorry!.</div></div>
 				<%		
 			} else { 		
@@ -148,7 +150,8 @@
 					<%
 				} else {
 					Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
-					Query playerQuery = new Query(Player.entityKind, playerKey).addSort(Player.playerIDName, Query.SortDirection.DESCENDING);
+					Query playerQuery = new Query(Player.entityKind, playerKey).addSort(Player.teamNameName, Query.SortDirection.ASCENDING);
+					playerQuery.addSort(Player.playerNameName, Query.SortDirection.ASCENDING);
 					playerQuery.setFilter(feID);
 					List<Entity> players = datastore.prepare(playerQuery).asList(FetchOptions.Builder.withDefaults());
 					
@@ -170,7 +173,9 @@
 						HashMap<Object, Medal> teamMedals = new HashMap<Object, Medal>();
 						HashMap<Object, HashMap> teamCount = new HashMap<Object, HashMap>();
 						HashMap<Object, HashMap> playerCount = new HashMap<Object, HashMap>();
+						HashMap<String, String> playerTeams = new HashMap<String, String>();
 						ArrayList<Medal> teamDisplay = new ArrayList<Medal>();
+						ArrayList<Medal> playerDisplay = new ArrayList<Medal>();
 				
 						HashMap displayPlayers = new HashMap();
 						
@@ -195,9 +200,10 @@
 							((Player) displayPlayers.get(eScore.getProperty(Score.playerIDName))).addScore(new Score(eScore));
 						}
 						
-						// Display players
+						// Generate teams
 						for (Object dp : displayPlayers.values()) {
 							// Setup teams
+							playerTeams.put((String) ((Player) dp).getPlayerName(), (String) ((Player) dp).getTeamName());
 							if (!teams.containsKey(((Player) dp).getTeamName())) {
 								teams.put(((Player) dp).getTeamName(), new HashMap<Object, Integer>());
 								teamCount.put(((Player) dp).getTeamName(), new HashMap<String, Integer>());
@@ -207,7 +213,7 @@
 								teamCount.get(((Player) dp).getTeamName()).put("total", 0);
 							}
 							
-							// Display player scores
+							// Store player scores
 							for (Entity game : games) {
 								Integer sc = ((Player) dp).getScore(((Long) game.getProperty(Game.gameIDName)).intValue());
 								// Add to medals
@@ -230,24 +236,60 @@
 							}
 						}
 						
-						// Count team medals
-						for (Medal tm : teamMedals.values()) {
-							for (String n : medalNames) {
-								MedalScore ms = tm.getScore(n);
-								if (!ms.displayName.equals("")) {
-									if (ms.displayName.contains(",")) {
-										String[] names = ms.displayName.split(", ");
-										for (String ns : names) {
-											teamCount.get(ns).put(n, ((Integer) teamCount.get(ns).get(n)) + 1);
-											teamCount.get(ns).put("total", ((Integer) teamCount.get(ns).get("total")) + 1);
+						if (e.isTeamScore()) {
+							// Count team medals
+							for (Medal tm : teamMedals.values()) {
+								for (String n : medalNames) {
+									MedalScore ms = tm.getScore(n);
+									if (!ms.displayName.equals("")) {
+										if (ms.displayName.contains(",")) {
+											String[] names = ms.displayName.split(", ");
+											for (String ns : names) {
+												teamCount.get(ns).put(n, ((Integer) teamCount.get(ns).get(n)) + 1);
+												teamCount.get(ns).put("total", ((Integer) teamCount.get(ns).get("total")) + 1);
+											}
+											
+										} else {
+											teamCount.get(ms.displayName).put(n, ((Integer) teamCount.get(ms.displayName).get(n)) + 1);
+											teamCount.get(ms.displayName).put("total", ((Integer) teamCount.get(ms.displayName).get("total")) + 1);
 										}
-										
-									} else {
-										teamCount.get(ms.displayName).put(n, ((Integer) teamCount.get(ms.displayName).get(n)) + 1);
-										teamCount.get(ms.displayName).put("total", ((Integer) teamCount.get(ms.displayName).get("total")) + 1);
 									}
 								}
 							}
+						} else {
+							// Count player medals
+							for (Medal pm : playerMedals.values()) {
+								for (String n : medalNames) {
+									MedalScore ms = pm.getScore(n);
+									if (!ms.displayName.equals("")) {
+										if (ms.displayName.contains(",")) {
+											String[] names = ms.displayName.split(", ");
+											for (String ns : names) {
+												playerCount.get(ns).put(n, ((Integer) playerCount.get(ns).get(n)) + 1);
+												playerCount.get(ns).put("total", ((Integer) playerCount.get(ns).get("total")) + 1);
+												teamCount.get(playerTeams.get(ns)).put(n, ((Integer) teamCount.get(playerTeams.get(ns)).get(n)) + 1);
+												teamCount.get(playerTeams.get(ns)).put("total", ((Integer) teamCount.get(playerTeams.get(ns)).get("total")) + 1);
+											}
+										} else {
+											playerCount.get(ms.displayName).put(n, ((Integer) playerCount.get(ms.displayName).get(n)) + 1);
+											playerCount.get(ms.displayName).put("total", ((Integer) playerCount.get(ms.displayName).get("total")) + 1);
+											teamCount.get(playerTeams.get(ms.displayName)).put(n, ((Integer) teamCount.get(playerTeams.get(ms.displayName)).get(n)) + 1);
+											teamCount.get(playerTeams.get(ms.displayName)).put("total", ((Integer) teamCount.get(playerTeams.get(ms.displayName)).get("total")) + 1);
+										}
+									}
+								}
+							}
+							
+							for (Object t : playerCount.keySet()) {
+								// sort medals
+								playerDisplay.add(0, new Medal("total," + e.getEventMedals(), true, (String) t));
+								playerDisplay.get(0).addScore("total", new MedalScore("", ((Integer) playerCount.get((String) t).get("total"))));
+								for (String m : medalNames) {
+									playerDisplay.get(0).addScore(m, new MedalScore("", ((Integer) playerCount.get((String) t).get(m))));
+								}
+							}
+							
+							Collections.sort(playerDisplay);
 						}
 						
 						for (Object t : teamCount.keySet()) {
@@ -258,7 +300,7 @@
 								teamDisplay.get(0).addScore(m, new MedalScore("", ((Integer) teamCount.get((String) t).get(m))));
 							}
 						}
-						
+							
 						Collections.sort(teamDisplay);
 						
 						%>
@@ -304,68 +346,242 @@
             </table>
             </div>
             <%
-						
-						// Count player medals
-						for (Medal pm : playerMedals.values()) {
+						if (!e.isTeamScore()) {
+							%>
+							<div class="row"><h3>Player Medal Count:</h3></div>
+							<div class = "row">
+							<table class="table table-hover table-bordered">
+							<thead>
+							<tr><th>Player</th><th>Team</th>
+							<%
 							for (String n : medalNames) {
-								MedalScore ms = pm.getScore(n);
-								if (!ms.displayName.equals("")) {
-									if (ms.displayName.contains(",")) {
-										String[] names = ms.displayName.split(", ");
-										for (String ns : names) {
-											playerCount.get(ns).put(n, ((Integer) playerCount.get(ns).get(n)) + 1);
-										}
-									} else {
-										playerCount.get(ms.displayName).put(n, ((Integer) playerCount.get(ms.displayName).get(n)) + 1);
-									}
-								}
+								pageContext.setAttribute("medal_name", n);
+								%>
+								<th>${fn:escapeXml(medal_name)}</th>
+								<%
 							}
+							%>
+							<th>Total</th></tr></thead>
+							<tbody>
+							<%
+							for (Medal m : playerDisplay) {
+							//for (Object tn : teamCount.keySet()) {
+								//System.out.println(tn);
+								pageContext.setAttribute("player_name", m.getDisplayName());
+								pageContext.setAttribute("team_name", playerTeams.get(m.getDisplayName()));
+								//pageContext.setAttribute("team_name", tn);
+								%>
+								<tr><td>${fn:escapeXml(player_name)}</td><td>${fn:escapeXml(team_name)}</td>
+								<%
+								for (String n : medalNames) {
+									pageContext.setAttribute("medal_count", m.getScore(n).score);
+									//pageContext.setAttribute("medal_count", teamCount.get(tn).get(n));
+									%>
+									<td>${fn:escapeXml(medal_count)}</td>
+									<%
+								}
+								pageContext.setAttribute("total_count", m.getScore("total").score);
+								//pageContext.setAttribute("total_count", teamCount.get(tn).get("total"));
+								%>
+								<td>${fn:escapeXml(total_count)}</td></tr>
+								<%
+							}
+							%>
+							</tbody>
+							</table>
+							</div>
+              
+              <div class="row"><h3>Player Medals:</h3></div>
+							<div class = "row">
+							<table class="table table-hover table-bordered">
+							<thead>
+							<tr><th>Team</th>
+							<%
+							for (Entity game : games) {
+								%>
+								<th>
+								<%
+								pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+								%>
+								${fn:escapeXml(game_name)}</th>
+								<%
+							}
+							%>
+							</tr>
+							</thead>
+							<tbody>
+							<%	
+							for (int i=0;i<medalNames.length;i++) {
+								pageContext.setAttribute("medal_name", medalNames[i]);
+								%> <tr><td>${fn:escapeXml(medal_name)}</td>
+								<%
+								for (Entity g : games) {
+									Medal m = playerMedals.get(g.getProperty(Game.gameIDName));
+									MedalScore ms = m.getScore(medalNames[i]);
+									if (ms.displayName.equals("") || (ms.score == Integer.MAX_VALUE) || (ms.score == Integer.MIN_VALUE)) {
+										pageContext.setAttribute("medal_score", "");
+									} else {
+										pageContext.setAttribute("medal_score", ms.displayName + ": " + Integer.toString(ms.score));
+									}
+									%><td>${fn:escapeXml(medal_score)}</td>
+									<%					
+								}
+								%>
+                </tr>
+								<%
+							}
+							%>
+							</tbody>
+							</table>
+							</div>
+							<%
 						}
 						
-					
-						%>
-						<div class="row"><h3>Medals By Team:</h3></div>
-						<div class = "row">
-						<table class="table table-hover table-bordered">
-    				<thead>
-						<tr><th>Team</th>
-						<%
-						for (Entity game : games) {
+						if (e.isTeamScore()) {
 							%>
-							<th>
+							<div class="row"><h3>Team Medals:</h3></div>
+							<div class = "row">
+							<table class="table table-hover table-bordered">
+							<thead>
+							<tr><th>Team</th>
 							<%
-							pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+							for (Entity game : games) {
+								%>
+								<th>
+								<%
+								pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+								%>
+								${fn:escapeXml(game_name)}</th>
+								<%
+							}
 							%>
-							${fn:escapeXml(game_name)}</th>
+							</tr>
+							</thead>
+							<tbody>
+							<%	
+							for (int i=0;i<medalNames.length;i++) {
+								pageContext.setAttribute("medal_name", medalNames[i]);
+								%> <tr><td>${fn:escapeXml(medal_name)}</td>
+								<%
+								for (Entity g : games) {
+									Medal m = teamMedals.get(g.getProperty(Game.gameIDName));
+									MedalScore ms = m.getScore(medalNames[i]);
+									if (ms.displayName.equals("") || (ms.score == Integer.MAX_VALUE) || (ms.score == Integer.MIN_VALUE)) {
+										pageContext.setAttribute("medal_score", "");
+									} else {
+										pageContext.setAttribute("medal_score", ms.displayName + ": " + Integer.toString(ms.score));
+									}
+									%><td>${fn:escapeXml(medal_score)}</td>
+									<%
+								}
+								%>
+                </tr>
+								<%
+							}
+							%>
+							</tbody>
+							</table>
+							</div>
 							<%
 						}
-        		%>
+						
+						if (e.isTeamScore()) {
+							%>
+              <div class="row"><h3>Team Scores:</h3></div>
+              <div class = "row">
+              <table class="table table-hover table-bordered">
+              <thead>
+              <tr><th>Team</th>
+              <%
+              for (Entity game : games) {
+                %>
+                <th>
+                <%
+                pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+                %>
+                ${fn:escapeXml(game_name)}</th>
+                <%
+              }
+							%>
+              </tr>
+              </thead>
+              <tbody>
+              <%
+              for (String tname : teams.keySet()) {
+								pageContext.setAttribute("team_name", Player.humanize(tname));
+								%>
+								<tr><td>${fn:escapeXml(team_name)}</td>
+								<%
+								for (Entity game : games) {
+									if (teams.get(tname).containsKey(game.getProperty(Game.gameIDName))) {
+										pageContext.setAttribute("team_score", teams.get(tname).get(game.getProperty(Game.gameIDName)));
+									} else {
+										pageContext.setAttribute("team_score", "");
+									}
+									%>
+									<td>${fn:escapeXml(team_score)}</td>
+									<%
+								}
+								%>
+								</tr>
+								<%
+             	}
+							%>
+							</tbody>
+							</table>
+              </div>
+              <%
+						}
+						%>
+            <div class="row"><h3>Player Scores:</h3></div>
+            <div class = "row">
+            <table class="table table-hover table-bordered">
+            <thead>
+            <tr><th>Player</th><th>Team</th>
+            <%
+            for (Entity game : games) {
+              %>
+              <th>
+              <%
+              pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+              %>
+              ${fn:escapeXml(game_name)}</th>
+              <%
+            }
+          	%>
             </tr>
             </thead>
             <tbody>
-						<%	
-						for (int i=0;i<medalNames.length;i++) {
-							pageContext.setAttribute("medal_name", medalNames[i]);
-							%> <tr><td>${fn:escapeXml(medal_name)}</td>
+            <%
+						for (Entity dp : players) {
+							pageContext.setAttribute("player_name", dp.getProperty(Player.playerNameName));
+							pageContext.setAttribute("team_name", Player.humanize((String) dp.getProperty(Player.teamNameName)));
+							%>
+							<tr><td>${fn:escapeXml(player_name)}</td><td>${fn:escapeXml(team_name)}</td>
 							<%
-							for (Entity g : games) {
-								Medal m = teamMedals.get(g.getProperty(Game.gameIDName));
-								MedalScore ms = m.getScore(medalNames[i]);
-								if (ms.displayName.equals("") || (ms.score == Integer.MAX_VALUE) || (ms.score == Integer.MIN_VALUE)) {
-									pageContext.setAttribute("medal_score", "");
+							for (Entity game : games) {
+								Integer ps = 
+									(((Player) displayPlayers.get(dp.getProperty(Player.playerIDName))).getScore(((Long) game.getProperty(Game.gameIDName)).intValue()));
+								if (ps == null) {
+									pageContext.setAttribute("player_score", "");
 								} else {
-									pageContext.setAttribute("medal_score", ms.displayName + ": " + Integer.toString(ms.score));
+									pageContext.setAttribute("player_score", ps);
 								}
-								%><td>${fn:escapeXml(medal_score)}</td>
-								<%
+								%>
+								<td>${fn:escapeXml(player_score)}</td>
+								<%	
 							}
-							%></tr><%
+							%>
+							</tr>
+							<%
 						}
 						%>
-            </tbody>
-            </table>
+						</tbody>
+						</table>
+						</div>
             </div>
             <%
+						
 					}		
 				}
 			} 

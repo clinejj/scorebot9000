@@ -56,7 +56,7 @@ function addForm(params, type) {
 					if (type === "event") {
 						if (res.indexOf("&&") !== -1) {
 							var cIDs = res.split("&&");
-							if (cIDs === "-1") {
+							if (parseInt(cIDs[1]) == -1) {
 								$('#current_event').html("N/A");
 							} else {
 								$('#current_event').html(cIDs[1]);
@@ -105,7 +105,17 @@ $('#textForm').live('submit', (function(event) {
 	});
 }));
 
-$('#eventNameIn').tooltip({
+$('#eventMedalIn').tooltip({
 	animation: true,
 	trigger: 'focus'
+});
+
+$('#teamRadio').tooltip({
+	animation: true,
+	trigger: 'hover'
+});
+
+$('#playerRadio').tooltip({
+	animation: true,
+	trigger: 'hover'
 });

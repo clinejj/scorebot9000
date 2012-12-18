@@ -200,7 +200,8 @@ public class AddServlet extends HttpServlet {
 									req.getParameter(Event.eventNameName).trim(), 
 									req.getParameter(Event.medalsName).trim(),
 									Boolean.parseBoolean(req.getParameter(Event.archivedName)),
-									Boolean.parseBoolean(req.getParameter(Event.activeName)));
+									Boolean.parseBoolean(req.getParameter(Event.activeName)),
+									Boolean.parseBoolean(req.getParameter(Event.teamScoreName)));
 					
 							datastore.put(e.createEntity());
 							strResp = "New event added.";
@@ -209,6 +210,7 @@ public class AddServlet extends HttpServlet {
 					    	events.get(0).setProperty(Event.medalsName, req.getParameter(Event.medalsName).trim());
 					    	events.get(0).setProperty(Event.archivedName, Boolean.parseBoolean(req.getParameter(Event.archivedName)));
 					    	events.get(0).setProperty(Event.activeName, Boolean.parseBoolean(req.getParameter(Event.activeName)));
+					    	events.get(0).setProperty(Event.teamScoreName, Boolean.parseBoolean(req.getParameter(Event.teamScoreName)));
 					    	curID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue();
 					    	datastore.put(events.get(0));
 					    	strResp = "Event updated.";
