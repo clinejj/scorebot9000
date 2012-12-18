@@ -14,21 +14,21 @@ public class Player {
 	private Key playerKey;
 	private HashMap<Integer, Score> scores;
 	
-	public static final String keyName = "playerList";
-	public static final String keyKind = "Players";
-	public static final String entityKind = "player";
-	public static final String playerIDName = "playerID";
-	public static final String playerNameName = "playerName";
-	public static final String eventIDName = "eventID";
-	public static final String teamNameName = "teamName";
+	public static final String KEY_NAME = "playerList";
+	public static final String KEY_KIND = "Players";
+	public static final String ENTITY_KIND = "player";
+	public static final String PLAYER_ID = "playerID";
+	public static final String PLAYER_NAME = "playerName";
+	public static final String EVENT_ID = "eventID";
+	public static final String TEAM_NAME = "teamName";
 	
 	public Player() {
-		playerKey = KeyFactory.createKey(keyKind, keyName);
+		playerKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		scores = new HashMap<Integer, Score>();
 	}
 	
 	public Player(String pID, String pName, String tName, int eID) {
-		playerKey = KeyFactory.createKey(keyKind, keyName);
+		playerKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		playerID = pID;
 		playerName = pName;
 		teamName = tName;
@@ -37,11 +37,11 @@ public class Player {
 	}
 	
 	public Player(Entity pA) {
-		playerID = (String) pA.getProperty(playerIDName);
-		playerName = (String) pA.getProperty(playerNameName);
-		teamName = (String) pA.getProperty(teamNameName);
-		eventID = ((Long) pA.getProperty(eventIDName)).intValue();
-		playerKey = KeyFactory.createKey(keyKind, keyName);
+		playerID = (String) pA.getProperty(PLAYER_ID);
+		playerName = (String) pA.getProperty(PLAYER_NAME);
+		teamName = (String) pA.getProperty(TEAM_NAME);
+		eventID = ((Long) pA.getProperty(EVENT_ID)).intValue();
+		playerKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		scores = new HashMap<Integer, Score>();
 	}
 	
@@ -85,11 +85,11 @@ public class Player {
 	}
 	
 	public Entity createEntity() {
-		Entity player = new Entity(entityKind, playerKey);
-		player.setProperty(playerIDName, playerID);
-		player.setProperty(playerNameName, playerName);
-		player.setProperty(teamNameName, teamName);
-		player.setProperty(eventIDName, eventID);
+		Entity player = new Entity(ENTITY_KIND, playerKey);
+		player.setProperty(PLAYER_ID, playerID);
+		player.setProperty(PLAYER_NAME, playerName);
+		player.setProperty(TEAM_NAME, teamName);
+		player.setProperty(EVENT_ID, eventID);
 		
 		return player;
 	}

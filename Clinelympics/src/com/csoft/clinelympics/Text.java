@@ -14,21 +14,21 @@ public class Text {
 	private Date sentDate;
 	private Key textKey;
 	
-	public static final String keyName = "textList";
-	public static final String keyKind = "Texts";
-	public static final String entityKind = "text";
-	public static final String smsIDName = "SmsSid";
-	public static final String accountSIDName = "AccountSid";
-	public static final String fromName = "From";
-	public static final String bodyName = "Body";
-	public static final String sentDateName = "date";
+	public static final String KEY_NAME = "textList";
+	public static final String KEY_KIND = "Texts";
+	public static final String ENTITY_KIND = "text";
+	public static final String SMS_SID = "SmsSid";
+	public static final String ACCOUNT_SID = "AccountSid";
+	public static final String FROM = "From";
+	public static final String BODY = "Body";
+	public static final String SENT_DATE = "date";
 
 	public Text() {
-		setTextKey(KeyFactory.createKey(keyKind, keyName));
+		setTextKey(KeyFactory.createKey(KEY_KIND, KEY_NAME));
 	}
 	
 	public Text(String sID, String aID, String f, String b) {
-		setTextKey(KeyFactory.createKey(keyKind, keyName));
+		setTextKey(KeyFactory.createKey(KEY_KIND, KEY_NAME));
 		setSmsID(sID);
 		setAccountSID(aID);
 		setFrom(f);
@@ -37,12 +37,12 @@ public class Text {
 	}
 	
 	public Text(Entity eText) {
-		setTextKey(KeyFactory.createKey(keyKind, keyName));
-		setSmsID((String) eText.getProperty(smsIDName));
-		setAccountSID((String) eText.getProperty(accountSIDName));
-		setFrom((String) eText.getProperty(fromName));
-		setBody((String) eText.getProperty(bodyName));
-		setSentDate((Date) eText.getProperty(sentDateName));
+		setTextKey(KeyFactory.createKey(KEY_KIND, KEY_NAME));
+		setSmsID((String) eText.getProperty(SMS_SID));
+		setAccountSID((String) eText.getProperty(ACCOUNT_SID));
+		setFrom((String) eText.getProperty(FROM));
+		setBody((String) eText.getProperty(BODY));
+		setSentDate((Date) eText.getProperty(SENT_DATE));
 	}
 
 	public void setSmsID(String smsID) {
@@ -94,12 +94,12 @@ public class Text {
 	}
 	
 	public Entity createEntity() {
-		Entity text = new Entity(entityKind, textKey);
-		text.setProperty(smsIDName, smsID);
-		text.setProperty(accountSIDName, accountSID);
-		text.setProperty(fromName, from);
-		text.setProperty(bodyName, body);
-		text.setProperty(sentDateName, sentDate);
+		Entity text = new Entity(ENTITY_KIND, textKey);
+		text.setProperty(SMS_SID, smsID);
+		text.setProperty(ACCOUNT_SID, accountSID);
+		text.setProperty(FROM, from);
+		text.setProperty(BODY, body);
+		text.setProperty(SENT_DATE, sentDate);
 		
 		return text;
 	}

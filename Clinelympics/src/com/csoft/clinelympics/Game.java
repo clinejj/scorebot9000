@@ -11,20 +11,20 @@ public class Game {
 	private int eventID;
 	private Key gameKey;
 	
-	public static final String keyName = "gameList";
-	public static final String keyKind = "Games";
-	public static final String entityKind = "game";
-	public static final String gameIDName = "gameID";
-	public static final String gameNameName = "gameName";
-	public static final String scoreTypeName = "scoreType";
-	public static final String eventIDName = "eventID";
+	public static final String KEY_NAME = "gameList";
+	public static final String KEY_KIND = "Games";
+	public static final String ENTITY_KIND = "game";
+	public static final String GAME_ID = "gameID";
+	public static final String GAME_NAME = "gameName";
+	public static final String SCORE_TYPE = "scoreType";
+	public static final String EVENT_ID = "eventID";
 	
 	public Game() {
-		gameKey = KeyFactory.createKey(keyKind, keyName);
+		gameKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 	}
 	
 	public Game(int gID, String gName, boolean sType, int eID) {
-		gameKey = KeyFactory.createKey(keyKind, keyName);
+		gameKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		gameID = gID;
 		gameName = gName;
 		scoreType = sType;
@@ -32,11 +32,11 @@ public class Game {
 	}
 	
 	public Game(Entity eGame) {
-		gameKey = KeyFactory.createKey(keyKind, keyName);
-		gameID = ((Long) eGame.getProperty(gameIDName)).intValue();
-		gameName = (String) eGame.getProperty(gameNameName);
-		scoreType = (Boolean) eGame.getProperty(scoreTypeName);
-		eventID = ((Long) eGame.getProperty(eventIDName)).intValue();
+		gameKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
+		gameID = ((Long) eGame.getProperty(GAME_ID)).intValue();
+		gameName = (String) eGame.getProperty(GAME_NAME);
+		scoreType = (Boolean) eGame.getProperty(SCORE_TYPE);
+		eventID = ((Long) eGame.getProperty(EVENT_ID)).intValue();
 	}
 	
 	public void setGameID(int gameID) {
@@ -64,11 +64,11 @@ public class Game {
 	}
 	
 	public Entity createEntity() {
-		Entity game = new Entity(entityKind, gameKey);
-		game.setProperty(gameIDName, gameID);
-		game.setProperty(gameNameName, gameName);
-		game.setProperty(scoreTypeName, scoreType);
-		game.setProperty(eventIDName, eventID);
+		Entity game = new Entity(ENTITY_KIND, gameKey);
+		game.setProperty(GAME_ID, gameID);
+		game.setProperty(GAME_NAME, gameName);
+		game.setProperty(SCORE_TYPE, scoreType);
+		game.setProperty(EVENT_ID, eventID);
 		
 		return game;
 	}

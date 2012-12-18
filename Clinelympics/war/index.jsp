@@ -17,13 +17,13 @@
 
   <%
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-		Query query = new Query(Settings.entityKind, settingsKey);
+		Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+		Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		
-		Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
-		query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);
-		Filter activeEvents = new FilterPredicate(Event.archivedName, FilterOperator.EQUAL, false);
+		Key eventKey = KeyFactory.createKey(Event.KEY_KIND, Event.KEY_NAME);
+		query = new Query(Event.ENTITY_KIND, eventKey).addSort(Event.EVENT_ID, Query.SortDirection.ASCENDING);
+		Filter activeEvents = new FilterPredicate(Event.ARCHIVED_NAME, FilterOperator.EQUAL, false);
 		query.setFilter(activeEvents);
 		List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		%>
@@ -33,7 +33,7 @@
   <% if (settings.isEmpty()) { %>
     	<title>Scorebot 9000</title>
   <% } else {
-			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.siteNameName)); %>
+			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.SITE_NAME)); %>
       <title>${fn:escapeXml(site_name)}</title>
   <% } %>
     <c:import url="/components/head.html" />
@@ -59,7 +59,7 @@
 								%>
                 <li class="dropdown">
                 	<%
-                  if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+                  if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 										%>
                     <a href="/summary.jsp" class="dropdown-toggle" data-toggle="dropdown">
                       Summary
@@ -67,7 +67,7 @@
                     </a>
                     <%
 									} else {
-										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.eventIDName));
+										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.EVENT_ID));
 										%>
                     <a href="/summary.jsp?e=${fn:escapeXml(event_id)}" class="dropdown-toggle" data-toggle="dropdown">
                       Summary
@@ -79,8 +79,8 @@
                   <ul class="dropdown-menu">
                   <%
 									for (Entity ce : events) {
-										pageContext.setAttribute("event_id", ce.getProperty(Event.eventIDName));
-										pageContext.setAttribute("event_name", ce.getProperty(Event.eventNameName));
+										pageContext.setAttribute("event_id", ce.getProperty(Event.EVENT_ID));
+										pageContext.setAttribute("event_name", ce.getProperty(Event.EVENT_NAME));
 										%>
                     <li><a href="/summary.jsp?e=${fn:escapeXml(event_id)}">${fn:escapeXml(event_name)}</a></li>
                     <%
@@ -90,7 +90,7 @@
                 </li>
                 <%
 							}
-							if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+							if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 								%>
 								<li><a href="/scores.jsp">Scores</a></li>
 								<li><a href="/medals.jsp">Medals</a></li>

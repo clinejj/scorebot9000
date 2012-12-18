@@ -11,20 +11,20 @@ public class Settings {
 	private String siteName;
 	private Key settingsKey;
 	
-	public static final String keyName = "settingsList";
-	public static final String keyKind = "Settings";
-	public static final String entityKind = "setting";
-	public static final String adminName = "adminName";
-	public static final String adminNumName = "adminNumName";
-	public static final String curEventName = "eventID";
-	public static final String siteNameName = "siteName";
+	public static final String KEY_NAME = "settingsList";
+	public static final String KEY_KIND = "Settings";
+	public static final String ENTITY_KIND = "setting";
+	public static final String ADMIN_NAME = "adminName";
+	public static final String ADMIN_NUM = "adminNumName";
+	public static final String CUR_EVENT = "eventID";
+	public static final String SITE_NAME = "siteName";
 	
 	public Settings() {
-		settingsKey = KeyFactory.createKey(keyKind, keyName);
+		settingsKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 	}
 	
 	public Settings(String a, String n, int e, String s) {
-		settingsKey = KeyFactory.createKey(keyKind, keyName);
+		settingsKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		setAdmin(a);
 		setAdminNum(n);
 		setCurEventID(e);
@@ -32,11 +32,11 @@ public class Settings {
 	}
 	
 	public Settings(Entity e) {
-		setAdmin((String) e.getProperty(adminName));
-		setAdminNum((String) e.getProperty(adminNumName));
-		setCurEventID(((Long) e.getProperty(curEventName)).intValue());
-		setSiteName((String) e.getProperty(siteNameName));
-		settingsKey = KeyFactory.createKey(keyKind, keyName);
+		setAdmin((String) e.getProperty(ADMIN_NAME));
+		setAdminNum((String) e.getProperty(ADMIN_NUM));
+		setCurEventID(((Long) e.getProperty(CUR_EVENT)).intValue());
+		setSiteName((String) e.getProperty(SITE_NAME));
+		settingsKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 	}
 	
 	public void setAdmin(String admin) {
@@ -62,11 +62,11 @@ public class Settings {
 	}
 	
 	public Entity createEntity() {
-		Entity setting = new Entity(entityKind, settingsKey);
-		setting.setProperty(adminName, admin);
-		setting.setProperty(adminNumName, adminNum);
-		setting.setProperty(curEventName, curEventID);
-		setting.setProperty(siteNameName, siteName);
+		Entity setting = new Entity(ENTITY_KIND, settingsKey);
+		setting.setProperty(ADMIN_NAME, admin);
+		setting.setProperty(ADMIN_NUM, adminNum);
+		setting.setProperty(CUR_EVENT, curEventID);
+		setting.setProperty(SITE_NAME, siteName);
 		
 		return setting;
 	}

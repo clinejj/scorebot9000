@@ -15,8 +15,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -24,9 +24,9 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				pageContext.setAttribute("nameval", Name.nameStr);
+				pageContext.setAttribute("nameval", Name.NAME);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
-			pageContext.setAttribute("type_val", Name.entityKind); %>
+			pageContext.setAttribute("type_val", Name.ENTITY_KIND); %>
   <div id="name_response"></div>
   <div id="name_form">
   <form id="addNameForm" action="" class="form-inline">
@@ -38,12 +38,13 @@
   </div>
   <div id="nametable">
 <%
-    Key nameKey = KeyFactory.createKey(Name.keyKind, Name.keyName);
-    query = new Query(Name.entityKind, nameKey).addSort(Name.nameStr, Query.SortDirection.ASCENDING);
+    Key nameKey = KeyFactory.createKey(Name.KEY_KIND, Name.KEY_NAME);
+    query = new Query(Name.ENTITY_KIND, nameKey).addSort(Name.NAME, Query.SortDirection.ASCENDING);
     List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (names.isEmpty()) {
         %>
-        <p class="text-error">There are no names</p>
+        <div class="row"><div class="alert alert-error">
+        There are no names</div></div>
         <%
     } else {
         %>
@@ -56,9 +57,9 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("name", name.getProperty(Name.nameStr));
-						pageContext.setAttribute("rnd", name.getProperty(Name.rndStr));
-						if ((Boolean) name.getProperty(Name.usedStr)) {			
+            pageContext.setAttribute("name", name.getProperty(Name.NAME));
+						pageContext.setAttribute("rnd", name.getProperty(Name.RND));
+						if ((Boolean) name.getProperty(Name.USED)) {			
 							pageContext.setAttribute("used", "Yes");
 						} else {
 							pageContext.setAttribute("used", "");

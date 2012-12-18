@@ -13,22 +13,22 @@ public class Event {
 	private boolean isTeamScore;
 	private Key eventKey;
 	
-	public static final String keyName = "eventList";
-	public static final String keyKind = "Events";
-	public static final String entityKind = "event";
-	public static final String eventIDName = "eventID";
-	public static final String eventNameName = "eventName";
-	public static final String archivedName = "archived";
-	public static final String medalsName = "medals";
-	public static final String activeName = "active";
-	public static final String teamScoreName = "teamscore";
+	public static final String KEY_NAME = "eventList";
+	public static final String KEY_KIND = "Events";
+	public static final String ENTITY_KIND = "event";
+	public static final String EVENT_ID = "eventID";
+	public static final String EVENT_NAME = "eventName";
+	public static final String ARCHIVED_NAME = "archived";
+	public static final String MEDALS_NAME = "medals";
+	public static final String ACTIVE_NAME = "active";
+	public static final String TEAMSCORE_NAME = "teamscore";
 	
 	public Event() {
-		eventKey = KeyFactory.createKey(keyKind, keyName);
+		eventKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 	}
 	
 	public Event(int eID, String eName, String eMedals) {
-		eventKey = KeyFactory.createKey(keyKind, keyName);
+		eventKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		eventID = eID;
 		eventName = eName;
 		eventMedals = eMedals;
@@ -38,7 +38,7 @@ public class Event {
 	}
 	
 	public Event(int eID, String eName, String eMedals, boolean arc, boolean act, boolean team) {
-		eventKey = KeyFactory.createKey(keyKind, keyName);
+		eventKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		eventID = eID;
 		eventName = eName;
 		eventMedals = eMedals;
@@ -48,13 +48,13 @@ public class Event {
 	}
 	
 	public Event(Entity e) {
-		eventKey = KeyFactory.createKey(keyKind, keyName);
-		eventID = ((Long) e.getProperty(eventIDName)).intValue();
-		eventName = (String) e.getProperty(eventNameName);
-		eventMedals = (String) e.getProperty(medalsName);
-		isArchived = (Boolean) e.getProperty(archivedName);
-		setActive((Boolean) e.getProperty(activeName));
-		setTeamScore((Boolean) e.getProperty(teamScoreName));
+		eventKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
+		eventID = ((Long) e.getProperty(EVENT_ID)).intValue();
+		eventName = (String) e.getProperty(EVENT_NAME);
+		eventMedals = (String) e.getProperty(MEDALS_NAME);
+		isArchived = (Boolean) e.getProperty(ARCHIVED_NAME);
+		setActive((Boolean) e.getProperty(ACTIVE_NAME));
+		setTeamScore((Boolean) e.getProperty(TEAMSCORE_NAME));
 	}
 	
 	public void setEventID(int eventID) {
@@ -86,13 +86,13 @@ public class Event {
 	}
 	
 	public Entity createEntity() {
-		Entity e = new Entity(entityKind, eventKey);
-		e.setProperty(eventIDName, eventID);
-		e.setProperty(eventNameName, eventName);
-		e.setProperty(medalsName, eventMedals);
-		e.setProperty(archivedName, isArchived);
-		e.setProperty(activeName, isActive);
-		e.setProperty(teamScoreName, isTeamScore);
+		Entity e = new Entity(ENTITY_KIND, eventKey);
+		e.setProperty(EVENT_ID, eventID);
+		e.setProperty(EVENT_NAME, eventName);
+		e.setProperty(MEDALS_NAME, eventMedals);
+		e.setProperty(ARCHIVED_NAME, isArchived);
+		e.setProperty(ACTIVE_NAME, isActive);
+		e.setProperty(TEAMSCORE_NAME, isTeamScore);
 		
 		return e;
 	}

@@ -16,8 +16,8 @@
 
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -25,12 +25,12 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				pageContext.setAttribute("idval", Score.playerIDName);
-				pageContext.setAttribute("nameval", Score.gameIDName);
-				pageContext.setAttribute("scoreval", Score.playerScoreName);
-				pageContext.setAttribute("eventval", Score.eventIDName);
+				pageContext.setAttribute("idval", Score.PLAYER_ID);
+				pageContext.setAttribute("nameval", Score.GAME_ID);
+				pageContext.setAttribute("scoreval", Score.PLAYER_SCORE);
+				pageContext.setAttribute("eventval", Score.EVENT_ID);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
-				pageContext.setAttribute("type_val", Score.entityKind);
+				pageContext.setAttribute("type_val", Score.ENTITY_KIND);
 		%>
     <div id="score_response"></div>
     <div id="score_form">
@@ -46,12 +46,12 @@
     </div>
   <div id="score_table">
 <%
-    Key scoreKey = KeyFactory.createKey(Score.keyKind, Score.keyName);
-    query = new Query(Score.entityKind, scoreKey).addSort(Score.dateName, Query.SortDirection.DESCENDING);
+    Key scoreKey = KeyFactory.createKey(Score.KEY_KIND, Score.KEY_NAME);
+    query = new Query(Score.ENTITY_KIND, scoreKey).addSort(Score.DATE, Query.SortDirection.DESCENDING);
     List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (scores.isEmpty()) {
         %>
-        <p class="text-error">There are no scores</p>
+        <div class="row"><div class="alert alert-error">There are no scores</div></div>
         <%
     } else {
         %>
@@ -64,11 +64,11 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("player_id", score.getProperty(Score.playerIDName));
-						pageContext.setAttribute("game_id", score.getProperty(Score.gameIDName));
-						pageContext.setAttribute("player_score", score.getProperty(Score.playerScoreName));
-						pageContext.setAttribute("event_id", score.getProperty(Score.eventIDName));
-						pageContext.setAttribute("date", score.getProperty(Score.dateName));
+            pageContext.setAttribute("player_id", score.getProperty(Score.PLAYER_ID));
+						pageContext.setAttribute("game_id", score.getProperty(Score.GAME_ID));
+						pageContext.setAttribute("player_score", score.getProperty(Score.PLAYER_SCORE));
+						pageContext.setAttribute("event_id", score.getProperty(Score.EVENT_ID));
+						pageContext.setAttribute("date", score.getProperty(Score.DATE));
 						%>
             <td>${fn:escapeXml(date)}</td>
             <td>${fn:escapeXml(event_id)}</td>

@@ -16,8 +16,8 @@
 
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -25,11 +25,11 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				pageContext.setAttribute("eventval", Game.eventIDName);
-				pageContext.setAttribute("nameval", Game.gameNameName);
-				pageContext.setAttribute("scoreval", Game.scoreTypeName);
+				pageContext.setAttribute("eventval", Game.EVENT_ID);
+				pageContext.setAttribute("nameval", Game.GAME_NAME);
+				pageContext.setAttribute("scoreval", Game.SCORE_TYPE);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
-				pageContext.setAttribute("type_val", Game.entityKind);
+				pageContext.setAttribute("type_val", Game.ENTITY_KIND);
 	%>
   <div id="game_response"></div>
   <div id="game_form">
@@ -50,13 +50,13 @@
     </div>
   <div id="game_table">
 <%
-    Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-    query = new Query(Game.entityKind, gameKey).addSort(Game.eventIDName, Query.SortDirection.DESCENDING);
-		query.addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
+    Key gameKey = KeyFactory.createKey(Game.KEY_KIND, Game.KEY_NAME);
+    query = new Query(Game.ENTITY_KIND, gameKey).addSort(Game.EVENT_ID, Query.SortDirection.DESCENDING);
+		query.addSort(Game.GAME_ID, Query.SortDirection.DESCENDING);
     List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (games.isEmpty()) {
         %>
-        <p class="text-error">There are no games</p>
+        <div class="row"><div class="alert alert-error">There are no games</div></div>
         <%
     } else {
         %>
@@ -69,10 +69,10 @@
 			%>
             <tr>
             <%
-						pageContext.setAttribute("event_id", game.getProperty(Game.eventIDName));
-            pageContext.setAttribute("game_id", game.getProperty(Game.gameIDName));
-						pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
-						if ((Boolean) game.getProperty(Game.scoreTypeName)) {			
+						pageContext.setAttribute("event_id", game.getProperty(Game.EVENT_ID));
+            pageContext.setAttribute("game_id", game.getProperty(Game.GAME_ID));
+						pageContext.setAttribute("game_name", game.getProperty(Game.GAME_NAME));
+						if ((Boolean) game.getProperty(Game.SCORE_TYPE)) {			
 							pageContext.setAttribute("score_type", "high");
 						} else {
 							pageContext.setAttribute("score_type", "low");

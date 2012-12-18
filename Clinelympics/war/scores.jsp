@@ -21,13 +21,13 @@
 
   <%
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-		Query query = new Query(Settings.entityKind, settingsKey);
+		Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+		Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		
-		Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
-		query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);
-		Filter activeEvents = new FilterPredicate(Event.archivedName, FilterOperator.EQUAL, false);
+		Key eventKey = KeyFactory.createKey(Event.KEY_KIND, Event.KEY_NAME);
+		query = new Query(Event.ENTITY_KIND, eventKey).addSort(Event.EVENT_ID, Query.SortDirection.ASCENDING);
+		Filter activeEvents = new FilterPredicate(Event.ARCHIVED_NAME, FilterOperator.EQUAL, false);
 		query.setFilter(activeEvents);
 		List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		%>
@@ -37,7 +37,7 @@
   <% if (settings.isEmpty()) { %>
     	<title>Scores</title>
   <% } else {
-			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.siteNameName)); %>
+			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.SITE_NAME)); %>
       <title>Scores - ${fn:escapeXml(site_name)}</title>
   <% } %>
     <c:import url="/components/head.html" />
@@ -63,7 +63,7 @@
 								%>
                 <li class="dropdown">
                 	<%
-                  if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+                  if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 										%>
                     <a href="/summary.jsp" class="dropdown-toggle" data-toggle="dropdown">
                       Summary
@@ -71,7 +71,7 @@
                     </a>
                     <%
 									} else {
-										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.eventIDName));
+										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.EVENT_ID));
 										%>
                     <a href="/summary.jsp?e=${fn:escapeXml(event_id)}" class="dropdown-toggle" data-toggle="dropdown">
                       Summary
@@ -83,8 +83,8 @@
                   <ul class="dropdown-menu">
                   <%
 									for (Entity ce : events) {
-										pageContext.setAttribute("event_id", ce.getProperty(Event.eventIDName));
-										pageContext.setAttribute("event_name", ce.getProperty(Event.eventNameName));
+										pageContext.setAttribute("event_id", ce.getProperty(Event.EVENT_ID));
+										pageContext.setAttribute("event_name", ce.getProperty(Event.EVENT_NAME));
 										%>
                     <li><a href="/summary.jsp?e=${fn:escapeXml(event_id)}">${fn:escapeXml(event_name)}</a></li>
                     <%
@@ -94,7 +94,7 @@
                 </li>
                 <%
 							}
-							if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+							if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 								%>
 								<li><a href="/scores.jsp">Scores</a></li>
 								<li><a href="/medals.jsp">Medals</a></li>
@@ -135,7 +135,7 @@
 			if (request.getParameter("e") != null) {
 				eventID = Integer.parseInt(request.getParameter("e"));
 			}
-			Filter feID = new FilterPredicate(Event.eventIDName, FilterOperator.EQUAL, eventID);
+			Filter feID = new FilterPredicate(Event.EVENT_ID, FilterOperator.EQUAL, eventID);
 			query.setFilter(feID);
 			events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 			if (events.isEmpty()) {
@@ -149,8 +149,8 @@
 				%>
 				<div class="row"><h2 style="text-align: center;">Scores for ${fn:escapeXml(event_name)}</h2></div>
 				<%
-				Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-				Query gameQuery = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
+				Key gameKey = KeyFactory.createKey(Game.KEY_KIND, Game.KEY_NAME);
+				Query gameQuery = new Query(Game.ENTITY_KIND, gameKey).addSort(Game.GAME_ID, Query.SortDirection.ASCENDING);
 				gameQuery.setFilter(feID);
 				List<Entity> games = datastore.prepare(gameQuery).asList(FetchOptions.Builder.withDefaults());
 				if (games.isEmpty()) {						
@@ -158,14 +158,14 @@
 					<div class="alert alert-error">There was an error accessing the game list.</div>
 					<%
 				} else {
-					Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
-					Query playerQuery = new Query(Player.entityKind, playerKey).addSort(Player.teamNameName, Query.SortDirection.ASCENDING);
-					playerQuery.addSort(Player.playerNameName, Query.SortDirection.ASCENDING);
+					Key playerKey = KeyFactory.createKey(Player.KEY_KIND, Player.KEY_NAME);
+					Query playerQuery = new Query(Player.ENTITY_KIND, playerKey).addSort(Player.TEAM_NAME, Query.SortDirection.ASCENDING);
+					playerQuery.addSort(Player.PLAYER_NAME, Query.SortDirection.ASCENDING);
 					playerQuery.setFilter(feID);
 					List<Entity> players = datastore.prepare(playerQuery).asList(FetchOptions.Builder.withDefaults());
 					
-					Key scoreKey = KeyFactory.createKey(Score.keyKind, Score.keyName);
-					Query scoreQuery = new Query(Score.entityKind, scoreKey).addSort(Score.gameIDName, Query.SortDirection.ASCENDING);
+					Key scoreKey = KeyFactory.createKey(Score.KEY_KIND, Score.KEY_NAME);
+					Query scoreQuery = new Query(Score.ENTITY_KIND, scoreKey).addSort(Score.GAME_ID, Query.SortDirection.ASCENDING);
 					scoreQuery.setFilter(feID);
 					List<Entity> scores = datastore.prepare(scoreQuery).asList(FetchOptions.Builder.withDefaults());	
 					
@@ -182,12 +182,12 @@
 						
 						// Get list of players for display
 						for (Entity ePlayer : players) {
-							displayPlayers.put(ePlayer.getProperty(Player.playerIDName), new Player(ePlayer));
+							displayPlayers.put(ePlayer.getProperty(Player.PLAYER_ID), new Player(ePlayer));
 						}
 						
 						// Add scores to player display
 						for (Entity eScore : scores) {
-							((Player) displayPlayers.get(eScore.getProperty(Score.playerIDName))).addScore(new Score(eScore));
+							((Player) displayPlayers.get(eScore.getProperty(Score.PLAYER_ID))).addScore(new Score(eScore));
 						}
 						
 						// Generate teams
@@ -199,14 +199,14 @@
 							
 							// Store player scores
 							for (Entity game : games) {
-								Integer sc = ((Player) dp).getScore(((Long) game.getProperty(Game.gameIDName)).intValue());
+								Integer sc = ((Player) dp).getScore(((Long) game.getProperty(Game.GAME_ID)).intValue());
 								// Add to medals
 								if (sc != null) {
-									if (teams.get(((Player) dp).getTeamName()).containsKey(game.getProperty(Game.gameIDName))) {
-										Integer ts = (Integer) teams.get(((Player) dp).getTeamName()).get(game.getProperty(Game.gameIDName));
-										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.gameIDName), sc + ts);
+									if (teams.get(((Player) dp).getTeamName()).containsKey(game.getProperty(Game.GAME_ID))) {
+										Integer ts = (Integer) teams.get(((Player) dp).getTeamName()).get(game.getProperty(Game.GAME_ID));
+										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.GAME_ID), sc + ts);
 									} else {
-										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.gameIDName), sc);
+										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.GAME_ID), sc);
 									}
 								}	
 							}
@@ -224,7 +224,7 @@
                 %>
                 <th>
                 <%
-                pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+                pageContext.setAttribute("game_name", game.getProperty(Game.GAME_NAME));
                 %>
                 ${fn:escapeXml(game_name)}</th>
                 <%
@@ -240,8 +240,8 @@
 								<tr><td>${fn:escapeXml(team_name)}</td>
 								<%
 								for (Entity game : games) {
-									if (teams.get(tname).containsKey(game.getProperty(Game.gameIDName))) {
-										pageContext.setAttribute("team_score", teams.get(tname).get(game.getProperty(Game.gameIDName)));
+									if (teams.get(tname).containsKey(game.getProperty(Game.GAME_ID))) {
+										pageContext.setAttribute("team_score", teams.get(tname).get(game.getProperty(Game.GAME_ID)));
 									} else {
 										pageContext.setAttribute("team_score", "");
 									}
@@ -270,7 +270,7 @@
               %>
               <th>
               <%
-              pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+              pageContext.setAttribute("game_name", game.getProperty(Game.GAME_NAME));
               %>
               ${fn:escapeXml(game_name)}</th>
               <%
@@ -281,14 +281,14 @@
             <tbody>
             <%
 						for (Entity dp : players) {
-							pageContext.setAttribute("player_name", dp.getProperty(Player.playerNameName));
-							pageContext.setAttribute("team_name", Player.humanize((String) dp.getProperty(Player.teamNameName)));
+							pageContext.setAttribute("player_name", dp.getProperty(Player.PLAYER_NAME));
+							pageContext.setAttribute("team_name", Player.humanize((String) dp.getProperty(Player.TEAM_NAME)));
 							%>
 							<tr><td>${fn:escapeXml(player_name)}</td><td>${fn:escapeXml(team_name)}</td>
 							<%
 							for (Entity game : games) {
 								Integer ps = 
-									(((Player) displayPlayers.get(dp.getProperty(Player.playerIDName))).getScore(((Long) game.getProperty(Game.gameIDName)).intValue()));
+									(((Player) displayPlayers.get(dp.getProperty(Player.PLAYER_ID))).getScore(((Long) game.getProperty(Game.GAME_ID)).intValue()));
 								if (ps == null) {
 									pageContext.setAttribute("player_score", "");
 								} else {

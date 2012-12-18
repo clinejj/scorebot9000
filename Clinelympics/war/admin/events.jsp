@@ -15,8 +15,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -24,13 +24,13 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				pageContext.setAttribute("nameval", Event.eventNameName);
-				pageContext.setAttribute("medalval", Event.medalsName);
-				pageContext.setAttribute("archiveval", Event.archivedName);
-				pageContext.setAttribute("activeval", Event.activeName);
+				pageContext.setAttribute("nameval", Event.EVENT_NAME);
+				pageContext.setAttribute("medalval", Event.MEDALS_NAME);
+				pageContext.setAttribute("archiveval", Event.ARCHIVED_NAME);
+				pageContext.setAttribute("activeval", Event.ACTIVE_NAME);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
-				pageContext.setAttribute("type_val", Event.entityKind);
-				pageContext.setAttribute("team_val", Event.teamScoreName);
+				pageContext.setAttribute("type_val", Event.ENTITY_KIND);
+				pageContext.setAttribute("team_val", Event.TEAMSCORE_NAME);
 	%>
   <div id="event_response"></div>
   <div id="event_form">
@@ -52,12 +52,12 @@
     </div>
 <div id="event_table">
 <%
-    Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
-    query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.DESCENDING);
+    Key eventKey = KeyFactory.createKey(Event.KEY_KIND, Event.KEY_NAME);
+    query = new Query(Event.ENTITY_KIND, eventKey).addSort(Event.EVENT_ID, Query.SortDirection.DESCENDING);
     List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (events.isEmpty()) {
         %>
-        <p class="text-error">There are no events</p>
+        <div class="row"><div class="alert alert-error">There are no events</div></div>
         <%
     } else {
         %>
@@ -70,20 +70,20 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("event_id", event.getProperty(Event.eventIDName));
-						pageContext.setAttribute("event_name", event.getProperty(Event.eventNameName));
-						pageContext.setAttribute("medals_name", event.getProperty(Event.medalsName));
-						if ((Boolean) event.getProperty(Event.activeName)) {			
+            pageContext.setAttribute("event_id", event.getProperty(Event.EVENT_ID));
+						pageContext.setAttribute("event_name", event.getProperty(Event.EVENT_NAME));
+						pageContext.setAttribute("medals_name", event.getProperty(Event.MEDALS_NAME));
+						if ((Boolean) event.getProperty(Event.ACTIVE_NAME)) {			
 							pageContext.setAttribute("active", "Yes");
 						} else {
 							pageContext.setAttribute("active", "");
 						}
-						if ((Boolean) event.getProperty(Event.archivedName)) {			
+						if ((Boolean) event.getProperty(Event.ARCHIVED_NAME)) {			
 							pageContext.setAttribute("archived", "Yes");
 						} else {
 							pageContext.setAttribute("archived", "");
 						}
-						if ((Boolean) event.getProperty(Event.teamScoreName)) {			
+						if ((Boolean) event.getProperty(Event.TEAMSCORE_NAME)) {			
 							pageContext.setAttribute("teamscore", "Team");
 						} else {
 							pageContext.setAttribute("teamscore", "Player");

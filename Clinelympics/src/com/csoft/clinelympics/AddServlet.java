@@ -28,203 +28,203 @@ public class AddServlet extends HttpServlet {
 		String strResp = "";
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
-		Query query = new Query(Settings.entityKind, new Settings().getSettingsKey());
+		Query query = new Query(Settings.ENTITY_KIND, new Settings().getSettingsKey());
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		if (!settings.isEmpty()) {
 			if (settings.size() > 1) System.out.println("Settings has multiple entries.");
-			int curEvent = ((Long) settings.get(0).getProperty(Settings.curEventName)).intValue();
+			int curEvent = ((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue();
 			int storeEvent = curEvent;
-			if (req.getParameter(Event.eventIDName) != null) {
-				storeEvent = Integer.parseInt(req.getParameter(Event.eventIDName));
+			if (req.getParameter(Event.EVENT_ID) != null) {
+				storeEvent = Integer.parseInt(req.getParameter(Event.EVENT_ID));
 			}
 			String type = req.getParameter(TYPE_NAME);
-			if (((String) settings.get(0).getProperty(Settings.adminName)).equals(req.getHeader(USER_HEADER))) {
-				if (type.equals(Player.entityKind)) {
+			if (((String) settings.get(0).getProperty(Settings.ADMIN_NAME)).equals(req.getHeader(USER_HEADER))) {
+				if (type.equals(Player.ENTITY_KIND)) {
 					// Add a player
-					query = new Query(Event.entityKind, new Event().getEventKey());
-					Filter feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, storeEvent);
+					query = new Query(Event.ENTITY_KIND, new Event().getEventKey());
+					Filter feID = new FilterPredicate(Player.EVENT_ID, FilterOperator.EQUAL, storeEvent);
 					query.setFilter(feID);
 					List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					if (events.size() > 0) {
 						if (events.size() > 1) System.out.println("Multiple events with ID " + Integer.toString(storeEvent));
-						query = new Query(Player.entityKind, new Player().getPlayerKey());
-						Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName).trim());
-						feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, storeEvent);
+						query = new Query(Player.ENTITY_KIND, new Player().getPlayerKey());
+						Filter isPlayer = new FilterPredicate(Player.PLAYER_ID, FilterOperator.EQUAL, req.getParameter(Player.PLAYER_ID).trim());
+						feID = new FilterPredicate(Player.EVENT_ID, FilterOperator.EQUAL, storeEvent);
 						query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 					    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    if (players.isEmpty()) {
-							Player player = new Player(req.getParameter(Player.playerIDName), 
-									req.getParameter(Player.playerNameName).trim(), 
-									req.getParameter(Player.teamNameName).trim(),
+							Player player = new Player(req.getParameter(Player.PLAYER_ID), 
+									req.getParameter(Player.PLAYER_NAME).trim(), 
+									req.getParameter(Player.TEAM_NAME).trim(),
 									storeEvent);
 							datastore.put(player.createEntity());
 							strResp = "New player created.";
 					    } else {
-					    	if (players.size() > 1) System.out.println("Multiple players with ID " + req.getParameter(Player.playerIDName));
-					    	players.get(0).setProperty(Player.playerNameName, req.getParameter(Player.playerNameName));
-					    	players.get(0).setProperty(Player.teamNameName, req.getParameter(Player.teamNameName));
-				    		players.get(0).setProperty(Player.eventIDName, storeEvent);
+					    	if (players.size() > 1) System.out.println("Multiple players with ID " + req.getParameter(Player.PLAYER_ID));
+					    	players.get(0).setProperty(Player.PLAYER_NAME, req.getParameter(Player.PLAYER_NAME));
+					    	players.get(0).setProperty(Player.TEAM_NAME, req.getParameter(Player.TEAM_NAME));
+				    		players.get(0).setProperty(Player.EVENT_ID, storeEvent);
 					    	datastore.put(players.get(0));
 					    	strResp = "Player updated.";
 					    }
 					} else {
 						strResp = "err: Event with ID " + Integer.toString(storeEvent) + " not found.";
 					}
-				} else if (type.equals(Score.entityKind)) {
+				} else if (type.equals(Score.ENTITY_KIND)) {
 					// Add a score		
-					query = new Query(Player.entityKind, new Player().getPlayerKey());
-					Filter isPlayer = new FilterPredicate(Player.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName));
-					Filter feID = new FilterPredicate(Score.eventIDName, FilterOperator.EQUAL, storeEvent);
+					query = new Query(Player.ENTITY_KIND, new Player().getPlayerKey());
+					Filter isPlayer = new FilterPredicate(Player.PLAYER_ID, FilterOperator.EQUAL, req.getParameter(Player.PLAYER_ID));
+					Filter feID = new FilterPredicate(Score.EVENT_ID, FilterOperator.EQUAL, storeEvent);
 					query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 				    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				    if (players.size() > 0) {
-				    	if (players.size() > 1) System.out.println("Multiple players for player with ID " + req.getParameter(Player.playerIDName));
-				    	query = new Query(Game.entityKind, new Game().getGameKey());
-						Filter isGame = new FilterPredicate(Game.gameIDName, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Game.gameIDName)));
+				    	if (players.size() > 1) System.out.println("Multiple players for player with ID " + req.getParameter(Player.PLAYER_ID));
+				    	query = new Query(Game.ENTITY_KIND, new Game().getGameKey());
+						Filter isGame = new FilterPredicate(Game.GAME_ID, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Game.GAME_ID)));
 						query.setFilter(isGame);
 					    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    if (games.size() > 0) {
-					    	if (games.size() > 1) System.out.println("Multiple games found for game " + req.getParameter(Game.gameIDName));
-							query = new Query(Score.entityKind, new Score().getScoreKey());
-							query.addSort(Score.dateName, Query.SortDirection.DESCENDING);
-							Filter fpID = new FilterPredicate(Score.playerIDName, FilterOperator.EQUAL, req.getParameter(Player.playerIDName));
-							Filter fgID = new FilterPredicate(Score.gameIDName, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Game.gameIDName)));
+					    	if (games.size() > 1) System.out.println("Multiple games found for game " + req.getParameter(Game.GAME_ID));
+							query = new Query(Score.ENTITY_KIND, new Score().getScoreKey());
+							query.addSort(Score.DATE, Query.SortDirection.DESCENDING);
+							Filter fpID = new FilterPredicate(Score.PLAYER_ID, FilterOperator.EQUAL, req.getParameter(Player.PLAYER_ID));
+							Filter fgID = new FilterPredicate(Score.GAME_ID, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Game.GAME_ID)));
 							query.setFilter(CompositeFilterOperator.and(fpID,fgID,feID));
 							List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 							if (scores.size() == 0) {
-								Score score = new Score(req.getParameter(Score.playerIDName), 
-										Integer.parseInt(req.getParameter(Score.gameIDName).trim()), 
-										Integer.parseInt(req.getParameter(Score.playerScoreName).trim()),
+								Score score = new Score(req.getParameter(Score.PLAYER_ID), 
+										Integer.parseInt(req.getParameter(Score.GAME_ID).trim()), 
+										Integer.parseInt(req.getParameter(Score.PLAYER_SCORE).trim()),
 										storeEvent);
 								datastore.put(score.createEntity());
 								strResp = "Score added.";
 							} else {
-								scores.get(0).setProperty(Score.playerScoreName, Integer.parseInt(req.getParameter(Score.playerScoreName).trim()));
-								scores.get(0).setProperty(Score.dateName, new Date());
-								scores.get(0).setProperty(Score.eventIDName, storeEvent);
+								scores.get(0).setProperty(Score.PLAYER_SCORE, Integer.parseInt(req.getParameter(Score.PLAYER_SCORE).trim()));
+								scores.get(0).setProperty(Score.DATE, new Date());
+								scores.get(0).setProperty(Score.EVENT_ID, storeEvent);
 								datastore.put(scores.get(0));
 								if (scores.size() > 1) {
-									System.out.println("Multiple scores for player " + req.getParameter(Player.playerIDName) + " and game " + req.getParameter(Game.gameIDName));
+									System.out.println("Multiple scores for player " + req.getParameter(Player.PLAYER_ID) + " and game " + req.getParameter(Game.GAME_ID));
 								}
 								strResp = "Score updated.";
 							}
 					    } else {
-					    	strResp = "err: Couldn't find that game ID. " + req.getParameter(Game.gameIDName);
+					    	strResp = "err: Couldn't find that game ID. " + req.getParameter(Game.GAME_ID);
 					    }
 				    } else {
-				    	strResp = "err: Couldn't find playerID " + req.getParameter(Player.playerIDName);
+				    	strResp = "err: Couldn't find playerID " + req.getParameter(Player.PLAYER_ID);
 				    }
-				} else if (type.equals(Game.entityKind)) {
+				} else if (type.equals(Game.ENTITY_KIND)) {
 					// Add a game
-					query = new Query(Event.entityKind, new Event().getEventKey());
-					Filter feID = new FilterPredicate(Player.eventIDName, FilterOperator.EQUAL, storeEvent);
+					query = new Query(Event.ENTITY_KIND, new Event().getEventKey());
+					Filter feID = new FilterPredicate(Player.EVENT_ID, FilterOperator.EQUAL, storeEvent);
 					query.setFilter(feID);
 					List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					if (events.size() > 0) {
 						if (events.size() > 1) System.out.println("Multiple events with ID " + Integer.toString(storeEvent));
-						query = new Query(Game.entityKind, new Game().getGameKey());
-						Filter isGame = new FilterPredicate(Game.gameNameName, FilterOperator.EQUAL, req.getParameter(Game.gameNameName).trim());
+						query = new Query(Game.ENTITY_KIND, new Game().getGameKey());
+						Filter isGame = new FilterPredicate(Game.GAME_NAME, FilterOperator.EQUAL, req.getParameter(Game.GAME_NAME).trim());
 						query.setFilter(CompositeFilterOperator.and(isGame,feID));
 					    List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    
 					    if (games.size() == 0) {
 							int newID = 1;
-					    	query = new Query(Game.entityKind, new Game().getGameKey()).addSort(Game.gameIDName, Query.SortDirection.DESCENDING);
+					    	query = new Query(Game.ENTITY_KIND, new Game().getGameKey()).addSort(Game.GAME_ID, Query.SortDirection.DESCENDING);
 					    	query.setFilter(feID);
 					    	games = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(2));
 						    if (games.size() > 0) {
-						    	newID = ((Long) games.get(0).getProperty(Game.gameIDName)).intValue() + 1;
+						    	newID = ((Long) games.get(0).getProperty(Game.GAME_ID)).intValue() + 1;
 						    }
 							Game game = new Game(newID, 
-									req.getParameter(Game.gameNameName).trim(), 
-									Boolean.parseBoolean(req.getParameter(Game.scoreTypeName).trim()),
+									req.getParameter(Game.GAME_NAME).trim(), 
+									Boolean.parseBoolean(req.getParameter(Game.SCORE_TYPE).trim()),
 									storeEvent);
 					
 							datastore.put(game.createEntity());
 							strResp = "New game created.";
 					    } else {
-					    	if (games.size() > 1) System.out.println("Multiple games with name " + req.getParameter(Game.gameNameName));
-					    	games.get(0).setProperty(Game.scoreTypeName, Boolean.parseBoolean(req.getParameter(Game.scoreTypeName).trim()));
+					    	if (games.size() > 1) System.out.println("Multiple games with name " + req.getParameter(Game.GAME_NAME));
+					    	games.get(0).setProperty(Game.SCORE_TYPE, Boolean.parseBoolean(req.getParameter(Game.SCORE_TYPE).trim()));
 					    	datastore.put(games.get(0));
 					    	strResp = "Game updated.";
 					    }
 					} else {
 						strResp = "err: Event with ID " + Integer.toString(storeEvent) + " not found.";
 					}
-				} else if (type.equals(Name.entityKind)) {
+				} else if (type.equals(Name.ENTITY_KIND)) {
 					// Add a name
-					query = new Query(Name.entityKind, new Name().getNameKey());
-					Filter isName = new FilterPredicate(Name.nameStr, FilterOperator.EQUAL, req.getParameter(Name.nameStr).trim());
+					query = new Query(Name.ENTITY_KIND, new Name().getNameKey());
+					Filter isName = new FilterPredicate(Name.NAME, FilterOperator.EQUAL, req.getParameter(Name.NAME).trim());
 					query.setFilter(isName);
 				    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				    if (names.isEmpty()) {
-						Name n = new Name(req.getParameter(Name.nameStr).trim());
+						Name n = new Name(req.getParameter(Name.NAME).trim());
 						datastore.put(n.createEntity());
 						strResp = "Name added";
 				    } else {
 				    	strResp = "err: Name already exists.";
 				    }
-				} else if (type.equals(Event.entityKind)) {
+				} else if (type.equals(Event.ENTITY_KIND)) {
 					// Add an event
-					if (req.getParameter(Event.activeName).equals("true") && req.getParameter(Event.activeName).equals(req.getParameter(Event.archivedName))) {
+					if (req.getParameter(Event.ACTIVE_NAME).equals("true") && req.getParameter(Event.ACTIVE_NAME).equals(req.getParameter(Event.ARCHIVED_NAME))) {
 						strResp = "err: Cannot set an event both active and archived.";
 					} else {
-					    if (Boolean.parseBoolean(req.getParameter(Event.activeName))) {
-					    	query = new Query(Event.entityKind, new Event().getEventKey()).addSort(Event.eventIDName, Query.SortDirection.DESCENDING);
-						    Filter isActive = new FilterPredicate(Event.activeName, FilterOperator.EQUAL, true);
+					    if (Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME))) {
+					    	query = new Query(Event.ENTITY_KIND, new Event().getEventKey()).addSort(Event.EVENT_ID, Query.SortDirection.DESCENDING);
+						    Filter isActive = new FilterPredicate(Event.ACTIVE_NAME, FilterOperator.EQUAL, true);
 						    query.setFilter(isActive);
 					    	List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    	for (Entity e : events) {
-					    		e.setProperty(Event.activeName, false);
+					    		e.setProperty(Event.ACTIVE_NAME, false);
 					    	}
 					    	datastore.put(events);
 					    }
 					    
 						int curID = 0;
-						query = new Query(Event.entityKind, new Event().getEventKey());
-						Filter isEvent = new FilterPredicate(Event.eventNameName, FilterOperator.EQUAL, req.getParameter(Event.eventNameName).trim());
+						query = new Query(Event.ENTITY_KIND, new Event().getEventKey());
+						Filter isEvent = new FilterPredicate(Event.EVENT_NAME, FilterOperator.EQUAL, req.getParameter(Event.EVENT_NAME).trim());
 						query.setFilter(isEvent);
 					    List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    
 					    if (events.isEmpty()) {
 							int newID = 1;
-					    	query = new Query(Event.entityKind, new Event().getEventKey());
+					    	query = new Query(Event.ENTITY_KIND, new Event().getEventKey());
 						    events = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(2));
 						    if (events.size() > 0) {
-						    	newID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue() + 1;
+						    	newID = ((Long) events.get(0).getProperty(Event.EVENT_ID)).intValue() + 1;
 						    }
 						    
 						    curID = newID;
 						    
 							Event e = new Event(newID, 
-									req.getParameter(Event.eventNameName).trim(), 
-									req.getParameter(Event.medalsName).trim(),
-									Boolean.parseBoolean(req.getParameter(Event.archivedName)),
-									Boolean.parseBoolean(req.getParameter(Event.activeName)),
-									Boolean.parseBoolean(req.getParameter(Event.teamScoreName)));
+									req.getParameter(Event.EVENT_NAME).trim(), 
+									req.getParameter(Event.MEDALS_NAME).trim(),
+									Boolean.parseBoolean(req.getParameter(Event.ARCHIVED_NAME)),
+									Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME)),
+									Boolean.parseBoolean(req.getParameter(Event.TEAMSCORE_NAME)));
 					
 							datastore.put(e.createEntity());
 							strResp = "New event added.";
 					    } else {
-					    	if (events.size() > 1) System.out.println("Multiple events with name " + req.getParameter(Event.eventNameName));
-					    	events.get(0).setProperty(Event.medalsName, req.getParameter(Event.medalsName).trim());
-					    	events.get(0).setProperty(Event.archivedName, Boolean.parseBoolean(req.getParameter(Event.archivedName)));
-					    	events.get(0).setProperty(Event.activeName, Boolean.parseBoolean(req.getParameter(Event.activeName)));
-					    	events.get(0).setProperty(Event.teamScoreName, Boolean.parseBoolean(req.getParameter(Event.teamScoreName)));
-					    	curID = ((Long) events.get(0).getProperty(Event.eventIDName)).intValue();
+					    	if (events.size() > 1) System.out.println("Multiple events with name " + req.getParameter(Event.EVENT_NAME));
+					    	events.get(0).setProperty(Event.MEDALS_NAME, req.getParameter(Event.MEDALS_NAME).trim());
+					    	events.get(0).setProperty(Event.ARCHIVED_NAME, Boolean.parseBoolean(req.getParameter(Event.ARCHIVED_NAME)));
+					    	events.get(0).setProperty(Event.ACTIVE_NAME, Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME)));
+					    	events.get(0).setProperty(Event.TEAMSCORE_NAME, Boolean.parseBoolean(req.getParameter(Event.TEAMSCORE_NAME)));
+					    	curID = ((Long) events.get(0).getProperty(Event.EVENT_ID)).intValue();
 					    	datastore.put(events.get(0));
 					    	strResp = "Event updated.";
 					    }
 					   
-					    if (Boolean.parseBoolean(req.getParameter(Event.activeName))) {
-					    	settings.get(0).setProperty(Settings.curEventName, curID);
+					    if (Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME))) {
+					    	settings.get(0).setProperty(Settings.CUR_EVENT, curID);
 						    datastore.put(settings.get(0));
 						    curEvent = curID;
 						    strResp = strResp + "&&" + Integer.toString(curEvent);
 						    resetNames();
 					    } else {
 					    	if (curID == curEvent) {
-					    		settings.get(0).setProperty(Settings.curEventName, -1);
+					    		settings.get(0).setProperty(Settings.CUR_EVENT, -1);
 							    datastore.put(settings.get(0));
 							    curEvent = -1;
 							    strResp = strResp + "&&" + Integer.toString(curEvent);
@@ -241,12 +241,12 @@ public class AddServlet extends HttpServlet {
     
     private void resetNames() {
     	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    	Query query = new Query(Name.entityKind, new Name().getNameKey());
-    	Filter isName = new FilterPredicate(Name.usedStr, FilterOperator.EQUAL, true);
+    	Query query = new Query(Name.ENTITY_KIND, new Name().getNameKey());
+    	Filter isName = new FilterPredicate(Name.USED, FilterOperator.EQUAL, true);
 		query.setFilter(isName);
 	    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	    for (Entity n : names) {
-	    	n.setProperty(Name.usedStr, false);
+	    	n.setProperty(Name.USED, false);
 	    }
 	    datastore.put(names);
     }

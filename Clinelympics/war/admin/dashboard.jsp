@@ -19,8 +19,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -30,8 +30,8 @@
 			if (user.getNickname().equals(s.getAdmin())) {
 				pageContext.setAttribute("user_email", s.getAdmin());
 				
-				Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
-				query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);
+				Key eventKey = KeyFactory.createKey(Event.KEY_KIND, Event.KEY_NAME);
+				query = new Query(Event.ENTITY_KIND, eventKey).addSort(Event.EVENT_ID, Query.SortDirection.ASCENDING);
 				List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				if (events.isEmpty()) { 
 				%>
@@ -42,9 +42,9 @@
 					<%
 				}
 				
-				Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-				query = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
-				Filter feID = new FilterPredicate(Game.eventIDName, FilterOperator.EQUAL, s.getCurEventID());
+				Key gameKey = KeyFactory.createKey(Game.KEY_KIND, Game.KEY_NAME);
+				query = new Query(Game.ENTITY_KIND, gameKey).addSort(Game.GAME_ID, Query.SortDirection.ASCENDING);
+				Filter feID = new FilterPredicate(Game.EVENT_ID, FilterOperator.EQUAL, s.getCurEventID());
 				query.setFilter(feID);
 				List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 				if (games.isEmpty() && (s.getCurEventID() != -1)) {

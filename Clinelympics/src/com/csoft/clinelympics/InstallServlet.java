@@ -18,13 +18,13 @@ public class InstallServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
-		Settings s = new Settings((String) req.getParameter(Settings.adminName),
-				(String) req.getParameter(Settings.adminNumName), 
+		Settings s = new Settings((String) req.getParameter(Settings.ADMIN_NAME),
+				(String) req.getParameter(Settings.ADMIN_NUM), 
 				-1,
-				(String) req.getParameter(Settings.siteNameName));
+				(String) req.getParameter(Settings.SITE_NAME));
 		
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Query query = new Query(Settings.entityKind, s.getSettingsKey());
+		Query query = new Query(Settings.ENTITY_KIND, s.getSettingsKey());
 		List<Entity> sList = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		if (sList.isEmpty()) {
 			datastore.put(s.createEntity());

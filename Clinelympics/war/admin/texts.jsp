@@ -16,8 +16,8 @@
 
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -25,8 +25,8 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				pageContext.setAttribute("fromval", Text.fromName);
-				pageContext.setAttribute("bodyval", Text.bodyName);
+				pageContext.setAttribute("fromval", Text.FROM);
+				pageContext.setAttribute("bodyval", Text.BODY);
 		%>
   <div id="text_response"></div>
   <div id="text_form">
@@ -38,12 +38,12 @@
     </div>
   <div id="text_table">
 <%
-    Key textKey = KeyFactory.createKey(Text.keyKind, Text.keyName);
-    query = new Query(Text.entityKind, textKey).addSort(Text.sentDateName, Query.SortDirection.DESCENDING);
+    Key textKey = KeyFactory.createKey(Text.KEY_KIND, Text.KEY_NAME);
+    query = new Query(Text.ENTITY_KIND, textKey).addSort(Text.SENT_DATE, Query.SortDirection.DESCENDING);
     List<Entity> texts = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (texts.isEmpty()) {
         %>
-        <p class="text-error">There are no texts</p>
+        <div class="row"><div class="alert alert-error">There are no texts</div></div>
         <%
     } else {
         %>
@@ -56,11 +56,11 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("date", text.getProperty(Text.sentDateName));
-						pageContext.setAttribute("from", text.getProperty(Text.fromName));
-						pageContext.setAttribute("body", text.getProperty(Text.bodyName));
-						pageContext.setAttribute("smsid", text.getProperty(Text.smsIDName));
-						pageContext.setAttribute("accountsid", text.getProperty(Text.accountSIDName));
+            pageContext.setAttribute("date", text.getProperty(Text.SENT_DATE));
+						pageContext.setAttribute("from", text.getProperty(Text.FROM));
+						pageContext.setAttribute("body", text.getProperty(Text.BODY));
+						pageContext.setAttribute("smsid", text.getProperty(Text.SMS_SID));
+						pageContext.setAttribute("accountsid", text.getProperty(Text.ACCOUNT_SID));
 			%>
             <td>${fn:escapeXml(date)}</td>
             <td>${fn:escapeXml(from)}</td>

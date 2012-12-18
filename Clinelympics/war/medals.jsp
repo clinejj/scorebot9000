@@ -25,13 +25,13 @@
 
   <%
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-		Query query = new Query(Settings.entityKind, settingsKey);
+		Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+		Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		
-		Key eventKey = KeyFactory.createKey(Event.keyKind, Event.keyName);
-		query = new Query(Event.entityKind, eventKey).addSort(Event.eventIDName, Query.SortDirection.ASCENDING);
-		Filter activeEvents = new FilterPredicate(Event.archivedName, FilterOperator.EQUAL, false);
+		Key eventKey = KeyFactory.createKey(Event.KEY_KIND, Event.KEY_NAME);
+		query = new Query(Event.ENTITY_KIND, eventKey).addSort(Event.EVENT_ID, Query.SortDirection.ASCENDING);
+		Filter activeEvents = new FilterPredicate(Event.ARCHIVED_NAME, FilterOperator.EQUAL, false);
 		query.setFilter(activeEvents);
 		List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		%>
@@ -41,7 +41,7 @@
   <% if (settings.isEmpty()) { %>
     	<title>Medals</title>
   <% } else {
-			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.siteNameName)); %>
+			pageContext.setAttribute("site_name", settings.get(0).getProperty(Settings.SITE_NAME)); %>
       <title>Medals - ${fn:escapeXml(site_name)}</title>
   <% } %>
     <c:import url="/components/head.html" />
@@ -67,7 +67,7 @@
 								%>
                 <li class="dropdown">
                 	<%
-                  if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+                  if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 										%>
                     <a href="/summary.jsp" class="dropdown-toggle" data-toggle="dropdown">
                       Summary
@@ -75,7 +75,7 @@
                     </a>
                     <%
 									} else {
-										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.eventIDName));
+										pageContext.setAttribute("event_id", events.get(0).getProperty(Event.EVENT_ID));
 										%>
                     <a href="/summary.jsp?e=${fn:escapeXml(event_id)}" class="dropdown-toggle" data-toggle="dropdown">
                       Summary
@@ -87,8 +87,8 @@
                   <ul class="dropdown-menu">
                   <%
 									for (Entity ce : events) {
-										pageContext.setAttribute("event_id", ce.getProperty(Event.eventIDName));
-										pageContext.setAttribute("event_name", ce.getProperty(Event.eventNameName));
+										pageContext.setAttribute("event_id", ce.getProperty(Event.EVENT_ID));
+										pageContext.setAttribute("event_name", ce.getProperty(Event.EVENT_NAME));
 										%>
                     <li><a href="/summary.jsp?e=${fn:escapeXml(event_id)}">${fn:escapeXml(event_name)}</a></li>
                     <%
@@ -98,7 +98,7 @@
                 </li>
                 <%
 							}
-							if (((Long) settings.get(0).getProperty(Settings.curEventName)).intValue() != -1) {
+							if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 								%>
 								<li><a href="/scores.jsp">Scores</a></li>
 								<li><a href="/medals.jsp">Medals</a></li>
@@ -139,7 +139,7 @@
 			if (request.getParameter("e") != null) {
 				eventID = Integer.parseInt(request.getParameter("e"));
 			}
-			Filter feID = new FilterPredicate(Event.eventIDName, FilterOperator.EQUAL, eventID);
+			Filter feID = new FilterPredicate(Event.EVENT_ID, FilterOperator.EQUAL, eventID);
 			query.setFilter(feID);
 			events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 			if (events.isEmpty()) {
@@ -153,8 +153,8 @@
 				%>
 				<div class="row"><h2 style="text-align: center;">Medals for ${fn:escapeXml(event_name)}</h2></div>
 				<%
-				Key gameKey = KeyFactory.createKey(Game.keyKind, Game.keyName);
-				Query gameQuery = new Query(Game.entityKind, gameKey).addSort(Game.gameIDName, Query.SortDirection.ASCENDING);
+				Key gameKey = KeyFactory.createKey(Game.KEY_KIND, Game.KEY_NAME);
+				Query gameQuery = new Query(Game.ENTITY_KIND, gameKey).addSort(Game.GAME_ID, Query.SortDirection.ASCENDING);
 				gameQuery.setFilter(feID);
 				List<Entity> games = datastore.prepare(gameQuery).asList(FetchOptions.Builder.withDefaults());
 				if (games.isEmpty()) {						
@@ -162,14 +162,14 @@
 					<div class="alert alert-error">There was an error accessing the game list.</div>
 					<%
 				} else {
-					Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
-					Query playerQuery = new Query(Player.entityKind, playerKey).addSort(Player.teamNameName, Query.SortDirection.ASCENDING);
-					playerQuery.addSort(Player.playerNameName, Query.SortDirection.ASCENDING);
+					Key playerKey = KeyFactory.createKey(Player.KEY_KIND, Player.KEY_NAME);
+					Query playerQuery = new Query(Player.ENTITY_KIND, playerKey).addSort(Player.TEAM_NAME, Query.SortDirection.ASCENDING);
+					playerQuery.addSort(Player.PLAYER_NAME, Query.SortDirection.ASCENDING);
 					playerQuery.setFilter(feID);
 					List<Entity> players = datastore.prepare(playerQuery).asList(FetchOptions.Builder.withDefaults());
 					
-					Key scoreKey = KeyFactory.createKey(Score.keyKind, Score.keyName);
-					Query scoreQuery = new Query(Score.entityKind, scoreKey).addSort(Score.gameIDName, Query.SortDirection.ASCENDING);
+					Key scoreKey = KeyFactory.createKey(Score.KEY_KIND, Score.KEY_NAME);
+					Query scoreQuery = new Query(Score.ENTITY_KIND, scoreKey).addSort(Score.GAME_ID, Query.SortDirection.ASCENDING);
 					scoreQuery.setFilter(feID);
 					List<Entity> scores = datastore.prepare(scoreQuery).asList(FetchOptions.Builder.withDefaults());	
 					
@@ -194,23 +194,23 @@
 						
 						// Setup medal storage
 						for (Entity game : games) {
-							playerMedals.put(game.getProperty(Game.gameIDName), new Medal(e.getEventMedals(),(Boolean) game.getProperty(Game.scoreTypeName)));
-							teamMedals.put(game.getProperty(Game.gameIDName), new Medal(e.getEventMedals(), (Boolean) game.getProperty(Game.scoreTypeName)));
+							playerMedals.put(game.getProperty(Game.GAME_ID), new Medal(e.getEventMedals(),(Boolean) game.getProperty(Game.SCORE_TYPE)));
+							teamMedals.put(game.getProperty(Game.GAME_ID), new Medal(e.getEventMedals(), (Boolean) game.getProperty(Game.SCORE_TYPE)));
 						}
 						
 						// Get list of players for display
 						for (Entity ePlayer : players) {
-							displayPlayers.put(ePlayer.getProperty(Player.playerIDName), new Player(ePlayer));
-							playerCount.put((String) ePlayer.getProperty(Player.playerNameName), new HashMap<String, Integer>());
+							displayPlayers.put(ePlayer.getProperty(Player.PLAYER_ID), new Player(ePlayer));
+							playerCount.put((String) ePlayer.getProperty(Player.PLAYER_NAME), new HashMap<String, Integer>());
 							for (String m : medalNames) {
-								playerCount.get((String) ePlayer.getProperty(Player.playerNameName)).put(m, 0);
+								playerCount.get((String) ePlayer.getProperty(Player.PLAYER_NAME)).put(m, 0);
 							}
-							playerCount.get((String) ePlayer.getProperty(Player.playerNameName)).put("total", 0);
+							playerCount.get((String) ePlayer.getProperty(Player.PLAYER_NAME)).put("total", 0);
 						}
 						
 						// Add scores to player display
 						for (Entity eScore : scores) {
-							((Player) displayPlayers.get(eScore.getProperty(Score.playerIDName))).addScore(new Score(eScore));
+							((Player) displayPlayers.get(eScore.getProperty(Score.PLAYER_ID))).addScore(new Score(eScore));
 						}
 						
 						// Generate teams
@@ -228,15 +228,15 @@
 							
 							// Store player scores
 							for (Entity game : games) {
-								Integer sc = ((Player) dp).getScore(((Long) game.getProperty(Game.gameIDName)).intValue());
+								Integer sc = ((Player) dp).getScore(((Long) game.getProperty(Game.GAME_ID)).intValue());
 								// Add to medals
 								if (sc != null) {
-									playerMedals.get(game.getProperty(Game.gameIDName)).addScore(((Player) dp).getPlayerName(), sc);
-									if (teams.get(((Player) dp).getTeamName()).containsKey(game.getProperty(Game.gameIDName))) {
-										Integer ts = (Integer) teams.get(((Player) dp).getTeamName()).get(game.getProperty(Game.gameIDName));
-										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.gameIDName), sc + ts);
+									playerMedals.get(game.getProperty(Game.GAME_ID)).addScore(((Player) dp).getPlayerName(), sc);
+									if (teams.get(((Player) dp).getTeamName()).containsKey(game.getProperty(Game.GAME_ID))) {
+										Integer ts = (Integer) teams.get(((Player) dp).getTeamName()).get(game.getProperty(Game.GAME_ID));
+										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.GAME_ID), sc + ts);
 									} else {
-										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.gameIDName), sc);
+										teams.get(((Player) dp).getTeamName()).put(game.getProperty(Game.GAME_ID), sc);
 									}
 								}	
 							}
@@ -414,7 +414,7 @@
 								%>
 								<th>
 								<%
-								pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+								pageContext.setAttribute("game_name", game.getProperty(Game.GAME_NAME));
 								%>
 								${fn:escapeXml(game_name)}</th>
 								<%
@@ -429,7 +429,7 @@
 								%> <tr><td>${fn:escapeXml(medal_name)}</td>
 								<%
 								for (Entity g : games) {
-									Medal m = playerMedals.get(g.getProperty(Game.gameIDName));
+									Medal m = playerMedals.get(g.getProperty(Game.GAME_ID));
 									MedalScore ms = m.getScore(medalNames[i]);
 									if (ms.displayName.equals("") || (ms.score == Integer.MAX_VALUE) || (ms.score == Integer.MIN_VALUE)) {
 										pageContext.setAttribute("medal_score", "");
@@ -462,7 +462,7 @@
 								%>
 								<th>
 								<%
-								pageContext.setAttribute("game_name", game.getProperty(Game.gameNameName));
+								pageContext.setAttribute("game_name", game.getProperty(Game.GAME_NAME));
 								%>
 								${fn:escapeXml(game_name)}</th>
 								<%
@@ -477,7 +477,7 @@
 								%> <tr><td>${fn:escapeXml(medal_name)}</td>
 								<%
 								for (Entity g : games) {
-									Medal m = teamMedals.get(g.getProperty(Game.gameIDName));
+									Medal m = teamMedals.get(g.getProperty(Game.GAME_ID));
 									MedalScore ms = m.getScore(medalNames[i]);
 									if (ms.displayName.equals("") || (ms.score == Integer.MAX_VALUE) || (ms.score == Integer.MIN_VALUE)) {
 										pageContext.setAttribute("medal_score", "");

@@ -29,8 +29,8 @@
 	<div class="container">
   <%
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-		Query query = new Query(Settings.entityKind, settingsKey);
+		Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+		Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 		List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		if (settings.isEmpty()) {
 	%>
@@ -49,8 +49,8 @@
       <%
 		pageContext.setAttribute("admin", Settings.adminName);
 		pageContext.setAttribute("adminnum", Settings.adminNumName);
-		pageContext.setAttribute("curevent", Settings.curEventName);
-		pageContext.setAttribute("sitename", Settings.siteNameName);
+		pageContext.setAttribute("curevent", Settings.CUR_EVENT);
+		pageContext.setAttribute("sitename", Settings.SITE_NAME);
 		%>
   <form action="/install" method="post" class="form-horizontal">
     <div class="control-group">

@@ -12,30 +12,30 @@ public class Name {
 	private boolean isUsed;
 	private Key nameKey;
 	
-	public static final String keyName = "nameList";
-	public static final String keyKind = "Names";
-	public static final String entityKind = "name";
-	public static final String nameStr = "Name";
-	public static final String rndStr = "rnd";
-	public static final String usedStr = "isUsed";
+	public static final String KEY_NAME = "nameList";
+	public static final String KEY_KIND = "Names";
+	public static final String ENTITY_KIND = "name";
+	public static final String NAME = "Name";
+	public static final String RND = "rnd";
+	public static final String USED = "isUsed";
 	
 	public Name() {
-		setNameKey(KeyFactory.createKey(keyKind, keyName));
+		setNameKey(KeyFactory.createKey(KEY_KIND, KEY_NAME));
 	}
 	
 	public Name(String n) {
 		Random r = new Random(System.currentTimeMillis());
-		setNameKey(KeyFactory.createKey(keyKind, keyName));
+		setNameKey(KeyFactory.createKey(KEY_KIND, KEY_NAME));
 		setName(n);
 		setRnd(r.nextInt());
 		setUsed(false);
 	}
 	
 	public Name(Entity eName) {
-		setNameKey(KeyFactory.createKey(keyKind, keyName));
-		setName((String) eName.getProperty(nameStr));
-		setRnd(((Long) eName.getProperty(rndStr)).intValue());
-		setUsed((Boolean) eName.getProperty(usedStr));
+		setNameKey(KeyFactory.createKey(KEY_KIND, KEY_NAME));
+		setName((String) eName.getProperty(NAME));
+		setRnd(((Long) eName.getProperty(RND)).intValue());
+		setUsed((Boolean) eName.getProperty(USED));
 	}
 
 	public void setName(String name) {
@@ -71,10 +71,10 @@ public class Name {
 	}
 
 	public Entity createEntity() {
-		Entity n = new Entity(entityKind, nameKey);
-		n.setProperty(nameStr, name);
-		n.setProperty(rndStr, rnd);
-		n.setProperty(usedStr, isUsed);
+		Entity n = new Entity(ENTITY_KIND, nameKey);
+		n.setProperty(NAME, name);
+		n.setProperty(RND, rnd);
+		n.setProperty(USED, isUsed);
 		
 		return n;
 	}

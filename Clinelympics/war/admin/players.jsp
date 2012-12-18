@@ -16,8 +16,8 @@
 
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Key settingsKey = KeyFactory.createKey(Settings.keyKind, Settings.keyName);
-	Query query = new Query(Settings.entityKind, settingsKey);
+	Key settingsKey = KeyFactory.createKey(Settings.KEY_KIND, Settings.KEY_NAME);
+	Query query = new Query(Settings.ENTITY_KIND, settingsKey);
 	List<Entity> settings = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	if (!settings.isEmpty()) {
 		Settings s = new Settings(settings.get(0));
@@ -25,12 +25,12 @@
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			if (user.getNickname().equals(s.getAdmin())) {
-				pageContext.setAttribute("idval", Player.playerIDName);
-				pageContext.setAttribute("nameval", Player.playerNameName);
-				pageContext.setAttribute("teamval", Player.teamNameName);
-				pageContext.setAttribute("eventval", Player.eventIDName);
+				pageContext.setAttribute("idval", Player.PLAYER_ID);
+				pageContext.setAttribute("nameval", Player.PLAYER_NAME);
+				pageContext.setAttribute("teamval", Player.TEAM_NAME);
+				pageContext.setAttribute("eventval", Player.EVENT_ID);
 				pageContext.setAttribute("user_email", s.getAdmin()); 
-				pageContext.setAttribute("type_val", Player.entityKind);
+				pageContext.setAttribute("type_val", Player.ENTITY_KIND);
 		%>
     <div id="player_response"></div>
   	<div id="player_form">
@@ -46,13 +46,13 @@
     </div>
   <div id="player_table">
 <%
-    Key playerKey = KeyFactory.createKey(Player.keyKind, Player.keyName);
-    query = new Query(Player.entityKind, playerKey).addSort(Player.eventIDName, Query.SortDirection.DESCENDING);
-		query.addSort(Player.playerIDName, Query.SortDirection.DESCENDING);
+    Key playerKey = KeyFactory.createKey(Player.KEY_KIND, Player.KEY_NAME);
+    query = new Query(Player.ENTITY_KIND, playerKey).addSort(Player.EVENT_ID, Query.SortDirection.DESCENDING);
+		query.addSort(Player.PLAYER_ID, Query.SortDirection.DESCENDING);
     List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (players.isEmpty()) {
         %>
-        <p class="text-error">There are no players</p>
+        <div class="row"><div class="alert alert-error">There are no players</div></div>
         <%
     } else {
         %>
@@ -65,10 +65,10 @@
 			%>
             <tr>
             <%
-            pageContext.setAttribute("player_id", player.getProperty(Player.playerIDName));
-						pageContext.setAttribute("player_name", player.getProperty(Player.playerNameName));
-						pageContext.setAttribute("team_name", player.getProperty(Player.teamNameName));
-						pageContext.setAttribute("event_id", player.getProperty(Player.eventIDName));
+            pageContext.setAttribute("player_id", player.getProperty(Player.PLAYER_ID));
+						pageContext.setAttribute("player_name", player.getProperty(Player.PLAYER_NAME));
+						pageContext.setAttribute("team_name", player.getProperty(Player.TEAM_NAME));
+						pageContext.setAttribute("event_id", player.getProperty(Player.EVENT_ID));
 						%>
             <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(player_id)}</td>

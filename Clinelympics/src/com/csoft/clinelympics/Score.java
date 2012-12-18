@@ -13,21 +13,21 @@ public class Score {
 	private int eventID;
 	private Key scoreKey;
 	
-	public static final String keyName = "scoreList";
-	public static final String keyKind = "Scores";
-	public static final String entityKind = "score";
-	public static final String playerIDName = "playerID";
-	public static final String gameIDName = "gameID";
-	public static final String eventIDName = "eventID";
-	public static final String playerScoreName = "playerScore";
-	public static final String dateName = "date";
+	public static final String KEY_NAME = "scoreList";
+	public static final String KEY_KIND = "Scores";
+	public static final String ENTITY_KIND = "score";
+	public static final String PLAYER_ID = "playerID";
+	public static final String GAME_ID = "gameID";
+	public static final String EVENT_ID = "eventID";
+	public static final String PLAYER_SCORE = "playerScore";
+	public static final String DATE = "date";
 
 	public Score() {
-		scoreKey = KeyFactory.createKey(keyKind, keyName);
+		scoreKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 	}
 	
 	public Score(String pID, int gID, int pScore, int eID) {
-		scoreKey = KeyFactory.createKey(keyKind, keyName);
+		scoreKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		eventID = eID;
 		playerID = pID;
 		gameID = gID;
@@ -35,11 +35,11 @@ public class Score {
 	}
 	
 	public Score(Entity eScore) {
-		scoreKey = KeyFactory.createKey(keyKind, keyName);
-		eventID = ((Long) eScore.getProperty(eventIDName)).intValue();
-		playerID = (String) eScore.getProperty(playerIDName);
-		gameID = ((Long) eScore.getProperty(gameIDName)).intValue();
-		playerScore = ((Long) eScore.getProperty(playerScoreName)).intValue();
+		scoreKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
+		eventID = ((Long) eScore.getProperty(EVENT_ID)).intValue();
+		playerID = (String) eScore.getProperty(PLAYER_ID);
+		gameID = ((Long) eScore.getProperty(GAME_ID)).intValue();
+		playerScore = ((Long) eScore.getProperty(PLAYER_SCORE)).intValue();
 	}
 
 	public void setPlayerID(String playerID) {
@@ -67,12 +67,12 @@ public class Score {
 	}
 	
 	public Entity createEntity() {
-		Entity score = new Entity(entityKind, scoreKey);
-		score.setProperty(eventIDName, eventID);
-		score.setProperty(playerIDName, playerID);
-		score.setProperty(gameIDName, gameID);
-		score.setProperty(playerScoreName, playerScore);
-		score.setProperty(dateName, new Date());
+		Entity score = new Entity(ENTITY_KIND, scoreKey);
+		score.setProperty(EVENT_ID, eventID);
+		score.setProperty(PLAYER_ID, playerID);
+		score.setProperty(GAME_ID, gameID);
+		score.setProperty(PLAYER_SCORE, playerScore);
+		score.setProperty(DATE, new Date());
 		
 		return score;
 	}
