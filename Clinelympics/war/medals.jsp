@@ -100,8 +100,8 @@
 							}
 							if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 								%>
-								<li><a href="/scores.jsp">Scores</a></li>
 								<li><a href="/medals.jsp">Medals</a></li>
+								<li><a href="/scores.jsp">Scores</a></li>				
                 <%
 							}
 							%>
@@ -305,68 +305,76 @@
 							Collections.sort(playerDisplay);
 						}
 						
-						for (Object t : teamCount.keySet()) {
-							// sort medals
-							teamDisplay.add(0, new Medal("total," + e.getEventMedals(), true, (String) t));
-							teamDisplay.get(0).addScore("total", new MedalScore("", ((Integer) teamCount.get((String) t).get("total"))));
-							for (String m : medalNames) {
-								teamDisplay.get(0).addScore(m, new MedalScore("", ((Integer) teamCount.get((String) t).get(m))));
+						if (e.usesTeams()) {
+							for (Object t : teamCount.keySet()) {
+								// sort medals
+								teamDisplay.add(0, new Medal("total," + e.getEventMedals(), true, (String) t));
+								teamDisplay.get(0).addScore("total", new MedalScore("", ((Integer) teamCount.get((String) t).get("total"))));
+								for (String m : medalNames) {
+									teamDisplay.get(0).addScore(m, new MedalScore("", ((Integer) teamCount.get((String) t).get(m))));
+								}
 							}
-						}
+								
+							Collections.sort(teamDisplay);
 							
-						Collections.sort(teamDisplay);
-						
-						%>
-            <div class="row"><h3>Team Medal Count:</h3></div>
-            <div class = "row">
-            <table class="table table-hover table-bordered">
-            <thead>
-            <tr><th></th>
-            <%
-						for (String n : medalNames) {
-							pageContext.setAttribute("medal_name", n);
 							%>
-              <th>${fn:escapeXml(medal_name)}</th>
-              <%
-						}
-						%>
-            <th>Total</th></tr></thead>
-            <tbody>
-            <%
-						for (Medal m : teamDisplay) {
-						//for (Object tn : teamCount.keySet()) {
-							//System.out.println(tn);
-							pageContext.setAttribute("team_name", m.getDisplayName());
-							//pageContext.setAttribute("team_name", tn);
-							%>
-              <tr><td>${fn:escapeXml(team_name)}</td>
-              <%
+							<div class="row"><h3>Team Medal Count:</h3></div>
+							<div class = "row">
+							<table class="table table-hover table-bordered">
+							<thead>
+							<tr><th>Team</th>
+							<%
 							for (String n : medalNames) {
-								pageContext.setAttribute("medal_count", m.getScore(n).score);
-								//pageContext.setAttribute("medal_count", teamCount.get(tn).get(n));
+								pageContext.setAttribute("medal_name", n);
 								%>
-                <td>${fn:escapeXml(medal_count)}</td>
-                <%
+								<th>${fn:escapeXml(medal_name)}</th>
+								<%
 							}
-							pageContext.setAttribute("total_count", m.getScore("total").score);
-							//pageContext.setAttribute("total_count", teamCount.get(tn).get("total"));
 							%>
-              <td>${fn:escapeXml(total_count)}</td></tr>
-              <%
+							<th>Total</th></tr></thead>
+							<tbody>
+							<%
+							for (Medal m : teamDisplay) {
+							//for (Object tn : teamCount.keySet()) {
+								//System.out.println(tn);
+								pageContext.setAttribute("team_name", m.getDisplayName());
+								//pageContext.setAttribute("team_name", tn);
+								%>
+								<tr><td>${fn:escapeXml(team_name)}</td>
+								<%
+								for (String n : medalNames) {
+									pageContext.setAttribute("medal_count", m.getScore(n).score);
+									//pageContext.setAttribute("medal_count", teamCount.get(tn).get(n));
+									%>
+									<td>${fn:escapeXml(medal_count)}</td>
+									<%
+								}
+								pageContext.setAttribute("total_count", m.getScore("total").score);
+								//pageContext.setAttribute("total_count", teamCount.get(tn).get("total"));
+								%>
+								<td>${fn:escapeXml(total_count)}</td></tr>
+								<%
+							}
+							%>
+							</tbody>
+							</table>
+							</div>
+							<%
 						}
-						%>
-            </tbody>
-            </table>
-            </div>
-            <%
+						
 						if (!e.isTeamScore()) {
 							%>
 							<div class="row"><h3>Player Medal Count:</h3></div>
 							<div class = "row">
 							<table class="table table-hover table-bordered">
 							<thead>
-							<tr><th>Player</th><th>Team</th>
+							<tr><th>Player</th>
 							<%
+              if (e.usesTeams()) {
+                %>
+                <th>Team</th>
+                <%
+              }
 							for (String n : medalNames) {
 								pageContext.setAttribute("medal_name", n);
 								%>
@@ -384,8 +392,13 @@
 								pageContext.setAttribute("team_name", playerTeams.get(m.getDisplayName()));
 								//pageContext.setAttribute("team_name", tn);
 								%>
-								<tr><td>${fn:escapeXml(player_name)}</td><td>${fn:escapeXml(team_name)}</td>
-								<%
+								<tr><td>${fn:escapeXml(player_name)}</td>
+                <%
+								if (e.usesTeams()) {
+									%>
+									<td>${fn:escapeXml(team_name)}</td>
+									<%
+								}
 								for (String n : medalNames) {
 									pageContext.setAttribute("medal_count", m.getScore(n).score);
 									//pageContext.setAttribute("medal_count", teamCount.get(tn).get(n));
@@ -408,7 +421,7 @@
 							<div class = "row">
 							<table class="table table-hover table-bordered">
 							<thead>
-							<tr><th>Team</th>
+							<tr><th></th>
 							<%
 							for (Entity game : games) {
 								%>

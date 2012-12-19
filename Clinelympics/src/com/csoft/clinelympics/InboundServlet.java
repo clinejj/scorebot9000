@@ -73,7 +73,6 @@ public class InboundServlet extends HttpServlet {
 						query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
 					    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 					    if (players.isEmpty()) {
-							String teamName = inText.getBody().substring(inText.getBody().indexOf(" ")+1).trim().toUpperCase();
 							Random r = new Random(System.currentTimeMillis());
 							query = new Query(Name.ENTITY_KIND, new Name().getNameKey());
 							
@@ -88,12 +87,17 @@ public class InboundServlet extends HttpServlet {
 						    int curEnt = r.nextInt(names.size());
 						    String newName = (String) names.get(curEnt).getProperty(Name.NAME);
 						    
+						    String teamName = "";
+						    if ((Boolean) events.get(0).getProperty(Event.TEAM_SUPPORT)) {
+						    	teamName = inText.getBody().substring(inText.getBody().indexOf(" ")+1).trim().toUpperCase();
+						    	smsresp = "Welcome to team " + Player.humanize(teamName) + ", "  + newName + ". Good luck!";
+						    } else {
+						    	smsresp = "You have registered to play "  + newName + ". Good luck!";
+						    }
 							Player player = new Player(inText.getFrom(), newName, teamName, curEvent);
 							datastore.put(player.createEntity());
 							names.get(curEnt).setProperty(Name.USED, true);
 							datastore.put(names.get(curEnt));
-							
-							smsresp = "Welcome to team " + Player.humanize(teamName) + ", "  + newName;
 					    }
 					} else {
 						isValid = false;
@@ -157,19 +161,23 @@ public class InboundServlet extends HttpServlet {
 				    }
 				} else if (split[0].equalsIgnoreCase(CMD_CHANGE)) {
 					if (split[1].equalsIgnoreCase(CMD_TEAM)) {
-						query = new Query(Player.ENTITY_KIND, new Player().getPlayerKey());
-						Filter isPlayer = new FilterPredicate(Player.PLAYER_ID, FilterOperator.EQUAL, inText.getFrom());
-						query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
-					    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-					    if (players.size() == 1) {
-					    	String teamName = inText.getBody().substring(inText.getBody().toUpperCase().indexOf(CMD_TEAM)+5).trim().toUpperCase();
-					    	players.get(0).setProperty(Player.TEAM_NAME, teamName);
-					    	datastore.put(players.get(0));
-					    	smsresp = "You have been changed to team " + Player.humanize(teamName);
-					    } else {
-					    	if (players.size() > 1) System.out.println("Multiple players with ID " + inText.getFrom());
-					    	smsresp = "We ran into an error.";
-					    }
+						if ((Boolean) events.get(0).getProperty(Event.TEAM_SUPPORT)) {
+							query = new Query(Player.ENTITY_KIND, new Player().getPlayerKey());
+							Filter isPlayer = new FilterPredicate(Player.PLAYER_ID, FilterOperator.EQUAL, inText.getFrom());
+							query.setFilter(CompositeFilterOperator.and(isPlayer,feID));
+						    List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+						    if (players.size() == 1) {
+						    	String teamName = inText.getBody().substring(inText.getBody().toUpperCase().indexOf(CMD_TEAM)+5).trim().toUpperCase();
+						    	players.get(0).setProperty(Player.TEAM_NAME, teamName);
+						    	datastore.put(players.get(0));
+						    	smsresp = "You have been changed to team " + Player.humanize(teamName);
+						    } else {
+						    	if (players.size() > 1) System.out.println("Multiple players with ID " + inText.getFrom());
+						    	smsresp = "We ran into an error.";
+						    }
+						} else {
+							isValid = false;
+						}
 					} else if (split[1].equalsIgnoreCase(CMD_NAME)) {
 						query = new Query(Player.ENTITY_KIND, new Player().getPlayerKey());
 						Filter isPlayer = new FilterPredicate(Player.PLAYER_ID, FilterOperator.EQUAL, inText.getFrom());

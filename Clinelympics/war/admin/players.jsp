@@ -52,7 +52,7 @@
     List<Entity> players = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (players.isEmpty()) {
         %>
-        <div class="row"><div class="alert alert-error">There are no players</div></div>
+        <div class="alert alert-error">There are no players</div>
         <%
     } else {
         %>

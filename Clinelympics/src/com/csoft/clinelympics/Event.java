@@ -11,6 +11,7 @@ public class Event {
 	private boolean isArchived;
 	private boolean isActive;
 	private boolean isTeamScore;
+	private boolean teamSupport;
 	private Key eventKey;
 	
 	public static final String KEY_NAME = "eventList";
@@ -22,6 +23,7 @@ public class Event {
 	public static final String MEDALS_NAME = "medals";
 	public static final String ACTIVE_NAME = "active";
 	public static final String TEAMSCORE_NAME = "teamscore";
+	public static final String TEAM_SUPPORT = "teams";
 	
 	public Event() {
 		eventKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
@@ -35,9 +37,10 @@ public class Event {
 		isArchived = false;
 		setActive(false);
 		setTeamScore(false);
+		setUsesTeams(true);
 	}
 	
-	public Event(int eID, String eName, String eMedals, boolean arc, boolean act, boolean team) {
+	public Event(int eID, String eName, String eMedals, boolean arc, boolean act, boolean team, boolean useTeam) {
 		eventKey = KeyFactory.createKey(KEY_KIND, KEY_NAME);
 		eventID = eID;
 		eventName = eName;
@@ -45,6 +48,7 @@ public class Event {
 		isArchived = arc;
 		setActive(act);
 		setTeamScore(team);
+		setUsesTeams(useTeam);
 	}
 	
 	public Event(Entity e) {
@@ -55,6 +59,7 @@ public class Event {
 		isArchived = (Boolean) e.getProperty(ARCHIVED_NAME);
 		setActive((Boolean) e.getProperty(ACTIVE_NAME));
 		setTeamScore((Boolean) e.getProperty(TEAMSCORE_NAME));
+		setUsesTeams((Boolean) e.getProperty(TEAM_SUPPORT));
 	}
 	
 	public void setEventID(int eventID) {
@@ -93,6 +98,7 @@ public class Event {
 		e.setProperty(ARCHIVED_NAME, isArchived);
 		e.setProperty(ACTIVE_NAME, isActive);
 		e.setProperty(TEAMSCORE_NAME, isTeamScore);
+		e.setProperty(TEAM_SUPPORT, teamSupport);
 		
 		return e;
 	}
@@ -111,5 +117,13 @@ public class Event {
 
 	public boolean isTeamScore() {
 		return isTeamScore;
+	}
+
+	public void setUsesTeams(boolean usesTeams) {
+		this.teamSupport = usesTeams;
+	}
+
+	public boolean usesTeams() {
+		return teamSupport;
 	}
 }

@@ -96,8 +96,8 @@
 							}
 							if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 								%>
-								<li><a href="/scores.jsp">Scores</a></li>
 								<li><a href="/medals.jsp">Medals</a></li>
+								<li><a href="/scores.jsp">Scores</a></li>				
                 <%
 							}
 							%>
@@ -260,12 +260,17 @@
               <%
 						}
 						%>
-            <div class="row"><h3>Player Scores:</h3></div>
+            <div class="row"><h3>Player Scores</h3></div>
             <div class = "row">
             <table class="table table-hover table-bordered">
             <thead>
-            <tr><th>Player</th><th>Team</th>
+            <tr><th>Player</th>
             <%
+						if (e.usesTeams()) {
+							%>
+							<th>Team</th>
+							<%
+						}
             for (Entity game : games) {
               %>
               <th>
@@ -284,8 +289,13 @@
 							pageContext.setAttribute("player_name", dp.getProperty(Player.PLAYER_NAME));
 							pageContext.setAttribute("team_name", Player.humanize((String) dp.getProperty(Player.TEAM_NAME)));
 							%>
-							<tr><td>${fn:escapeXml(player_name)}</td><td>${fn:escapeXml(team_name)}</td>
-							<%
+							<tr><td>${fn:escapeXml(player_name)}</td>
+              <%
+							if (e.usesTeams()) {
+								%>
+                <td>${fn:escapeXml(team_name)}</td>
+                <%
+							}
 							for (Entity game : games) {
 								Integer ps = 
 									(((Player) displayPlayers.get(dp.getProperty(Player.PLAYER_ID))).getScore(((Long) game.getProperty(Game.GAME_ID)).intValue()));

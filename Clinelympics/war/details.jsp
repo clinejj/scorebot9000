@@ -78,8 +78,8 @@
                 <%
 							}
 							%>
-              <li><a href="/scores.jsp">Scores</a></li>
               <li><a href="/medals.jsp">Medals</a></li>
+								<li><a href="/scores.jsp">Scores</a></li>				
               <li class="divider-vertical"></li>
             </ul>
       			<% 

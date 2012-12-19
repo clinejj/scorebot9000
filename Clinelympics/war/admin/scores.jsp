@@ -51,7 +51,7 @@
     List<Entity> scores = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (scores.isEmpty()) {
         %>
-        <div class="row"><div class="alert alert-error">There are no scores</div></div>
+        <div class="alert alert-error">There are no scores</div>
         <%
     } else {
         %>

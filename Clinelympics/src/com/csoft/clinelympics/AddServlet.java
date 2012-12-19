@@ -168,6 +168,8 @@ public class AddServlet extends HttpServlet {
 					// Add an event
 					if (req.getParameter(Event.ACTIVE_NAME).equals("true") && req.getParameter(Event.ACTIVE_NAME).equals(req.getParameter(Event.ARCHIVED_NAME))) {
 						strResp = "err: Cannot set an event both active and archived.";
+					} else if (req.getParameter(Event.TEAMSCORE_NAME).equalsIgnoreCase("true") && req.getParameter(Event.TEAM_SUPPORT).equalsIgnoreCase("false")) {
+						strResp = "err: Cannot have team scoring without team support.";
 					} else {
 					    if (Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME))) {
 					    	query = new Query(Event.ENTITY_KIND, new Event().getEventKey()).addSort(Event.EVENT_ID, Query.SortDirection.DESCENDING);
@@ -201,7 +203,8 @@ public class AddServlet extends HttpServlet {
 									req.getParameter(Event.MEDALS_NAME).trim(),
 									Boolean.parseBoolean(req.getParameter(Event.ARCHIVED_NAME)),
 									Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME)),
-									Boolean.parseBoolean(req.getParameter(Event.TEAMSCORE_NAME)));
+									Boolean.parseBoolean(req.getParameter(Event.TEAMSCORE_NAME)),
+									Boolean.parseBoolean(req.getParameter(Event.TEAM_SUPPORT)));
 					
 							datastore.put(e.createEntity());
 							strResp = "New event added.";
@@ -211,6 +214,7 @@ public class AddServlet extends HttpServlet {
 					    	events.get(0).setProperty(Event.ARCHIVED_NAME, Boolean.parseBoolean(req.getParameter(Event.ARCHIVED_NAME)));
 					    	events.get(0).setProperty(Event.ACTIVE_NAME, Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME)));
 					    	events.get(0).setProperty(Event.TEAMSCORE_NAME, Boolean.parseBoolean(req.getParameter(Event.TEAMSCORE_NAME)));
+					    	events.get(0).setProperty(Event.TEAM_SUPPORT, Boolean.parseBoolean(req.getParameter(Event.TEAM_SUPPORT)));
 					    	curID = ((Long) events.get(0).getProperty(Event.EVENT_ID)).intValue();
 					    	datastore.put(events.get(0));
 					    	strResp = "Event updated.";

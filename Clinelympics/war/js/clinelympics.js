@@ -2,11 +2,14 @@
 $('#addEventForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addEventForm').serialize();
-	if (a.indexOf("archived") == -1) {
+	if (a.indexOf("archived=") == -1) {
 		a = a + "&archived=false";
 	}
-	if (a.indexOf("active") == -1) {
+	if (a.indexOf("active=") == -1) {
 		a = a + "&active=false";
+	}
+	if (a.indexOf("teams=") == -1) {
+		a = a + "&teams=false";
 	}
 	addForm(a, $('#eventType').val());
 	

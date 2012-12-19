@@ -43,8 +43,7 @@
     List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (names.isEmpty()) {
         %>
-        <div class="row"><div class="alert alert-error">
-        There are no names</div></div>
+        <div class="alert alert-error">There are no names</div>
         <%
     } else {
         %>

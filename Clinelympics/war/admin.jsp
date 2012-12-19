@@ -95,8 +95,8 @@
 							}
 							if (((Long) settings.get(0).getProperty(Settings.CUR_EVENT)).intValue() != -1) {
 								%>
-								<li><a href="/scores.jsp">Scores</a></li>
 								<li><a href="/medals.jsp">Medals</a></li>
+								<li><a href="/scores.jsp">Scores</a></li>				
                 <%
 							}
 							%>

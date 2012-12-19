@@ -31,14 +31,16 @@
 				pageContext.setAttribute("user_email", s.getAdmin()); 
 				pageContext.setAttribute("type_val", Event.ENTITY_KIND);
 				pageContext.setAttribute("team_val", Event.TEAMSCORE_NAME);
+				pageContext.setAttribute("team_sup_val", Event.TEAM_SUPPORT);
 	%>
   <div id="event_response"></div>
   <div id="event_form">
     <form action="" id="addEventForm" class="form-inline">
-      <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" maxlength="50" size="50" />
-      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventMedalIn" placeholder="Gold,Silver,Bronze" data-placement="top" data-original-title="Medals must be comma separated, best to worst" maxlength="60" size="60"/>
+      <label for="${fn:escapeXml(nameval)}">Event Name:</label><input type="text" name="${fn:escapeXml(nameval)}" maxlength="50" size="40" />
+      <label for="${fn:escapeXml(medalval)}">Medals:</label><input type="text" name="${fn:escapeXml(medalval)}" id="eventMedalIn" placeholder="Gold,Silver,Bronze" data-placement="top" data-original-title="Medals must be comma separated, best to worst" maxlength="60" size="50"/>
       <label class="checkbox">Active<input type="checkbox" name="${fn:escapeXml(activeval)}" value="true"></label>
-			<label class="checkbox">Archive<input type="checkbox" name="${fn:escapeXml(archiveval)}" value="true"></label> 
+			<label class="checkbox">Archive<input type="checkbox" name="${fn:escapeXml(archiveval)}" value="true"></label>
+      <label class="checkbox">Teams<input type="checkbox" name="${fn:escapeXml(team_sup_val)}" value="true"></label> 
       <label class="radio" id="teamRadio" data-placement="top" data-original-title="Combine player scores, medals won by team">
         <input type="radio" name="${fn:escapeXml(team_val)}" value="true"> Team
       </label>
@@ -57,13 +59,13 @@
     List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (events.isEmpty()) {
         %>
-        <div class="row"><div class="alert alert-error">There are no events</div></div>
+        <div class="alert alert-error">There are no events</div>
         <%
     } else {
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isActive</th><th>isArchived</th><th>Score Type</th></tr>
+        <tr><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isActive</th><th>isArchived</th><th>Teams?</th><th>Score Type</th></tr>
         </thead><tbody>
         <%
         for (Entity event : events) {
@@ -83,6 +85,11 @@
 						} else {
 							pageContext.setAttribute("archived", "");
 						}
+						if ((Boolean) event.getProperty(Event.TEAM_SUPPORT)) {			
+							pageContext.setAttribute("teamsupport", "Yes");
+						} else {
+							pageContext.setAttribute("teamsupport", "");
+						}
 						if ((Boolean) event.getProperty(Event.TEAMSCORE_NAME)) {			
 							pageContext.setAttribute("teamscore", "Team");
 						} else {
@@ -94,6 +101,7 @@
             <td>${fn:escapeXml(medals_name)}</td>
             <td>${fn:escapeXml(active)}</td>
             <td>${fn:escapeXml(archived)}</td>
+            <td>${fn:escapeXml(teamsupport)}</td>
             <td>${fn:escapeXml(teamscore)}</td>
 			</tr>
             <%

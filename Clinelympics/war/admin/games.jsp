@@ -56,7 +56,7 @@
     List<Entity> games = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     if (games.isEmpty()) {
         %>
-        <div class="row"><div class="alert alert-error">There are no games</div></div>
+        <div class="alert alert-error">There are no games</div>
         <%
     } else {
         %>
