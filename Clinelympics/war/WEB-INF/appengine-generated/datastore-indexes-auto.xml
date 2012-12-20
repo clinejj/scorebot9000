@@ -56,5 +56,11 @@
         <property name="active" direction="asc"/>
         <property name="eventID" direction="desc"/>
     </datastore-index>
+    
+    <datastore-index kind="player" ancestor="true" source="manual">
+        <property name="eventID" direction="asc"/>
+        <property name="teamName" direction="asc"/>
+        <property name="playerName" direction="asc"/>
+    </datastore-index>
 
 </datastore-indexes>

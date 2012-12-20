@@ -187,7 +187,7 @@ public class Medal implements Comparable<Medal>{
 			if (scores.get(medalNames.get(val)).score == o.getScore(medalNames.get(val)).score) {
 				return compareRecur(o, val + 1);
 			} else {
-				return Integer.compare(o.getScore(medalNames.get(val)).score, scores.get(medalNames.get(val)).score);
+				return Integer.valueOf(o.getScore(medalNames.get(val)).score).compareTo(Integer.valueOf(scores.get(medalNames.get(val)).score));
 			}
 		}
 	}
