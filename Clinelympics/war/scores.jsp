@@ -27,8 +27,8 @@
 		
 		Key eventKey = KeyFactory.createKey(Event.KEY_KIND, Event.KEY_NAME);
 		query = new Query(Event.ENTITY_KIND, eventKey).addSort(Event.EVENT_ID, Query.SortDirection.ASCENDING);
-		Filter activeEvents = new FilterPredicate(Event.ARCHIVED_NAME, FilterOperator.EQUAL, false);
-		query.setFilter(activeEvents);
+		Filter unArchivedEvents = new FilterPredicate(Event.ARCHIVED_NAME, FilterOperator.EQUAL, false);
+		query.setFilter(unArchivedEvents);
 		List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 		%>
 <!DOCTYPE html>

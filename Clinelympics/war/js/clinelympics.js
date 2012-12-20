@@ -38,6 +38,11 @@ $('#addNameForm').live('submit', (function(event) {
 	editItems(a, $('#nameType').val(), "add");
 }));
 
+function updateSettings() {
+	var a=$('#settings_form').serialize();
+	editItems(a, 'setting', 'add');
+}
+
 function deleteItem(itemval, type) {
 	itemval = itemval + "&type=" + type;
 	editItems(itemval, type, "delete");
@@ -52,37 +57,55 @@ function editItems(params, type, method) {
 		dataType: 'text',
 		beforeSend: function(xhr) {xhr.setRequestHeader('userEmail',$('#userEmail').val())},
 		success: function(res) {
-			//alert(res);
-			$.get('/admin/'+type+'s.jsp').success(function(data) {
-				$('#'+type).html(data);
-				var newHTML = '<div class=" alert ';
-				var resArgs = res.split("err: ");
-				var btnHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-				if (resArgs.length > 1) {
-					newHTML = newHTML + 'alert-error">' + btnHTML + resArgs[1] + '</div>';
-				} else {
-					if (type === "event") {
-						if (res.indexOf("&&") !== -1) {
-							var cIDs = res.split("&&");
-							if (parseInt(cIDs[1]) == -1) {
-								$('#current_event').html("N/A");
-							} else {
-								$('#current_event').html(cIDs[1]);
-							}
-							res = cIDs[0];
-							$.get('/admin/names.jsp').success(function(newdata) {
-								$('#name').html(newdata);
-							});
+			var newHTML = '<div class=" alert ';
+			var resArgs = res.split("err: ");
+			var btnHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+			if (resArgs.length > 1) {
+				newHTML = newHTML + 'alert-error">' + btnHTML + resArgs[1] + '</div>';
+			} else {
+				if (type === "event") {
+					if (res.indexOf("&&") !== -1) {
+						var cIDs = res.split("&&");
+						if (parseInt(cIDs[1]) == -1) {
+							$('#current_event').html("N/A");
+						} else {
+							$('#current_event').html(cIDs[1]);
 						}
-					}
-					if (res.indexOf("update") !== -1) {
-						newHTML = newHTML + 'alert-info">' + btnHTML + res + '</div>';
-					} else {
-						newHTML = newHTML + 'alert-success">' + btnHTML + res + '</div>';
+						res = cIDs[0];
+						$.get('/admin/names.jsp').success(function(newdata) {
+							$('#name').html(newdata);
+						});
 					}
 				}
+				if (res.indexOf("update") !== -1) {
+					newHTML = newHTML + 'alert-info">' + btnHTML + res + '</div>';
+				} else {
+					newHTML = newHTML + 'alert-success">' + btnHTML + res + '</div>';
+				}
+			}
+			if (type === "setting") {
+				var ps = getQueryParams(params);
+				if (ps.eventID) {
+					if (parseInt(ps.eventID) == -1) {
+							$('#current_event').html("N/A");
+						} else {
+							$('#current_event').html(ps.eventID);
+						}
+				}
+				if (ps.adminNumName) {
+					$('#admin_num').html(ps.adminNumName);
+				}
+				if (ps.siteName) {
+					document.location.reload(true);
+				}
+				$('#updateModal').modal('hide')
 				$('#'+type+'_response').html(newHTML);
-			});
+			} else {
+				$.get('/admin/'+type+'s.jsp').success(function(data) {
+						$('#'+type).html(data);
+						$('#'+type+'_response').html(newHTML);
+				});
+			}
 		}
 	});
 }
@@ -112,3 +135,17 @@ $('#textForm').live('submit', (function(event) {
 		}
 	});
 }));
+
+function getQueryParams(qs) {
+    qs = qs.split("+").join(" ");
+
+    var params = {}, tokens,
+        re = /[?&]?([^=]+)=([^&]*)/g;
+
+    while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])]
+            = decodeURIComponent(tokens[2]);
+    }
+
+    return params;
+};

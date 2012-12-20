@@ -47,8 +47,8 @@
   <div class="row"><p>Let's get started.</p></div>
   <div class="row">
       <%
-		pageContext.setAttribute("admin", Settings.adminName);
-		pageContext.setAttribute("adminnum", Settings.adminNumName);
+		pageContext.setAttribute("admin", Settings.ADMIN_NAME);
+		pageContext.setAttribute("adminnum", Settings.ADMIN_NUM);
 		pageContext.setAttribute("curevent", Settings.CUR_EVENT);
 		pageContext.setAttribute("sitename", Settings.SITE_NAME);
 		%>

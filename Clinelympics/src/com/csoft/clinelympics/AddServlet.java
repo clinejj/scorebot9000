@@ -1,6 +1,7 @@
 package com.csoft.clinelympics;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -261,16 +262,16 @@ public class AddServlet extends HttpServlet {
 						    if (Boolean.parseBoolean(req.getParameter(Event.ACTIVE_NAME))) {
 						    	settings.get(0).setProperty(Settings.CUR_EVENT, curID);
 							    datastore.put(settings.get(0));
+							    resetNames(curID);
 							    curEvent = curID;
 							    strResp = strResp + "&&" + Integer.toString(curEvent);
-							    resetNames();
 						    } else {
 						    	if (curID == curEvent) {
 						    		settings.get(0).setProperty(Settings.CUR_EVENT, -1);
 								    datastore.put(settings.get(0));
 								    curEvent = -1;
 								    strResp = strResp + "&&" + Integer.toString(curEvent);
-								    resetNames();
+								    resetNames(-1);
 						    	}
 						    }
 						}
@@ -282,7 +283,7 @@ public class AddServlet extends HttpServlet {
 					    if (events.size() > 0) {
 					    	if (events.size() > 1) System.out.println("Multiple events with name " + req.getParameter(Event.EVENT_NAME));
 			    			
-					    	if ((Boolean) events.get(0).getProperty(Event.ACTIVE_NAME)) resetNames();
+					    	if ((Boolean) events.get(0).getProperty(Event.ACTIVE_NAME)) resetNames(-1);
 					    	int eID = ((Long) events.get(0).getProperty(Event.EVENT_ID)).intValue();
 			    			datastore.delete(events.get(0).getKey());
 			    			strResp = "Event '" + req.getParameter(Event.EVENT_NAME) + "' deleted.";
@@ -296,6 +297,43 @@ public class AddServlet extends HttpServlet {
 					    	strResp = ERR_STR + " Event '" + req.getParameter(Event.EVENT_NAME) + "' was not found.";
 					    }
 					}
+				} else if (type.equals(Settings.ENTITY_KIND)) {
+					if (req.getParameter(Settings.ADMIN_NUM) != null) {
+						if (!((String) req.getParameter(Settings.ADMIN_NUM)).equals("")) {
+							settings.get(0).setProperty(Settings.ADMIN_NUM, req.getParameter(Settings.ADMIN_NUM));
+						}
+					}
+					if (req.getParameter(Settings.SITE_NAME) != null) {
+						if (!((String) req.getParameter(Settings.SITE_NAME)).equals("")) {
+							settings.get(0).setProperty(Settings.SITE_NAME, req.getParameter(Settings.SITE_NAME));
+						}
+					}
+					if (req.getParameter(Settings.CUR_EVENT) != null) {
+						try {
+							if (Integer.parseInt(req.getParameter(Settings.CUR_EVENT)) == -1) {
+								settings.get(0).setProperty(Settings.CUR_EVENT, -1);
+							} else {
+								query = new Query(Event.ENTITY_KIND, new Event().getEventKey());
+								Filter isEvent = new FilterPredicate(Event.EVENT_ID, FilterOperator.EQUAL, Integer.parseInt(req.getParameter(Settings.CUR_EVENT)));
+								query.setFilter(isEvent);
+							    List<Entity> events = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+							    if (events.isEmpty()) {
+							    	strResp = "err: Could not find event ID " + req.getParameter(Settings.CUR_EVENT);
+							    } else {
+							    	if (events.size() > 1) System.out.println("Multiple events with ID " + req.getParameter(Settings.CUR_EVENT));
+							    	events.get(0).setProperty(Event.ARCHIVED_NAME, false);
+							    	datastore.put(events.get(0));
+							    	settings.get(0).setProperty(Settings.CUR_EVENT, Integer.parseInt(req.getParameter(Settings.CUR_EVENT)));
+							    }
+							}
+						} catch (NumberFormatException e) {
+							strResp = "err: Please format event ID as a number.";
+						}
+					}
+					if (strResp.equals("")) {
+						datastore.put(settings.get(0));
+						strResp = "Settings updated.";
+					}
 				}
 			}
 		}
@@ -303,14 +341,31 @@ public class AddServlet extends HttpServlet {
 		resp.getOutputStream().println(strResp);
 	}
     
-    private void resetNames() {
+    private void resetNames(int eID) {
+    	ArrayList<String> playerNames = new ArrayList<String>();
     	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     	Query query = new Query(Name.ENTITY_KIND, new Name().getNameKey());
     	Filter isName = new FilterPredicate(Name.USED, FilterOperator.EQUAL, true);
-		query.setFilter(isName);
+    	query.setFilter(isName);
+	    if (eID > 0) {
+	    	Query pquery = new Query(Player.ENTITY_KIND, new Player().getPlayerKey());
+	    	Filter isEvent = new FilterPredicate(Player.EVENT_ID, FilterOperator.EQUAL, eID);
+	    	pquery.setFilter(isEvent);
+		    List<Entity> events = datastore.prepare(pquery).asList(FetchOptions.Builder.withDefaults());
+		    for (Entity e: events) {
+		    	playerNames.add((String) e.getProperty(Player.PLAYER_NAME));
+		    }
+		    Filter newNames = new FilterPredicate(Name.NAME, FilterOperator.IN, playerNames);
+		    query.setFilter(CompositeFilterOperator.or(isName,newNames));
+	    }
 	    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	    for (Entity n : names) {
 	    	n.setProperty(Name.USED, false);
+	    	if (eID > 0) {
+	    		if (playerNames.contains((String) n.getProperty(Name.NAME))) {
+	    			n.setProperty(Name.USED, true);
+	    		}
+	    	}
 	    }
 	    datastore.put(names);
     }
