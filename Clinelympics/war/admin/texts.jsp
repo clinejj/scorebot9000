@@ -49,7 +49,7 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>Date</th><th>From</th><th>Body</th><th>smsID</th><th>AccountSID</th></tr></thead>
+        <tr id="header"><th>Date</th><th>From</th><th>Body</th><th>smsID</th><th>AccountSID</th></tr></thead>
         <tbody>
         <%
         for (Entity text : texts) {
@@ -80,3 +80,4 @@
 		}
 	}
 	%>
+	<script type="application/javascript" src="js/table-magic.js"></script>

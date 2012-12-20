@@ -155,12 +155,12 @@
           <div class="row">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#dashboard" data-toggle="tab">Dashboard</a></li>
-              <li><a href="#event" data-toggle="tab">Events</a></li>
-              <li><a href="#game" data-toggle="tab">Games</a></li>
-              <li><a href="#player" data-toggle="tab">Players</a></li>
-              <li><a href="#score" data-toggle="tab">Scores</a></li>
-              <li><a href="#name" data-toggle="tab">Names</a></li>
-              <li><a href="#text" data-toggle="tab">Texts</a></li>
+              <li onClick="unBindTable();"><a href="#event" data-toggle="tab">Events</a></li>
+              <li onClick="unBindTable();"><a href="#game" data-toggle="tab">Games</a></li>
+              <li onClick="unBindTable();"><a href="#player" data-toggle="tab">Players</a></li>
+              <li onClick="unBindTable();"><a href="#score" data-toggle="tab">Scores</a></li>
+              <li onClick="unBindTable();"><a href="#name" data-toggle="tab">Names</a></li>
+              <li onClick="unBindTable();"><a href="#text" data-toggle="tab">Texts</a></li>
             </ul>
           </div>
           <div class="row">
@@ -175,11 +175,12 @@
             </div>
           </div>
           <c:import url="/components/footer.html" />
+          <script type="application/javascript" src="js/clinelympics.js"></script>
 				<%
         } else {
         %>
         	<div class="row">
-          <p class="text-error">You do not have permission to view this page.    </p><a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Logout</a>
+          <div class="alert alert-error">You do not have permission to view this page. <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">Logout</a></div>
           </div>
           <%
       	}
@@ -189,7 +190,7 @@
 				<h2>Admin Panel</h2>      
       </div>
       <div class="row">
-      <p>Please <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">sign in</a>.</p>
+      <div class="alert alert-info">Please <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">sign in</a>.</div>
       </div>
 			<%
 			}

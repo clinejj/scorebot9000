@@ -62,13 +62,10 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>EventID</th><th>GameID</th><th>GameName</th><th>scoreType</th></tr>
+        <tr id="header"><th>EventID</th><th>GameID</th><th>GameName</th><th>scoreType</th><th width="80px"></th></tr>
         </thead><tbody>
         <%
         for (Entity game : games) {
-			%>
-            <tr>
-            <%
 						pageContext.setAttribute("event_id", game.getProperty(Game.EVENT_ID));
             pageContext.setAttribute("game_id", game.getProperty(Game.GAME_ID));
 						pageContext.setAttribute("game_name", game.getProperty(Game.GAME_NAME));
@@ -77,11 +74,15 @@
 						} else {
 							pageContext.setAttribute("score_type", "low");
 						}
+						pageContext.setAttribute("name_enc", ((String) game.getProperty(Game.GAME_NAME)).replace(" ","_") + game.getProperty(Game.EVENT_ID));
+						pageContext.setAttribute("delete_vals", Game.GAME_NAME + "=" + game.getProperty(Game.GAME_NAME) + "&" + Game.EVENT_ID + "=" + game.getProperty(Game.EVENT_ID));
 						%>
+            <tr id="${fn:escapeXml(name_enc)}">
             <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(game_id)}</td>
             <td>${fn:escapeXml(game_name)}</td>
             <td>${fn:escapeXml(score_type)}</td>
+            <td width="80px"><div> <button id="del_${fn:escapeXml(name_enc)}" class="btn btn-danger" onClick="deleteItem('${fn:escapeXml(delete_vals)}', '${fn:escapeXml(type_val)}');" style="display:none;">Delete</button></div></td>
 			</tr>
             <%
         }
@@ -95,3 +96,4 @@
 		}
 	}
 	%>
+	<script type="application/javascript" src="js/table-magic.js"></script>

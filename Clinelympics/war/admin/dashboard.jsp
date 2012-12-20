@@ -59,3 +59,4 @@
 		}
 	}
 	%>
+	<script type="application/javascript" src="js/table-magic.js"></script>

@@ -1,4 +1,3 @@
-// JavaScript Document
 $('#addEventForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addEventForm').serialize();
@@ -11,36 +10,42 @@ $('#addEventForm').live('submit', (function(event) {
 	if (a.indexOf("teams=") == -1) {
 		a = a + "&teams=false";
 	}
-	addForm(a, $('#eventType').val());
+	editItems(a, $('#eventType').val(), "add");
 	
 }));
 
 $('#addPlayerForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addPlayerForm').serialize();
-	addForm(a, $('#playerType').val());
+	editItems(a, $('#playerType').val(), "add");
 }));
 
 $('#addGameForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addGameForm').serialize();
-	addForm(a, $('#gameType').val());
+	editItems(a, $('#gameType').val(), "add");
 }));
 
 $('#addScoreForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addScoreForm').serialize();
-	addForm(a, $('#scoreType').val());
+	editItems(a, $('#scoreType').val(), "add");
 }));
 
 $('#addNameForm').live('submit', (function(event) {
 	event.preventDefault();
 	var a=$('#addNameForm').serialize();
-	addForm(a, $('#nameType').val());
+	editItems(a, $('#nameType').val(), "add");
 }));
 
-function addForm(params, type) {
-		$.ajax({
+function deleteItem(itemval, type) {
+	itemval = itemval + "&type=" + type;
+	editItems(itemval, type, "delete");
+};
+
+function editItems(params, type, method) {
+	params = params + "&method=" + method;
+	$.ajax({
 		type: 'post',
 		url: '/add',
 		data: params,
@@ -107,18 +112,3 @@ $('#textForm').live('submit', (function(event) {
 		}
 	});
 }));
-
-$('#eventMedalIn').tooltip({
-	animation: true,
-	trigger: 'focus'
-});
-
-$('#teamRadio').tooltip({
-	animation: true,
-	trigger: 'hover'
-});
-
-$('#playerRadio').tooltip({
-	animation: true,
-	trigger: 'hover'
-});

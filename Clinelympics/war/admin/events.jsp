@@ -65,13 +65,10 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isActive</th><th>isArchived</th><th>Teams?</th><th>Score Type</th></tr>
+        <tr id="header"><th>EventID</th><th>EventName</th><th>MedalsName</th><th>isActive</th><th>isArchived</th><th>Teams?</th><th>Score Type</th><th width="80px"></th></tr>
         </thead><tbody>
         <%
         for (Entity event : events) {
-			%>
-            <tr>
-            <%
             pageContext.setAttribute("event_id", event.getProperty(Event.EVENT_ID));
 						pageContext.setAttribute("event_name", event.getProperty(Event.EVENT_NAME));
 						pageContext.setAttribute("medals_name", event.getProperty(Event.MEDALS_NAME));
@@ -95,7 +92,10 @@
 						} else {
 							pageContext.setAttribute("teamscore", "Player");
 						}
+						pageContext.setAttribute("name_enc", "id" + event.getProperty(Event.EVENT_ID));
+						pageContext.setAttribute("delete_vals", Event.EVENT_NAME + "=" + event.getProperty(Event.EVENT_NAME));
 			%>
+      			<tr id="${fn:escapeXml(name_enc)}">
             <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(event_name)}</td>
             <td>${fn:escapeXml(medals_name)}</td>
@@ -103,6 +103,7 @@
             <td>${fn:escapeXml(archived)}</td>
             <td>${fn:escapeXml(teamsupport)}</td>
             <td>${fn:escapeXml(teamscore)}</td>
+            <td width="80px"><div> <button id="del_${fn:escapeXml(name_enc)}" class="btn btn-danger" onClick="deleteItem('${fn:escapeXml(delete_vals)}', '${fn:escapeXml(type_val)}');" style="display:none;">Delete</button></div></td>
 			</tr>
             <%
         }
@@ -116,3 +117,4 @@
 		}
 	}
 	%>
+	<script type="application/javascript" src="js/table-magic.js"></script>

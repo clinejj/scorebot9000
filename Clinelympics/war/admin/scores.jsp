@@ -57,24 +57,25 @@
         %>
         <table class="table table-hover">
         <thead>
-        <tr><th>Date</td><th>EventID</th><th>GameID</th><th>PlayerID</th><th>PlayerScore</th></tr></thead>
+        <tr id="header"><th>Date</td><th>EventID</th><th>GameID</th><th>PlayerID</th><th>PlayerScore</th><th width="80px"></th></tr></thead>
         <tbody>
         <%
         for (Entity score : scores) {
-			%>
-            <tr>
-            <%
             pageContext.setAttribute("player_id", score.getProperty(Score.PLAYER_ID));
 						pageContext.setAttribute("game_id", score.getProperty(Score.GAME_ID));
 						pageContext.setAttribute("player_score", score.getProperty(Score.PLAYER_SCORE));
 						pageContext.setAttribute("event_id", score.getProperty(Score.EVENT_ID));
 						pageContext.setAttribute("date", score.getProperty(Score.DATE));
+						pageContext.setAttribute("name_enc", "id" + score.getProperty(Score.PLAYER_ID) + score.getProperty(Score.GAME_ID) + score.getProperty(Score.EVENT_ID));
+						pageContext.setAttribute("delete_vals", "" + Score.PLAYER_ID + "=" + score.getProperty(Score.PLAYER_ID) + "&" + Score.GAME_ID + "=" + score.getProperty(Score.GAME_ID) + "&" + Score.EVENT_ID + "=" + score.getProperty(Score.EVENT_ID));
 						%>
+            <tr id="${fn:escapeXml(name_enc)}">
             <td>${fn:escapeXml(date)}</td>
             <td>${fn:escapeXml(event_id)}</td>
             <td>${fn:escapeXml(game_id)}</td>
             <td>${fn:escapeXml(player_id)}</td>
             <td>${fn:escapeXml(player_score)}</td>
+            <td width="80px"><div> <button id="del_${fn:escapeXml(name_enc)}" class="btn btn-danger" onClick="deleteItem('${fn:escapeXml(delete_vals)}', '${fn:escapeXml(type_val)}');" style="display:none;">Delete</button></div></td>
 			</tr>
             <%
         }
@@ -88,3 +89,4 @@
 		}
 	}
 	%>
+	<script type="application/javascript" src="js/table-magic.js"></script>

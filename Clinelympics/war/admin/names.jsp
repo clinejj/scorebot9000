@@ -36,7 +36,7 @@
     <input type="submit" value="Add" class="btn btn-primary"/>
   </form>
   </div>
-  <div id="nametable">
+  <div id="namepage">
 <%
     Key nameKey = KeyFactory.createKey(Name.KEY_KIND, Name.KEY_NAME);
     query = new Query(Name.ENTITY_KIND, nameKey).addSort(Name.NAME, Query.SortDirection.ASCENDING);
@@ -47,28 +47,28 @@
         <%
     } else {
         %>
-        <table class="table table-hover">
+        <table class="table table-hover" id="nametable">
         <thead>
-        <tr><th>Name</th><th>rnd</th><th>isUsed</th></tr></thead>
+        <tr id="header"><th>Name</th><th>rnd</th><th>isUsed</th><th width="80px"></th></tr></thead>
         <tbody>
         <%
         for (Entity name : names) {
-			%>
-            <tr>
-            <%
-            pageContext.setAttribute("name", name.getProperty(Name.NAME));
-						pageContext.setAttribute("rnd", name.getProperty(Name.RND));
-						if ((Boolean) name.getProperty(Name.USED)) {			
-							pageContext.setAttribute("used", "Yes");
-						} else {
-							pageContext.setAttribute("used", "");
-						}
-						%>
+					pageContext.setAttribute("name", name.getProperty(Name.NAME));
+					pageContext.setAttribute("rnd", name.getProperty(Name.RND));
+					if ((Boolean) name.getProperty(Name.USED)) {			
+						pageContext.setAttribute("used", "Yes");
+					} else {
+						pageContext.setAttribute("used", "");
+					}
+					pageContext.setAttribute("name_enc", ((String) name.getProperty(Name.NAME)).replace(" ","_"));
+					%>
+          <tr id="${fn:escapeXml(name_enc)}">
             <td>${fn:escapeXml(name)}</td>
             <td>${fn:escapeXml(rnd)}</td>
             <td>${fn:escapeXml(used)}</td>
-			</tr>
-            <%
+            <td width="80px"><div> <button id="del_${fn:escapeXml(name_enc)}" class="btn btn-danger" onClick="deleteItem('${fn:escapeXml(nameval)}=${fn:escapeXml(name)}', '${fn:escapeXml(type_val)}');" style="display:none;">Delete</button></div></td>
+					</tr>
+          <%
         }
     }
 %>
@@ -80,3 +80,4 @@
 		}
 	}
 	%>
+<script type="application/javascript" src="js/table-magic.js"></script>
