@@ -153,46 +153,17 @@
     -->
   	<div class="container">
       <div class="row">
-        <div class="span4">
-          <h2>Details</h2>
+        <div class="span6">
+          <h2>See The Scores Live</h2>
           <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 12th, 2012 at FastKart racing in Ogden. Events will take place at FastKart racing and Boondocks.</p>
-          <p>Closing Ceremonies will begin at 7:00pm at Squatter’s Pub Brewery in Salt Lake City</p>
-          <p><a class="btn" href="http://goo.gl/maps/u1jri" target="_blank">View Map &raquo;</a></p>
+          <p>Check out the scores to see live updates.</p>
+          <p><a class="btn" href="summary.jsp?e=2">See Scores &raquo;</a></p>
           <br>
-          <h2>RSVP</h2>
-          <p>Please RSVP no later than Friday, January 11th to John Cline for both entry into the games and dinner.</p>
-          <p><a class="btn" href="http://www.facebook.com/events/393282987419472/" target="_blank">RSVP &raquo;</a></p>
+          <h2>Details</h2>
+          <p>See the details for the event.</p>
+          <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
         </div>
-        <div class="span4">
-          <h2>Events</h2>
-          <ul>
-            <li>FastKart racing (5 minute qualifier, 20 lap race)</li>
-            <li>Bowling</li>
-            <li>Skeeball</li>
-            <li>Deal or No Deal</li>
-            <li>Fire and Ice</li>
-            <li>“Throw the balls at the screen”</li>
-            <li>Laser Tag</li>
-          </ul>
-          <h2>Rules</h2>
-          <ul>
-            <li>All events are team based</li>
-              <ul>
-              <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
-              <li>Team uniforms are not required, but highly encouraged</li>
-              </ul>
-            <li>All events will be best of 2 games, with the exceptions below</li>
-              <ul>
-              <li>FastKart racing and laser tag may be best of 2, time permitting</li>
-              <li>“Deal or No Deal” and “throw the balls at the screen” will both be performed as team events</li>
-              </ul>
-            <li>Scoring will be an average of each team member’s score for the event</li>
-              <ul><li>Teams will be paired off to ensure accurate scorekeeping</li></ul>
-            <li>Overall scoring will be pure medal count</li>
-              <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
-          </ul>
-       </div>
-        <div class="span4">
+        <div class="span6">
           <h2>2012 Results</h2>
           <p>Check out the results from last year's match.</p>
           <p><a class="btn" href="/summary.jsp?e=1">View &raquo;</a></p>
