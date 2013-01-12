@@ -106,19 +106,24 @@
 		.navbar-inner {
 			margin: -20px;
 		}
+		
+		.navbar .brand {
+			margin-left: 20px;
+		}
 
 		.carousel {
 			margin-left: -20px;
 			margin-right: -20px;
+			margin-bottom: 0px;
 		}
 		.carousel .container {
 
 		}
 		.carousel .item {
-			height: 300px;
+			height: 400px;
 		}
 		.carousel img {
-			height: 300px;
+			height: 400px;
 		}
 		
 		.hero-unit img {
@@ -127,9 +132,11 @@
 		}
 		
 		.hero-unit {
-			width: 65%;
+			width: 85%;
 			padding: 0 70px;
 			margin-top: 100px;
+			margin-left: auto;
+			margin-right: auto;
 		}
 		.hero-unit h1 {
 			font-size: 30px;
