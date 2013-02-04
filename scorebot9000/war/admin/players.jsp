@@ -36,7 +36,7 @@
   	<div id="player_form">
     <form action="" id="addPlayerForm" class="form-inline">
       Event ID: <input type="text" name="${fn:escapeXml(eventval)}"  maxlength="3" size="3"/>
-      Player ID: <input type="text" name="${fn:escapeXml(idval)}" maxlength="10" size="10"/>
+      Player ID: <input type="text" name="${fn:escapeXml(idval)}" maxlength="15" size="15"/>
       Player Name: <input type="text" name="${fn:escapeXml(nameval)}" maxlength="80" size="40"/>
       Team Name: <input type="text" name="${fn:escapeXml(teamval)}" maxlength="80" size="40"/>
       <input type="hidden" value="${fn:escapeXml(user_email)}" id="userEmail"/>

@@ -173,7 +173,7 @@
                 <div class="control-group">
                   <label class="control-label" for="${fn:escapeXml(numval)}">Phone number?</label>
                   <div class="controls">
-                    <input type="text" id="${fn:escapeXml(numval)}" name="${fn:escapeXml(numval)}" placeholder="${fn:escapeXml(admin_num)}" maxlength="10" size="10">
+                    <input type="text" id="${fn:escapeXml(numval)}" name="${fn:escapeXml(numval)}" placeholder="${fn:escapeXml(admin_num)}" maxlength="15" size="15">
                   </div>
                 </div>
                 <div class="control-group">
