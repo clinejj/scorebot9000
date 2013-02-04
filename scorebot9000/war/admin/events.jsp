@@ -41,7 +41,7 @@
       <label class="checkbox">Active<input type="checkbox" name="${fn:escapeXml(activeval)}" value="true"></label>
 			<label class="checkbox">Archive<input type="checkbox" name="${fn:escapeXml(archiveval)}" value="true"></label>
       <label class="checkbox">Teams<input type="checkbox" name="${fn:escapeXml(team_sup_val)}" value="true"></label> 
-      <label class="radio" id="teamRadio" data-placement="top" data-original-title="Combine player scores, medals won by team">
+      <label class="radio" id="teamRadio" data-placement="top" data-original-title="Combine player scores, medals won by team. Teams must be same size.">
         <input type="radio" name="${fn:escapeXml(team_val)}" value="true"> Team
       </label>
       <label class="radio" id="playerRadio" data-placement="top" data-original-title="Medals won by player">
