@@ -126,9 +126,9 @@
                 <div class="hero-unit" style="margin-top: 40px;">
                   <div class="row">
                     <img src="/img/emblem.png" height="200px" width="200px" class="pull-left" style="margin-right: 15px;">
-                    <h1>2013<br>Clinelympic<br>Games</h1>
+                    <h1>2014<br>Clinelympic<br>Games</h1>
                     </div>
-                    <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="http://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 12th, 2013.</p>
+                    <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="http://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 11th, 2014.</p>
                   </div>
                   
                   </div>
@@ -146,27 +146,51 @@
     	<img src="/img/emblem.png" height="200px" width="200px" class="pull-left" style="margin-right: 15px;">
       <h1>2013<br>Clinelympic<br>Games</h1>
       </div>
-      <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="http://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 12th, 2013.</p>
+      <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="http://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 11th, 2014.</p>
     </div>
     
     </div>
     -->
   	<div class="container">
       <div class="row">
-        <div class="span6">
-          <h2>See The Scores Live</h2>
-          <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 12th, 2012 at FastKart racing in Ogden. Events will take place at FastKart racing and Boondocks.</p>
-          <p>Check out the scores to see live updates.</p>
-          <p><a class="btn" href="summary.jsp?e=2">See Scores &raquo;</a></p>
-          <br>
+        <div class="span4">
           <h2>Details</h2>
-          <p>See the details for the event.</p>
-          <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
+          <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2014 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
+          <p>Closing Ceremonies will begin at 7:00pm, location TBD</p>
+          <!-- <p><a class="btn" href="http://goo.gl/maps/u1jri" target="_blank">View Map &raquo;</a></p> -->
+          <br>
+          <h2>RSVP</h2>
+          <p>Please RSVP no later than Friday, January 10th to John Cline for both entry into the games and dinner.</p>
+          <!-- <p><a class="btn" href="http://www.facebook.com/events/393282987419472/" target="_blank">RSVP &raquo;</a></p> -->
         </div>
-        <div class="span6">
-          <h2>2012 Results</h2>
-          <p>Check out the results from last year's match.</p>
-          <p><a class="btn" href="/summary.jsp?e=1">View &raquo;</a></p>
+        <div class="span4">
+          <h2>Events</h2>
+          <ul>
+            <li>Bowling</li>
+            <li>Skeeball</li>
+            <li>Various arcade games</li>
+          </ul>
+          <h2>Rules</h2>
+          <ul>
+            <li>All events are team based</li>
+              <ul>
+              <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
+              <li>Team uniforms are not required, but highly encouraged</li>
+              </ul>
+            <li>All events will be best of 2 games</li>
+            <li>Scoring will be an average of each team member’s score for the event</li>
+              <ul><li>Teams will be paired off to ensure accurate scorekeeping</li></ul>
+            <li>Overall scoring will be pure medal count</li>
+              <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
+          </ul>
+        </div>
+        <div class="span4">
+          <h2>Previous Results</h2>
+          <p>Check out the results from previous year's matches.</p>
+          <ul>
+          <li><a href="/summary.jsp?e=1">2012 Clinelympics</a></li>
+          <li><a href="/summary.jsp?e=2">2013 Clinelympics</a></li>
+          </ul>
         </div>
     </div>
   <c:import url="/components/footer.html" />

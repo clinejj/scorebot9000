@@ -103,23 +103,19 @@
     <div class="container">
     <div class="row">
         <h2>Details</h2>
-        <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 12th, 2012 at FastKart racing in Ogden. Events will take place at FastKart racing and Boondocks.</p>
-        <p>Closing Ceremonies will begin at 7:00pm at Squatter’s Pub Brewery in Salt Lake City.</p>
-        <p><a class="btn" href="#map">View Map &raquo;</a></p>
+		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2014 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
+		  <p>Closing Ceremonies will begin at 7:00pm, location TBD</p>
+		  <!-- <p><a class="btn" href="http://goo.gl/maps/u1jri" target="_blank">View Map &raquo;</a></p> -->
         <br>
         <h2>RSVP</h2>
-        <p>Please RSVP no later than Friday, January 11th to John Cline for both entry into the games and dinner. See below for game rules:</p>
-        <p><a class="btn" href="http://www.facebook.com/events/393282987419472/" target="_blank">RSVP &raquo;</a></p>
+        <p>Please RSVP no later than Friday, January 10th to John Cline for both entry into the games and dinner.</p>
+        <!-- <p><a class="btn" href="http://www.facebook.com/events/393282987419472/" target="_blank">RSVP &raquo;</a></p> -->
 				<br>
         <h2>Events</h2>
         <ul>
-          <li>FastKart racing (5 minute qualifier, 20 lap race)</li>
           <li>Bowling</li>
           <li>Skeeball</li>
-          <li>Deal or No Deal</li>
-          <li>Fire and Ice</li>
-          <li>“Throw the balls at the screen”</li>
-          <li>Laser Tag</li>
+          <li>Various arcade games</li>
         </ul>
         <h2>Rules</h2>
         <ul>
@@ -128,21 +124,19 @@
             <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
             <li>Team uniforms are not required, but highly encouraged</li>
             </ul>
-          <li>All events will be best of 2 games, with the exceptions below</li>
-            <ul>
-            <li>FastKart racing and laser tag may be best of 2, time permitting</li>
-            <li>“Deal or No Deal” and “throw the balls at the screen” will both be performed as team events</li>
-            </ul>
+          <li>All events will be best of 2 games</li>
           <li>Scoring will be an average of each team member’s score for the event</li>
             <ul><li>Teams will be paired off to ensure accurate scorekeeping</li></ul>
           <li>Overall scoring will be pure medal count</li>
             <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
         </ul>
     </div>
+    <!--
     <div class="row" id="map">
     	<h2>Map</h2>
     	<iframe width="640" height="480" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps/ms?t=m&amp;msa=0&amp;msid=207342954961356329594.0004d0ea16103523381d1&amp;ie=UTF8&amp;ll=41.032751,-111.838074&amp;spn=0.497242,0.878906&amp;z=10&amp;output=embed" style="margin-right:auto; margin-left:auto;"></iframe><br /><small>View <a href="https://maps.google.com/maps/ms?t=m&amp;msa=0&amp;msid=207342954961356329594.0004d0ea16103523381d1&amp;ie=UTF8&amp;ll=41.032751,-111.838074&amp;spn=0.497242,0.878906&amp;z=10&amp;source=embed" style="color:#0000FF;text-align:left">2013 Clinelympic Games</a> in a larger map</small>
     </div>
+    -->
   <c:import url="/components/footer.html" />
   </div>
   </body>
