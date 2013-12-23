@@ -170,7 +170,6 @@
 					List<Entity> scores = datastore.prepare(scoreQuery).asList(FetchOptions.Builder.withDefaults());	
 					
 					if (players.isEmpty() || scores.isEmpty()) {    
-						System.out.println(scores.isEmpty());
 						%>
 						<div class="alert alert-error">Error accessing player scores.</div>
 						<%

@@ -174,7 +174,6 @@
 					List<Entity> scores = datastore.prepare(scoreQuery).asList(FetchOptions.Builder.withDefaults());	
 					
 					if (players.isEmpty() || scores.isEmpty()) {    
-						System.out.println(scores.isEmpty());
 						%>
 						<div class="alert alert-error">Error accessing player scores.</div>
 						<%
@@ -335,22 +334,17 @@
 							<tbody>
 							<%
 							for (Medal m : teamDisplay) {
-							//for (Object tn : teamCount.keySet()) {
-								//System.out.println(tn);
 								pageContext.setAttribute("team_name", m.getDisplayName());
-								//pageContext.setAttribute("team_name", tn);
 								%>
 								<tr><td>${fn:escapeXml(team_name)}</td>
 								<%
 								for (String n : medalNames) {
 									pageContext.setAttribute("medal_count", m.getScore(n).score);
-									//pageContext.setAttribute("medal_count", teamCount.get(tn).get(n));
 									%>
 									<td>${fn:escapeXml(medal_count)}</td>
 									<%
 								}
 								pageContext.setAttribute("total_count", m.getScore("total").score);
-								//pageContext.setAttribute("total_count", teamCount.get(tn).get("total"));
 								%>
 								<td>${fn:escapeXml(total_count)}</td></tr>
 								<%
@@ -386,11 +380,8 @@
 							<tbody>
 							<%
 							for (Medal m : playerDisplay) {
-							//for (Object tn : teamCount.keySet()) {
-								//System.out.println(tn);
 								pageContext.setAttribute("player_name", m.getDisplayName());
 								pageContext.setAttribute("team_name", playerTeams.get(m.getDisplayName()));
-								//pageContext.setAttribute("team_name", tn);
 								%>
 								<tr><td>${fn:escapeXml(player_name)}</td>
                 <%
@@ -401,13 +392,11 @@
 								}
 								for (String n : medalNames) {
 									pageContext.setAttribute("medal_count", m.getScore(n).score);
-									//pageContext.setAttribute("medal_count", teamCount.get(tn).get(n));
 									%>
 									<td>${fn:escapeXml(medal_count)}</td>
 									<%
 								}
 								pageContext.setAttribute("total_count", m.getScore("total").score);
-								//pageContext.setAttribute("total_count", teamCount.get(tn).get("total"));
 								%>
 								<td>${fn:escapeXml(total_count)}</td></tr>
 								<%
