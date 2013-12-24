@@ -109,7 +109,7 @@
         <br>
         <h2>RSVP</h2>
         <p>Please RSVP no later than Friday, January 10th to John Cline for both entry into the games and dinner.</p>
-        <!-- <p><a class="btn" href="http://www.facebook.com/events/393282987419472/" target="_blank">RSVP &raquo;</a></p> -->
+        <p><a class="btn" href="https://www.facebook.com/events/260788640745104/" target="_blank">RSVP &raquo;</a></p>
 				<br>
         <h2>Events</h2>
         <ul>
@@ -128,7 +128,7 @@
             <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
             <li>Team uniforms are not required, but highly encouraged</li>
             </ul>
-          <li>All events will be best of 2 games</li>
+          <li>All events will be best of 2 games, with the exceptions below</li>
             <li>Scoring will be an average of each team member's score for the event*</li>
               <ul>
               	<li>Teams will be paired off to ensure accurate scorekeeping</li>
