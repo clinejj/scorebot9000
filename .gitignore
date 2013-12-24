@@ -1,5 +1,6 @@
 *.bin
 local_db.in
+datastore-indexes-auto.xml
 
 #################
 ## Eclipse
