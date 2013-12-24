@@ -105,7 +105,7 @@
         <h2>Details</h2>
 		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2014 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
 		  <p>Closing Ceremonies will begin at 7:00pm, location TBD</p>
-		  <!-- <p><a class="btn" href="http://goo.gl/maps/u1jri" target="_blank">View Map &raquo;</a></p> -->
+		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
         <br>
         <h2>RSVP</h2>
         <p>Please RSVP no later than Friday, January 10th to John Cline for both entry into the games and dinner.</p>
@@ -131,12 +131,12 @@
             <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
         </ul>
     </div>
-    <!--
+
     <div class="row" id="map">
     	<h2>Map</h2>
-    	<iframe width="640" height="480" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps/ms?t=m&amp;msa=0&amp;msid=207342954961356329594.0004d0ea16103523381d1&amp;ie=UTF8&amp;ll=41.032751,-111.838074&amp;spn=0.497242,0.878906&amp;z=10&amp;output=embed" style="margin-right:auto; margin-left:auto;"></iframe><br /><small>View <a href="https://maps.google.com/maps/ms?t=m&amp;msa=0&amp;msid=207342954961356329594.0004d0ea16103523381d1&amp;ie=UTF8&amp;ll=41.032751,-111.838074&amp;spn=0.497242,0.878906&amp;z=10&amp;source=embed" style="color:#0000FF;text-align:left">2013 Clinelympic Games</a> in a larger map</small>
+    	<iframe src="https://mapsengine.google.com/map/embed?mid=zafwTX89QNtI.kcj-egdPfzfM" width="640" height="480"></iframe>
     </div>
-    -->
+
   <c:import url="/components/footer.html" />
   </div>
   </body>

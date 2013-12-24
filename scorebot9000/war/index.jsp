@@ -145,7 +145,7 @@
           <h2>Details</h2>
           <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2014 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
           <p>Closing Ceremonies will begin at 7:00pm, location TBD</p>
-          <!-- <p><a class="btn" href="http://goo.gl/maps/u1jri" target="_blank">View Map &raquo;</a></p> -->
+          <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
           <br>
           <h2>RSVP</h2>
           <p>Please RSVP no later than Friday, January 10th to John Cline for both entry into the games and dinner.</p>
