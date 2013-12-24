@@ -113,9 +113,13 @@
 				<br>
         <h2>Events</h2>
         <ul>
-          <li>Bowling</li>
-          <li>Skeeball</li>
-          <li>Various arcade games</li>
+            <li>Bowling</li>
+            <li>Arkanoid</li>
+            <li>Gauntlet</li>
+            <li>Ms. Pacman</li>
+            <li>Rampage</li>
+            <li>Teenage Mutant Ninja Turtles</li>
+            <li>Tetris</li>
         </ul>
         <h2>Rules</h2>
         <ul>
@@ -125,8 +129,11 @@
             <li>Team uniforms are not required, but highly encouraged</li>
             </ul>
           <li>All events will be best of 2 games</li>
-          <li>Scoring will be an average of each team member’s score for the event</li>
-            <ul><li>Teams will be paired off to ensure accurate scorekeeping</li></ul>
+            <li>Scoring will be an average of each team member's score for the event*</li>
+              <ul>
+              	<li>Teams will be paired off to ensure accurate scorekeeping</li>
+              	<li>*Gauntlet, Rampage, and TMNT will both be performed as team events (players play at same time, score is total for all players)</li>
+              </ul>
           <li>Overall scoring will be pure medal count</li>
             <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
         </ul>
