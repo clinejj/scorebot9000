@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.TreeMap" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
 <%@ page import="com.google.appengine.api.datastore.Query" %>
@@ -176,7 +177,7 @@
 					} else if (!players.isEmpty() && !scores.isEmpty()) {		
 						// Setup variables
 						String[] medalNames = e.getEventMedals().split(",");
-						HashMap<String, HashMap> teams = new HashMap<String, HashMap>();
+						TreeMap<String, HashMap> teams = new TreeMap<String, HashMap>();
 						HashMap displayPlayers = new HashMap();
 						
 						// Get list of players for display

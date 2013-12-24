@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.TreeMap" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
@@ -185,7 +186,7 @@
 					} else if (!players.isEmpty() && !scores.isEmpty()) {		
 						// Setup variables
 						String[] medalNames = e.getEventMedals().split(",");
-						HashMap<String, HashMap> teams = new HashMap<String, HashMap>();
+						TreeMap<String, HashMap> teams = new TreeMap<String, HashMap>();
 						HashMap<Object, Medal> playerMedals = new HashMap<Object, Medal>();
 						HashMap<Object, Medal> teamMedals = new HashMap<Object, Medal>();
 						HashMap<Object, HashMap> teamCount = new HashMap<Object, HashMap>();
