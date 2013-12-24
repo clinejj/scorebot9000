@@ -178,7 +178,7 @@
               <li>Team uniforms are not required, but highly encouraged</li>
               </ul>
             <li>All events will be best of 2 games</li>
-            <li>Scoring will be an average of each team member’s score for the event</li>
+            <li>Scoring will be an average of each team member's score for the event</li>
               <ul><li>Teams will be paired off to ensure accurate scorekeeping</li></ul>
             <li>Overall scoring will be pure medal count</li>
               <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
