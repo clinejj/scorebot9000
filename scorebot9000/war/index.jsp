@@ -173,7 +173,7 @@
             <li>Scoring will be an average of each team member's score for the event*</li>
               <ul>
               	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              	<li>*Gauntlet, Rampage, and TMNT will both be performed as team events (players play at same time, score is total for all players)</li>
+              	<li>*Gauntlet, Rampage, and TMNT will be performed as team events (players play at same time, score is total for all players)</li>
               </ul>
             <li>Overall scoring will be pure medal count</li>
               <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
