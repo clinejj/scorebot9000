@@ -144,7 +144,7 @@
         <div class="span4">
           <h2>Details</h2>
           <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2014 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
-          <p>Closing Ceremonies will begin at 8:00pm, at The Saint Austere in Brooklyn. After-party location TBD.</p>
+          <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Brooklyn. After-party location TBD (but probably Union Pool).</p>
           <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
           <br>
           <h2>RSVP</h2>
