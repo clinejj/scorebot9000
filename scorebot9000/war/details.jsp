@@ -109,7 +109,7 @@
         <br>
         <h2>RSVP</h2>
         <p>Please RSVP no later than Friday, January 10th to John Cline for both entry into the games and dinner.</p>
-        <p><a class="btn" href="https://www.facebook.com/events/260788640745104/" target="_blank">RSVP &raquo;</a></p>
+        <p><a class="btn" href="https://www.facebook.com/events/904304946254504/" target="_blank">RSVP &raquo;</a></p>
 				<br>
         <h2>Events</h2>
         <ul>
