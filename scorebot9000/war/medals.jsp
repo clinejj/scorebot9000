@@ -175,7 +175,7 @@
 					
 					if (players.isEmpty() || scores.isEmpty()) {    
 						%>
-						<div class="alert alert-error">Error accessing player scores.</div>
+						<div class="alert alert-info">There are no scores for this game yet.</div>
 						<%
 					} else if (!players.isEmpty() && !scores.isEmpty()) {		
 						// Setup variables
