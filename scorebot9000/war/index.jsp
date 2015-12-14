@@ -179,7 +179,7 @@
               <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
           </ul>
         </div>
-        <div class="span6">
+        <div class="span4">
           <h2>Previous Results</h2>
           <p>Check out the results from previous year's matches.</p>
           <ul>
