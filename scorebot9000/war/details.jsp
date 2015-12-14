@@ -103,12 +103,12 @@
     <div class="container">
     <div class="row">
         <h2>Details</h2>
-		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 10th, 2015 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
+		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 9th, 2016 at Gutter Bowling in Brooklyn. Events will take place at Gutter Bowling and Barcade in Brooklyn.</p>
 		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Brooklyn. After-party location TBD (but probably Union Pool).</p>
 		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
         <br>
         <h2>RSVP</h2>
-        <p>Please RSVP no later than Friday, January 9th to John Cline for both entry into the games and dinner.</p>
+        <p>Please RSVP no later than Friday, January 8th to John Cline for both entry into the games and dinner.</p>
         <p><a class="btn" href="https://www.facebook.com/events/904304946254504/" target="_blank">RSVP &raquo;</a></p>
 				<br>
         <h2>Events</h2>
