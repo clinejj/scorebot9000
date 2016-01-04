@@ -257,19 +257,23 @@
 						if (e.isTeamScore()) {
 							// Count team medals
 							for (Medal tm : teamMedals.values()) {
-								for (String n : medalNames) {
+								for (int i = 0; i < medalNames.length; i++) {
+									String n = medalNames[i];
+									int medalValue = medalNames.length - i;
 									MedalScore ms = tm.getScore(n);
 									if (!ms.displayName.equals("")) {
 										if (ms.displayName.contains(",")) {
 											String[] names = ms.displayName.split(", ");
 											for (String ns : names) {
 												teamCount.get(ns).put(n, ((Integer) teamCount.get(ns).get(n)) + 1);
-												teamCount.get(ns).put("total", ((Integer) teamCount.get(ns).get("total")) + 1);
+												// Total score is based on value of medals
+												teamCount.get(ns).put("total", ((Integer) teamCount.get(ns).get("total")) + medalValue);
 											}
 											
 										} else {
 											teamCount.get(ms.displayName).put(n, ((Integer) teamCount.get(ms.displayName).get(n)) + 1);
-											teamCount.get(ms.displayName).put("total", ((Integer) teamCount.get(ms.displayName).get("total")) + 1);
+											// Total score is based on value of medals
+											teamCount.get(ms.displayName).put("total", ((Integer) teamCount.get(ms.displayName).get("total")) + medalValue);
 										}
 									}
 								}
