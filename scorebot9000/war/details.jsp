@@ -112,14 +112,25 @@
         <p><a class="btn" href="https://www.facebook.com/events/904304946254504/" target="_blank">RSVP &raquo;</a></p>
 				<br>
         <h2>Events</h2>
-        <ul>
+        <ol>
             <li>Bowling</li>
             <li>Arkanoid</li>
-            <li>Gauntlet</li>
+            <li>Gauntlet*</li>
             <li>Ms. Pacman</li>
-            <li>Rampage</li>
-            <li>Teenage Mutant Ninja Turtles</li>
+            <li>Rampage*</li>
+            <li>Teenage Mutant Ninja Turtles*</li>
             <li>Tetris</li>
+        </ol>
+        <p>* team event</p>
+        <h2>How To</h2>
+        <p>Text the following commands to 909-SCORE-11 (909-726-7311)</p>
+        <ul>
+            <li>REGISTER &lt;team name&gt;</li>
+            <li>SCORE &lt;game id (number from above)&gt; &lt;score&gt;</li>
+            <li>WHO</li>
+            <li>CHANGE TEAM &lt;new team name&gt;</li>
+            <li>CHANGE NAME &lt;new name&gt;</li>
+            <li>HELP</li>
         </ul>
         <h2>Rules</h2>
         <ul>
