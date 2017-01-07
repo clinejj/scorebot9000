@@ -144,7 +144,7 @@
         <div class="span6">
 		  <h2>See The Scores Lives</h2>
           <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 7th, 2017 at Brooklyn Bowl in Williamsburg. Events will take place at Brooklyn Bowl and Barcade in Williamsburg.</p>
-          <p>Closing Ceremonies will begin at 6:30pm, at The Saint Austere in Williamsburg. After-party location TBD (but probably Union Pool).</p>
+          <p>Closing Ceremonies will begin at 6:00pm, at The Saint Austere in Williamsburg. After-party location TBD (but probably Union Pool).</p>
           <p>Check out the scores to see live updates.</p>
           <p><a class="btn" href="summary.jsp?e=6">See Scores &raquo;</a></p>
           <br>
