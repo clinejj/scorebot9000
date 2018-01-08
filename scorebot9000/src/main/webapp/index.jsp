@@ -128,7 +128,7 @@
                     <img src="/img/emblem.png" height="200px" width="200px" class="pull-left" style="margin-right: 15px;">
                     <h1>2018<br>Clinelympic<br>Games</h1>
                     </div>
-                    <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="http://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 13th, 2018.</p>
+                    <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="http://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 14th, 2018.</p>
                   </div>
                   
                   </div>
