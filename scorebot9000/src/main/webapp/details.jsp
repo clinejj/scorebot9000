@@ -103,12 +103,12 @@
     <div class="container">
     <div class="row">
         <h2>Details</h2>
-		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 13th, 2018 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-		  <p>Closing Ceremonies will begin at 6:00pm, at The Saint Austere in Williamsburg. After-party location will be Good Move in Greenpoint.</p>
+		  <p>Opening Ceremonies will begin at 1:00pm on Sunday, January 14th, 2018 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
+		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be TBD.</p>
 		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
         <br>
         <h2>RSVP</h2>
-        <p>Please RSVP no later than Friday, January 6th to John Cline for both entry into the games and dinner.</p>
+        <p>Please RSVP no later than Friday, January 12th to John Cline for both entry into the games and dinner.</p>
         <p><a class="btn" href="https://www.facebook.com/events/369907473476776/" target="_blank">RSVP &raquo;</a></p>
 				<br>
         <h2>Events</h2>
