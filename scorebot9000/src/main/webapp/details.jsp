@@ -132,6 +132,11 @@
             <li>CHANGE NAME &lt;new name&gt;</li>
             <li>HELP</li>
         </ul>
+        <p>Examples:</p>
+        <ul>
+        	    <li>REGISTER WHEATIES</li>
+        	    <li>SCORE 1 228</li>
+        	</ul>
         <h2>Rules</h2>
         <ul>
           <li>All events are team based</li>
