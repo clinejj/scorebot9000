@@ -104,7 +104,7 @@
     <div class="row">
         <h2>Details</h2>
 		  <p>Opening Ceremonies will begin at 1:00pm on Sunday, January 14th, 2018 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be TBD.</p>
+		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be TBD (probably Union Pool).</p>
 		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
         <br>
         <h2>RSVP</h2>
@@ -123,7 +123,7 @@
         </ol>
         <p>* team event</p>
         <h2>How To</h2>
-        <p>Text the following commands to 909-SCORE-11 (909-726-7311)</p>
+        <p>Text the following commands to 909-SCORE-11 (<a href="sms:+19097267311">909-726-7311</a>)</p>
         <ul>
             <li>REGISTER &lt;team name&gt;</li>
             <li>SCORE &lt;game id (number from above)&gt; &lt;score&gt;</li>
