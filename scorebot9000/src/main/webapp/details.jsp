@@ -103,19 +103,19 @@
     <div class="container">
     <div class="row">
         <h2>Details</h2>
-		  <p>Opening Ceremonies will begin at 1:00pm on Sunday, January 14th, 2018 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be TBD (probably Union Pool).</p>
+		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 12th, 2019 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
+		  <p>Closing Ceremonies will begin at 7:30pm, at The Saint Austere in Williamsburg. After-party location will be TBD (probably Union Pool).</p>
 		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
         <br>
         <h2>RSVP</h2>
-        <p>Please RSVP no later than Friday, January 12th to John Cline for both entry into the games and dinner.</p>
-        <p><a class="btn" href="https://www.facebook.com/events/369907473476776/" target="_blank">RSVP &raquo;</a></p>
+        <p>Please RSVP no later than Thursday, January 10th to John Cline for both entry into the games and dinner.</p>
+        <p><a class="btn" href="https://www.facebook.com/events/520560221686367/" target="_blank">RSVP &raquo;</a></p>
 				<br>
         <h2>Events</h2>
         <ol>
             <li>Bowling</li>
             <li>Arkanoid</li>
-            <li>Metal Slug X*</li>
+            <li>Galaga</li>
             <li>Ms. Pacman</li>
             <li>Rampage*</li>
             <li>Teenage Mutant Ninja Turtles*</li>
@@ -148,7 +148,7 @@
             <li>Scoring will be an average of each team member's score for the event*</li>
               <ul>
               	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              	<li>*Metal Slug X, Rampage, and TMNT will be performed as team events (players play at same time, score is total for all players)</li>
+              	<li>*Rampage and TMNT will be performed as team events (players play at same time, score is total for all players)</li>
               </ul>
           <li>Overall scoring will be pure medal count</li>
             <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
