@@ -143,7 +143,6 @@
       <div class="row">
         <div class="span6">
           <h2>See the Scores Live</h2>
-		  <h2>Details</h2>
           <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 12th, 2019 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
           <p>Closing Ceremonies will begin at 7:30pm, at The Saint Austere in Williamsburg. After-party location TBD (probably Union Pool).</p>
           <p>Check out the scores to see live updates.</p>
