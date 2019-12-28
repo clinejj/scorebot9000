@@ -4,4 +4,9 @@
     <property name="isUsed" direction="asc"/>
     <property name="rnd" direction="desc"/>
   </datastore-index>
+  
+  <datastore-index kind="event" ancestor="true" source="auto">
+    <property name="archived" direction="asc"/>
+    <property name="eventID" direction="asc"/>
+  </datastore-index>
 </datastore-indexes>
