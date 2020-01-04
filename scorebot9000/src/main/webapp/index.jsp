@@ -153,11 +153,11 @@
           <h2>Events</h2>
           <ul>
             <li>Bowling</li>
-            <li>Arkanoid</li>
+            <li>Trivia</li>
+            <li>Drawing</li>
             <li>Galaga</li>
             <li>Ms. Pacman</li>
             <li>Rampage</li>
-            <li>Teenage Mutant Ninja Turtles</li>
             <li>Tetris</li>
           </ul>
           <h2>Rules</h2>
@@ -171,7 +171,7 @@
             <li>Scoring will be an average of each team member's score for the event</li>
               <ul>
               	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              	<li>*Rampage and TMNT will be performed as team events (players play at same time, score is total for all players)</li>
+              	<li>*Trivia, Drawing, and Rampage will be performed as team events (players play at same time, score is total for all players)</li>
               </ul>
             <li>Overall scoring will be weighted medal count</li>
               <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
