@@ -114,7 +114,7 @@
         <ol>
             <li>Bowling</li>
             <li>Trivia</li>
-            <li>Drawing</li>
+            <li>Drawing - <a href="http://bit.ly/cline2020art" target="_blank">vote here</a></li>
             <li>Galaga</li>
             <li>Ms. Pacman</li>
             <li>Rampage</li>
