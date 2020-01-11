@@ -104,7 +104,7 @@
     <div class="row">
         <h2>Details</h2>
 		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2020 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be TBD.</p>
+		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be either Burnside or Starlight.</p>
 		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
         <br>
         <h2>RSVP</h2>

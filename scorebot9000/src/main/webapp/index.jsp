@@ -140,44 +140,18 @@
     
   	<div class="container">
       <div class="row">
-        <div class="span4">
+      	<div class="span6">
+      	  <h2>See the Scores Live</h2>
+      	  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2020 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
+          <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be either Burnside or Starlight.</p>
+      	  <p>Check out the scores to see live updates.</p>
+          <p><a class="btn" href="summary.jsp?e=9">See Scores &raquo;</a></p>
+      	  <br>
           <h2>Details</h2>
-          <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2020 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-          <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location TBD.</p>
-          <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
-          <br>
-          <h2>RSVP</h2>
-          <p>Please RSVP no later than Thursday, January 9th to John Cline for both entry into the games and dinner.</p>
+          <p>See the details for the event.</p>
+          <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
         </div>
-        <div class="span4">
-          <h2>Events</h2>
-          <ul>
-            <li>Bowling</li>
-            <li>Trivia</li>
-            <li>Drawing</li>
-            <li>Galaga</li>
-            <li>Ms. Pacman</li>
-            <li>Rampage</li>
-            <li>Tetris</li>
-          </ul>
-          <h2>Rules</h2>
-          <ul>
-            <li>All events are team based</li>
-              <ul>
-              <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
-              <li>Team uniforms are not required, but highly encouraged</li>
-              </ul>
-            <li>All events will be best of 2 games, with the exceptions below</li>
-            <li>Scoring will be an average of each team member's score for the event</li>
-              <ul>
-              	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              	<li>*Trivia, Drawing, and Rampage will be performed as team events (players play at same time, score is total for all players)</li>
-              </ul>
-            <li>Overall scoring will be weighted medal count</li>
-              <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
-          </ul>
-        </div>
-        <div class="span4">
+        <div class="span6">
           <h2>Previous Results</h2>
           <p>Check out the results from previous year's matches.</p>
           <ul>
