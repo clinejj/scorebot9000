@@ -355,8 +355,10 @@ public class AddServlet extends HttpServlet {
 		    for (Entity e: events) {
 		    	playerNames.add((String) e.getProperty(Player.PLAYER_NAME));
 		    }
-		    Filter newNames = new FilterPredicate(Name.NAME, FilterOperator.IN, playerNames);
-		    query.setFilter(CompositeFilterOperator.or(isName,newNames));
+		    if (!playerNames.isEmpty()) {
+			    Filter newNames = new FilterPredicate(Name.NAME, FilterOperator.IN, playerNames);
+			    query.setFilter(CompositeFilterOperator.or(isName,newNames));
+		    }
 	    }
 	    List<Entity> names = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	    for (Entity n : names) {
