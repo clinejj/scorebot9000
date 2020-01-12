@@ -1,6 +1,12 @@
+# NOTE
+This project was written in 2012 and hasn't been meaningfully updated since. It has a bunch of bugs, and may be pretty difficult to actually get setup now (I'm not totally sure if Google even lets you make new AppEngine apps).
+
+USE AT YOUR OWN RISK.
+
+## Instructions
 Scorebot 9000 is a roll-your-own score tracking system that runs on Google AppEngine. It allows a player to register and submit scores to the system via text message and Twilio. Administrators can login to the system, setup events, create games used for scoring, and manage players and scores.
 
-Created by John Cline (@clinejj on twitter).
+Created by John Cline ([@clinejj](https://twitter.com/clinejj)).
 
 To setup:
 1) Create a site on Google AppEngine.
