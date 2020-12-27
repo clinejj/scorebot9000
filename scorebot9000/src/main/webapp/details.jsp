@@ -104,7 +104,7 @@
     <div class="row">
         <h2>Details</h2>
 		  <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
-          <p>Closing Ceremonies will begin at 5:00pm also on the internet.</p>
+          <p>Closing Ceremonies will begin at 5:00pm also on the internet, with a social hour to follow.</p>
         <br>
         <h2>RSVP</h2>
         <p>Please RSVP no later than Thursday, January 7th to John Cline for both entry into the games and dinner.</p>
