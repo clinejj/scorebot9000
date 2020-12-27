@@ -1,4 +1,5 @@
 # NOTE
+
 This project was written in 2012 and hasn't been meaningfully updated since. It has a bunch of bugs, and may be pretty difficult to actually get setup now (I'm not totally sure if Google even lets you make new AppEngine apps).
 
 Also, I'm just using it for my annual birthday party so if you attempt to make your own version you'll propbably want to update all the views.
@@ -6,11 +7,13 @@ Also, I'm just using it for my annual birthday party so if you attempt to make y
 USE AT YOUR OWN RISK.
 
 ## Instructions
+
 Scorebot 9000 is a roll-your-own score tracking system that runs on Google AppEngine. It allows a player to register and submit scores to the system via text message and Twilio. Administrators can login to the system, setup events, create games used for scoring, and manage players and scores.
 
 Created by John Cline ([@clinejj](https://twitter.com/clinejj)).
 
 To setup:
+
 1) Create a site on Google AppEngine.
 2) Download Scorebot 9000.
 3) Import the Scorebot 9000 folder as a new project into the Eclipse workspace.
