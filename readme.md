@@ -1,6 +1,8 @@
 # NOTE
 This project was written in 2012 and hasn't been meaningfully updated since. It has a bunch of bugs, and may be pretty difficult to actually get setup now (I'm not totally sure if Google even lets you make new AppEngine apps).
 
+Also, I'm just using it for my annual birthday party so if you attempt to make your own version you'll propbably want to update all the views.
+
 USE AT YOUR OWN RISK.
 
 ## Instructions
@@ -22,6 +24,3 @@ Usage:
 Once the site has been setup, create an event and games. The "current event" is used for site display, and controls which event is displayed by default when the "scores" and "medals" pages are clicked. If an event is "active," it is currently running and the system will respond to any texts sent. Players can register, submit scores, and change teams/names as applicable. If team scoring is used, teams must be the same size. The administration phone number used during setup can start and stop an event at any time. "Archived" events will not show up in the "summary" drop down menu.
 
 Also be sure to create several "names" for the system to assign to players using "Names" tab on the admin panel.
-
-
- 
