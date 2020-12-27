@@ -126,9 +126,9 @@
 	          <div class="hero-unit" style="margin-top: 40px;">
 	            <div class="row">
 	              <img src="/img/emblem.png" height="200px" width="200px" class="pull-left" style="margin-right: 15px;">
-	              <h1>2020<br>Clinelympic<br>Games</h1>
+	              <h1>2021<br>Clinelympic<br>Games</h1>
 	            </div>
-	            <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="https://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 11th, 2020.</p>
+	            <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="https://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 9th, 2021.</p>
 	          </div>
            </div>
         </div>
@@ -140,18 +140,36 @@
     
   	<div class="container">
       <div class="row">
-      	<div class="span6">
-      	  <h2>See the Scores Live</h2>
-      	  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2020 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-          <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be either Burnside or Starlight.</p>
-      	  <p>Check out the scores to see live updates.</p>
-          <p><a class="btn" href="summary.jsp?e=9">See Scores &raquo;</a></p>
-      	  <br>
-          <h2>Details</h2>
-          <p>See the details for the event.</p>
-          <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
+      	<div class="span4">
+		  <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
+          <p>Closing Ceremonies will begin at 5:00pm also on the internet.</p>
+          <br>
+          <h2>RSVP</h2>
+          <p>Please RSVP no later than Thursday, January 7th to John Cline for entry to the games and meeting information.</p>
         </div>
-        <div class="span6">
+        <div class="span4">
+          <h2>Events</h2>
+          <ul>
+            <li>Given the virtual nature of this year's games, events require a bit more <i>creativity</i>.</li>
+            <li>Details will be posted as soon as they are finalized.</li>
+          </ul>
+          <h2>Rules</h2>
+          <ul>
+            <li>All events are team based</li>
+              <ul>
+                <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
+                <li>Team uniforms are not required, but highly encouraged</li>
+              </ul>
+            <li>All events will be best of 2 games, with the exceptions below</li>
+            <li>Scoring will be an average of each team member's score for the event</li>
+              <ul>
+              	<li>Teams will be paired off to ensure accurate scorekeeping</li>
+              </ul>
+            <li>Overall scoring will be weighted medal count</li>
+            <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
+          </ul>
+        </div>
+        <div class="span4">
           <h2>Previous Results</h2>
           <p>Check out the results from previous year's matches.</p>
           <ul>
@@ -163,6 +181,7 @@
           <li><a href="/summary.jsp?e=6">2017 Clinelympics</a></li>
           <li><a href="/summary.jsp?e=7">2018 Clinelympics</a></li>
           <li><a href="/summary.jsp?e=8">2019 Clinelympics</a></li>
+          <li><a href="/summary.jsp?e=9">2020 Clinelympics</a></li>
           </ul>
         </div>
     </div>
