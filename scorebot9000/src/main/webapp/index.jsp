@@ -141,12 +141,12 @@
   	<div class="container">
       <div class="row">
       	<div class="span6">
-      	  <h2>See the Scores Live</h2>
-		  <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
+          <h2>See the Scores Live</h2>
+          <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
           <p>Closing Ceremonies will begin at 5:00pm also on the internet, with a social hour to follow.</p>
-      	  <p>Check out the scores to see live updates.</p>
+          <p>Check out the scores to see live updates.</p>
           <p><a class="btn" href="summary.jsp?e=10">See Scores &raquo;</a></p>
-      	  <br>
+          <br>
           <h2>Details</h2>
           <p>See the details for the event.</p>
           <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
