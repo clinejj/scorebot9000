@@ -126,9 +126,9 @@
 	          <div class="hero-unit" style="margin-top: 40px;">
 	            <div class="row">
 	              <img src="/img/emblem.png" height="200px" width="200px" class="pull-left" style="margin-right: 15px;">
-	              <h1>2020<br>Clinelympic<br>Games</h1>
+	              <h1>2021<br>Clinelympic<br>Games</h1>
 	            </div>
-	            <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="https://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 11th, 2020.</p>
+	            <p>The annual contest of athletic skill and mental fortitude in celebration of <a href="https://johncline.me/">John Cline</a>. Started in 2012 in honor of John's 25th year of life, the Clinelympic games has become the defining event of our time. This year's games will be held on January 9th, 2021.</p>
 	          </div>
            </div>
         </div>
@@ -141,12 +141,12 @@
   	<div class="container">
       <div class="row">
       	<div class="span6">
-      	  <h2>See the Scores Live</h2>
-      	  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2020 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-          <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be either Burnside or Starlight.</p>
-      	  <p>Check out the scores to see live updates.</p>
-          <p><a class="btn" href="summary.jsp?e=9">See Scores &raquo;</a></p>
-      	  <br>
+          <h2>See the Scores Live</h2>
+          <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
+          <p>Closing Ceremonies will begin at 5:00pm also on the internet, with a social hour to follow.</p>
+          <p>Check out the scores to see live updates.</p>
+          <p><a class="btn" href="summary.jsp?e=10">See Scores &raquo;</a></p>
+          <br>
           <h2>Details</h2>
           <p>See the details for the event.</p>
           <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
@@ -163,6 +163,7 @@
           <li><a href="/summary.jsp?e=6">2017 Clinelympics</a></li>
           <li><a href="/summary.jsp?e=7">2018 Clinelympics</a></li>
           <li><a href="/summary.jsp?e=8">2019 Clinelympics</a></li>
+          <li><a href="/summary.jsp?e=9">2020 Clinelympics</a></li>
           </ul>
         </div>
     </div>

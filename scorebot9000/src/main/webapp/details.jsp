@@ -103,22 +103,19 @@
     <div class="container">
     <div class="row">
         <h2>Details</h2>
-		  <p>Opening Ceremonies will begin at 1:00pm on Saturday, January 11th, 2020 at Gutter Bar in Williamsburg. Events will take place at Gutter Bar and Barcade in Williamsburg.</p>
-		  <p>Closing Ceremonies will begin at 7:00pm, at The Saint Austere in Williamsburg. After-party location will be either Burnside or Starlight.</p>
-		  <p><a class="btn" href="https://mapsengine.google.com/map/edit?mid=zafwTX89QNtI.kcj-egdPfzfM" target="_blank">View Map &raquo;</a></p>
+        <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
+        <p>Closing Ceremonies will begin at 5:00pm also on the internet, with a social hour to follow.</p>
         <br>
         <h2>RSVP</h2>
-        <p>Please RSVP no later than Thursday, January 9th to John Cline for both entry into the games and dinner.</p>
+        <p>Please RSVP no later than Thursday, January 7th to John Cline for both entry into the games and dinner.</p>
 		<br>
         <h2>Events</h2>
         <ol>
-            <li>Bowling</li>
-            <li>Trivia</li>
-            <li>Drawing - <a href="http://bit.ly/cline2020art" target="_blank">vote here</a></li>
-            <li>Galaga</li>
-            <li>Ms. Pacman</li>
-            <li>Rampage</li>
-            <li>Tetris</li>
+            <li>Trivia*</li>
+            <li>Contemporary Art* - <a href="http://bit.ly/cline2021art" target="_blank">vote here</a></li>
+            <li>Bracketeering</li>
+            <li>Champ'd Up*</li>
+            <li>Quiplash 3*</li>
         </ol>
         <p>* team event</p>
         <h2>How To</h2>
@@ -143,20 +140,11 @@
             <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
             <li>Team uniforms are not required, but highly encouraged</li>
             </ul>
-          <li>All events will be best of 2 games, with the exceptions below</li>
-            <li>Scoring will be an average of each team member's score for the event*</li>
-              <ul>
-              	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              	<li>*Trivia, Drawing, and Rampage will be performed as team events (players play at same time, score is total for all players)</li>
-              </ul>
+          <li>All events are single best game</li>
+          <li>For team events, only one player for each team will submit the team's score</li>
           <li>Overall scoring will be weighted medal count</li>
             <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
         </ul>
-    </div>
-
-    <div class="row" id="map">
-    	<h2>Map</h2>
-    	<iframe src="https://mapsengine.google.com/map/embed?mid=zafwTX89QNtI.kcj-egdPfzfM" width="640" height="480"></iframe>
     </div>
 
   <c:import url="/components/footer.html" />
