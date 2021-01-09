@@ -111,10 +111,13 @@
 		<br>
         <h2>Events</h2>
         <ol>
-            <li>Given the virtual nature of this year's games, events require a bit more <i>creativity</i>.</li>
-            <li>Details will be posted as soon as they are finalized.</li>
+            <li>Trivia*</li>
+            <li>Contemporary Art* - <a href="http://bit.ly/cline2021art" target="_blank">vote here</a></li>
+            <li>Bracketeering</li>
+            <li>Champ'd Up*</li>
+            <li>Quiplash 3*</li>
         </ol>
-        <!-- <p>* team event</p>  -->
+        <p>* team event</p>
         <h2>How To</h2>
         <p>Text the following commands to 909-SCORE-11 (<a href="sms:+19097267311">909-726-7311</a>)</p>
         <ul>
@@ -137,11 +140,8 @@
             <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
             <li>Team uniforms are not required, but highly encouraged</li>
             </ul>
-          <li>All events will be best of 2 games, with the exceptions below</li>
-            <li>Scoring will be an average of each team member's score for the event*</li>
-              <ul>
-              	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              </ul>
+          <li>All events are single best game</li>
+          <li>For team events, only one player for each team will submit the team's score</li>
           <li>Overall scoring will be weighted medal count</li>
             <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
         </ul>

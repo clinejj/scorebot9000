@@ -140,36 +140,18 @@
     
   	<div class="container">
       <div class="row">
-      	<div class="span4">
+      	<div class="span6">
+      	  <h2>See the Scores Live</h2>
 		  <p>Opening Ceremonies will begin at 3:00pm on Saturday, January 9th, 2021 on the internet. Location information provided upon RSVP.</p>
           <p>Closing Ceremonies will begin at 5:00pm also on the internet, with a social hour to follow.</p>
-          <br>
-          <h2>RSVP</h2>
-          <p>Please RSVP no later than Thursday, January 7th to John Cline for entry to the games and meeting information.</p>
+      	  <p>Check out the scores to see live updates.</p>
+          <p><a class="btn" href="summary.jsp?e=10">See Scores &raquo;</a></p>
+      	  <br>
+          <h2>Details</h2>
+          <p>See the details for the event.</p>
+          <p><a class="btn" href="details.jsp">Details &raquo;</a></p>
         </div>
-        <div class="span4">
-          <h2>Events</h2>
-          <ul>
-            <li>Given the virtual nature of this year's games, events require a bit more <i>creativity</i>.</li>
-            <li>Details will be posted as soon as they are finalized.</li>
-          </ul>
-          <h2>Rules</h2>
-          <ul>
-            <li>All events are team based</li>
-              <ul>
-                <li>Team size is 2 (or 3 if there is a total odd number of people)</li>
-                <li>Team uniforms are not required, but highly encouraged</li>
-              </ul>
-            <li>All events will be best of 2 games, with the exceptions below</li>
-            <li>Scoring will be an average of each team member's score for the event</li>
-              <ul>
-              	<li>Teams will be paired off to ensure accurate scorekeeping</li>
-              </ul>
-            <li>Overall scoring will be weighted medal count</li>
-            <ul><li>There will be prizes for overall gold, silver, and bronze</li></ul>
-          </ul>
-        </div>
-        <div class="span4">
+        <div class="span6">
           <h2>Previous Results</h2>
           <p>Check out the results from previous year's matches.</p>
           <ul>
