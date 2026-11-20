@@ -122,7 +122,7 @@ Individual-scored events (supported, but unused in prod) total medals **unweight
 
 | Concern | Choice | Why |
 |---|---|---|
-| Framework | Rails 8.x, current Ruby (3.3+ for `SecureRandom.uuid_v7`) | Mostly forms and CRUD; you know it |
+| Framework | Rails 8.1, Ruby 4.0 | Mostly forms and CRUD; you know it |
 | Frontend | Hotwire (Turbo + Stimulus), importmap, `tailwindcss-rails` | Server-rendered, with no JS build pipeline |
 | **Database** | **PlanetScale Postgres** (one database for app + Solid Queue + Solid Cable) | Durable, managed backups, and the same setup you already run |
 | IDs | UUIDv7 PKs + TypeID prefixed public IDs (§6.1) | Time-ordered keys (index-friendly; `first`/`last` stay meaningful), readable typed IDs in URLs, logs and the admin UI |
