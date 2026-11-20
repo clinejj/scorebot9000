@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     namespace :admin do
       root "dashboard#show"
       resources :sms_messages, only: %i[index create], path: "sms"
+      resources :host_requests, only: %i[index update]
       resources :legacy_imports, only: %i[index new create show] do
         post :run, on: :member
       end
@@ -86,6 +87,11 @@ Rails.application.routes.draw do
 
   get "privacy" => "pages#privacy"
   get "sms-terms" => "pages#sms_terms", as: :sms_terms
+  get "terms" => "pages#terms"
+
+  # "Host an event": approved hosts go to the console; others can request access.
+  get "host" => "host_requests#new"
+  post "host" => "host_requests#create"
 
   root "pages#home"
 end

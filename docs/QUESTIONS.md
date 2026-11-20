@@ -23,3 +23,6 @@ Questions that come up while building the PR stack. Each one has the default tha
 | 17 | PR 10 (console) | Adding a co-organizer by an email that has no account creates that account (unverified) with the role, and they sign in with that email later. Should the app also email them an invite? | No invite email yet; tell them yourself |
 | 18 | PR 10 (console) | The plan mentioned previewing a scoring preset against sample data. The console shows each preset's description and you can check the live results page, but there's no sample-data preview. Worth adding? | Not built |
 | 19 | PR 10 (console) | Custom domains for a series can only be set by platform admins, because each one also needs a Fly certificate and Cloudflare DNS. OK? | Yes |
+| 20 | PR 11 (live + hosting) | SMS cost guards: replies stop for an event after 2,000 in a day (`SMS_DAILY_REPLY_CAP_PER_EVENT`), and a number sending more than 30 texts in 10 minutes is ignored. Right limits? | As described |
+| 21 | PR 11 (live + hosting) | New host requests email every platform admin. Approving one emails the host (if they have an email) and can also turn on SMS for them with a checkbox. OK? | As described |
+| 22 | PR 11 (live + hosting) | The terms of service page is a short plain-language draft. Do you want to supply your own wording before opening hosting? | Draft at `/terms` |

@@ -4,6 +4,8 @@
 class ScoreEntry < ApplicationRecord
   has_prefixed_id :scr
 
+  broadcasts_refreshes_to ->(entry) { entry.game.event }
+
   enum :source, { sms: "sms", web: "web", organizer: "organizer", import: "import", reconciliation: "reconciliation" }, prefix: :from, validate: true
 
   belongs_to :game, touch: true

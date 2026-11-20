@@ -7,6 +7,14 @@ module Sms
   class Inbound
     Outcome = Data.define(:reply, :message)
 
+    # Cost guards (plan section 9.5): texts beyond these get processed-but-no-reply.
+    SENDER_LIMIT = 30           # inbound texts per number per 10 minutes
+    SENDER_WINDOW = 10.minutes
+
+    def self.daily_reply_cap
+      ENV.fetch("SMS_DAILY_REPLY_CAP_PER_EVENT", 2000).to_i
+    end
+
     def self.call(**)
       new(**).call
     end
@@ -32,7 +40,17 @@ module Sms
         return Outcome.new(reply: nil, message: @message)
       end
 
+      if sender_rate_limited?
+        @message.update!(status: "rate_limited")
+        return Outcome.new(reply: nil, message: @message)
+      end
+
       reply = process
+      if reply.present? && reply_cap_reached?
+        @message.update!(status: "capped")
+        Rails.logger.warn("SMS reply cap reached for event #{@message.event&.public_id}")
+        return Outcome.new(reply: nil, message: @message)
+      end
       log_reply(reply)
       Outcome.new(reply: reply, message: @message)
     rescue StandardError => error
@@ -62,6 +80,19 @@ module Sms
         return "Texting isn't turned on for #{event.name}. Play on the event page instead." unless event.sms_scoring_enabled? || command.name == :admin
 
         Commands.new(event: event, user: user, command: command).run
+      end
+
+      def sender_rate_limited?
+        return false if @simulated
+
+        SmsMessage.inbound.where(from_number: @from, simulated: false).where(created_at: SENDER_WINDOW.ago..).count > SENDER_LIMIT
+      end
+
+      def reply_cap_reached?
+        return false if @simulated || @message.event_id.nil?
+
+        SmsMessage.outbound.where(event_id: @message.event_id, simulated: false)
+          .where(created_at: Time.current.beginning_of_day..).count >= self.class.daily_reply_cap
       end
 
       # ADMIN START <code> can target an event that isn't live yet.

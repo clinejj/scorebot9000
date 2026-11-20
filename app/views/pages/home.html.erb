@@ -8,7 +8,7 @@
     <% if @live_events.any? %>
       <%= link_to "See what's live", "#live", class: "btn btn-primary" %>
     <% end %>
-    <%= link_to "Host an event", authenticated? ? root_path(anchor: "host") : new_session_path, class: "btn bg-white text-stone-900 hover:bg-stone-100" %>
+    <%= link_to "Host an event", host_path, class: "btn bg-white text-stone-900 hover:bg-stone-100" %>
   </div>
 </section>
 

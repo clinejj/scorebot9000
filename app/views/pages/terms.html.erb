@@ -1,0 +1,19 @@
+<% content_for :title, "Terms of service" %>
+<article class="prose prose-stone max-w-none dark:prose-invert">
+  <h1>Terms of service</h1>
+  <p class="lead">Scorebot 9000 is a free tool for keeping score at informal competitions, run by <%= Rails.configuration.x.operator_name %>. By using it you agree to these terms.</p>
+  <h2>Hosting events</h2>
+  <ul>
+    <li>Hosts are responsible for their events, including what they publish and how they use participants' information.</li>
+    <li>Only add players who've agreed to take part, and only text people who opted in by texting the event's number.</li>
+    <li>Don't use Scorebot for anything unlawful, harassing, or for marketing messages.</li>
+  </ul>
+  <h2>Playing</h2>
+  <ul>
+    <li>Your player name, team and scores are shown publicly on event pages. Your phone number and email are never shown.</li>
+    <li>Be nice. Hosts and the operator can remove names, scores or players at their discretion.</li>
+  </ul>
+  <h2>The service</h2>
+  <p>Scorebot is provided as-is, without warranties. Features, limits (including text-message limits) and availability may change. We may suspend accounts or events that misuse the service.</p>
+  <p>See also the <%= link_to "privacy policy", privacy_path %> and <%= link_to "SMS terms", sms_terms_path %>.</p>
+</article>

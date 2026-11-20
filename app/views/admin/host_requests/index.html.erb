@@ -1,0 +1,38 @@
+<% content_for :title, "Host requests" %>
+<p class="eyebrow">Platform admin</p>
+<h1 class="display mt-2 text-3xl">Host requests</h1>
+
+<section class="mt-6 space-y-3">
+  <% @pending.each do |host_request| %>
+    <div class="card">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div class="min-w-0">
+          <p class="font-bold"><%= host_request.user.display_name %> <span class="text-sm font-normal muted"><%= host_request.user.email || PhoneNumber.mask(host_request.user.phone) %> · <%= time_ago_in_words(host_request.created_at) %> ago</span></p>
+          <p class="mt-2 whitespace-pre-line text-sm"><%= host_request.message.presence || "(no message)" %></p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <%= form_with url: admin_host_request_path(host_request), method: :patch, class: "flex items-center gap-2" do |form| %>
+            <%= form.hidden_field :decision, value: "approve" %>
+            <label class="flex items-center gap-1 text-sm"><%= form.check_box :sms, {}, "1", "0" %> allow SMS</label>
+            <%= form.submit "Approve", class: "btn btn-primary btn-sm" %>
+          <% end %>
+          <%= button_to "Decline", admin_host_request_path(host_request), method: :patch, params: { decision: "decline" }, class: "btn btn-secondary btn-sm" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <% if @pending.empty? %><p class="card muted">No pending requests.</p><% end %>
+</section>
+
+<% if @reviewed.any? %>
+  <section class="mt-8 card">
+    <h2 class="font-bold">Reviewed</h2>
+    <table class="table-scores mt-2">
+      <tbody>
+        <% @reviewed.each do |host_request| %>
+          <tr><td><%= host_request.user.display_name %></td><td><%= host_request.status %></td><td class="muted"><%= host_request.reviewed_by_user&.display_name %></td><td class="text-right muted"><%= l host_request.reviewed_at.to_date if host_request.reviewed_at %></td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>

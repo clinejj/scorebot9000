@@ -5,6 +5,11 @@ class Event < ApplicationRecord
 
   has_prefixed_id :evt
 
+  # Live pages subscribe to the event's stream (turbo_stream_from @event) and
+  # morph-refresh on any change. Games, teams, participants and scores touch
+  # the event, so their changes refresh too (debounced by Turbo).
+  broadcasts_refreshes_to ->(event) { event }
+
   STATUSES = %w[draft published live final archived].freeze
 
   enum :status, STATUSES.index_with(&:itself), validate: true

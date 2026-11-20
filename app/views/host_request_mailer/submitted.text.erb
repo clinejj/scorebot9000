@@ -1,0 +1,5 @@
+<%= @host_request.user.display_name %> (<%= @host_request.user.email || PhoneNumber.mask(@host_request.user.phone) %>) asked to host events:
+
+<%= @host_request.message.presence || "(no message)" %>
+
+Review it: <%= admin_host_requests_url %>

@@ -1,7 +1,8 @@
 <% content_for :title, "TV · #{@event.name}" %>
+<%= turbo_stream_from @event unless @event.finished? %>
 <% config = @result.config %>
 <% rows = @result.standings.select(&:place).first(10) %>
-<div class="flex h-dvh flex-col p-6 lg:p-10" data-controller="auto-refresh" data-auto-refresh-interval-value="<%= @event.live? ? 15 : 120 %>">
+<div class="flex h-dvh flex-col p-6 lg:p-10" data-controller="auto-refresh" data-auto-refresh-interval-value="<%= @event.live? ? 45 : 300 %>">
   <header class="flex items-center justify-between gap-6">
     <div>
       <p class="text-sm font-bold uppercase tracking-[0.3em] text-accent"><%= @event.series&.name %></p>

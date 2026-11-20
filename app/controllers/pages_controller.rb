@@ -11,4 +11,7 @@ class PagesController < ApplicationController
 
   def sms_terms
   end
+
+  def terms
+  end
 end
