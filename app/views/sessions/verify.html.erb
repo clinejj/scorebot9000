@@ -1,0 +1,16 @@
+<% content_for :title, "Enter your code" %>
+<div class="mx-auto max-w-md">
+  <div class="card">
+    <h1 class="display text-2xl">Enter your code</h1>
+    <p class="mt-1 muted">We sent a 6-digit code to <strong><%= session[:sign_in_email] || session[:sign_in_phone_display] %></strong>.</p>
+    <%= form_with url: verify_session_path, class: "mt-6 space-y-4" do |form| %>
+      <div>
+        <%= form.label :code, "Code", class: "label" %>
+        <%= form.text_field :code, required: true, autofocus: true, autocomplete: "one-time-code", inputmode: "numeric",
+              pattern: "[0-9 ]*", maxlength: 7, class: "input text-center text-2xl tracking-[0.4em] tabular-nums" %>
+      </div>
+      <%= form.submit "Sign in", class: "btn btn-primary w-full" %>
+    <% end %>
+    <p class="mt-4 text-sm muted"><%= link_to "Use a different email or number", new_session_path, class: "underline" %></p>
+  </div>
+</div>

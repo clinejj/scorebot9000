@@ -2,7 +2,16 @@
 @plugin "@tailwindcss/typography";
 
 /* Dark mode follows the OS unless a page pins it with data-theme. */
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *), @media (prefers-color-scheme: dark) { &:where(:not([data-theme=light]), :not([data-theme=light]) *) });
+@custom-variant dark {
+  &:where([data-theme=dark], [data-theme=dark] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:not(:where([data-theme=light], [data-theme=light] *)) {
+      @slot;
+    }
+  }
+}
 
 @theme {
   --font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;

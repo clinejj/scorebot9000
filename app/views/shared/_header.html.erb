@@ -1,11 +1,19 @@
 <header class="border-b border-stone-200 bg-white/80 backdrop-blur dark:border-stone-800 dark:bg-stone-950/80">
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
-    <%= link_to site_root_path, class: "flex items-center gap-2" do %>
-      <span class="grid h-8 w-8 place-items-center rounded-lg bg-accent text-sm font-black text-accent-ink">S9</span>
-      <span class="display text-lg"><%= site_name %></span>
+    <%= link_to site_root_path, class: "flex min-w-0 items-center gap-2" do %>
+      <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent text-sm font-black text-accent-ink">S9</span>
+      <span class="display truncate text-lg"><%= site_name %></span>
     <% end %>
     <nav class="flex items-center gap-3 text-sm font-semibold">
       <%= yield :header_nav %>
+      <% if authenticated? %>
+        <% if current_user.platform_admin? && !content_for?(:header_nav) %>
+          <%= link_to "Admin", admin_root_path, class: "hover:underline" %>
+        <% end %>
+        <%= button_to "Sign out", session_path, method: :delete, class: "btn btn-secondary btn-sm" %>
+      <% else %>
+        <%= link_to "Sign in", new_session_path, class: "btn btn-secondary btn-sm" %>
+      <% end %>
     </nav>
   </div>
 </header>

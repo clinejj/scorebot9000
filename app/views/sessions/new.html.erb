@@ -1,0 +1,15 @@
+<% content_for :title, "Sign in" %>
+<div class="mx-auto max-w-md">
+  <div class="card">
+    <h1 class="display text-2xl">Sign in</h1>
+    <p class="mt-1 muted">We'll send you a one-time code. No password needed.</p>
+    <%= form_with url: session_path, class: "mt-6 space-y-4" do |form| %>
+      <div>
+        <%= form.label :identifier, "Email or mobile number", class: "label" %>
+        <%= form.text_field :identifier, value: params[:identifier], required: true, autofocus: true,
+              autocomplete: "username", inputmode: "email", placeholder: "you@example.com or 909-555-0123", class: "input" %>
+      </div>
+      <%= form.submit "Send code", class: "btn btn-primary w-full" %>
+    <% end %>
+  </div>
+</div>
