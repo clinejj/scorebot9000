@@ -1,0 +1,47 @@
+<% content_for :title, "Results · #{@event.name}" %>
+<% config = @result.config %>
+<% rows = @view == "players" ? @result.individual_standings : @result.standings %>
+<%= render "events/header", event: @event %>
+<%= render "events/nav", event: @event, current: :results %>
+
+<div data-controller="<%= "auto-refresh" if @event.live? %>" data-auto-refresh-interval-value="20">
+  <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="display text-2xl"><%= @event.finished? ? "Final results" : "Standings" %></h2>
+      <p class="text-sm muted"><%= config.preset_label %><%= " · official results as announced" if @event.official_snapshot&.from_legacy_capture? %></p>
+    </div>
+    <% if @result.individual_standings&.any? %>
+      <div class="inline-flex rounded-xl bg-stone-200 p-1 text-sm font-semibold dark:bg-stone-800">
+        <%= link_to "Teams", results_event_path(@event), class: "rounded-lg px-3 py-1.5 #{@view == "teams" ? "bg-white shadow-sm dark:bg-stone-950" : "muted"}" %>
+        <%= link_to "Players", results_event_path(@event, view: "players"), class: "rounded-lg px-3 py-1.5 #{@view == "players" ? "bg-white shadow-sm dark:bg-stone-950" : "muted"}" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if rows.blank? %>
+    <p class="mt-6 card muted">No one's registered yet.</p>
+  <% else %>
+    <div class="mt-6"><%= render "results/podium", event: @event, config: config, rows: rows %></div>
+    <div class="mt-6 card !p-0 sm:!p-2"><%= render "results/standings_table", event: @event, config: config, rows: rows %></div>
+  <% end %>
+
+  <% if @result.game_results.any? %>
+    <h2 class="display mt-10 text-2xl">By game</h2>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @result.game_results.each do |game_result| %>
+        <%= render "results/game_card", event: @event, config: config, game_result: game_result %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @adjustments.any? %>
+    <section class="mt-10 card">
+      <h2 class="font-bold">Adjustments</h2>
+      <ul class="mt-2 space-y-1 text-sm">
+        <% @adjustments.each do |adjustment| %>
+          <li><strong><%= adjustment.points.positive? ? "+" : "" %><%= points(adjustment.points) %></strong> <%= (adjustment.team || adjustment.participant).display_name %>: <%= adjustment.reason %></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+</div>

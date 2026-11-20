@@ -1,0 +1,7 @@
+<%# locals: (event:, current:) %>
+<nav class="mt-6 flex gap-1 overflow-x-auto border-b border-stone-200 text-sm font-semibold dark:border-stone-800">
+  <% [ [ "Overview", event_path(event), :overview ], [ "Results", results_event_path(event), :results ] ].each do |label, path, key| %>
+    <%= link_to label, path, class: "whitespace-nowrap border-b-2 px-3 py-2 #{key == current ? "border-accent text-stone-900 dark:text-white" : "border-transparent muted hover:text-stone-900 dark:hover:text-white"}" %>
+  <% end %>
+  <%= link_to "TV mode", tv_event_path(event), class: "ml-auto whitespace-nowrap px-3 py-2 muted hover:text-stone-900 dark:hover:text-white", target: "_blank" %>
+</nav>

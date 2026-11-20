@@ -1,0 +1,11 @@
+<%# locals: (event:) %>
+<%= link_to event_path(event), class: "card group block transition hover:-translate-y-0.5 hover:shadow-md", style: ("--brand-accent: #{event.accent_color}" if event.accent_color) do %>
+  <div class="flex items-center justify-between gap-2">
+    <p class="eyebrow truncate"><%= event.series&.name || "Event" %></p>
+    <%= status_pill(event) %>
+  </div>
+  <h3 class="display mt-2 text-xl group-hover:underline"><%= event.name %></h3>
+  <% if (date = event_date(event, format: :short)) %>
+    <p class="mt-1 text-sm muted"><%= date %><%= " · #{event.location_text}" if event.location_text.present? %></p>
+  <% end %>
+<% end %>

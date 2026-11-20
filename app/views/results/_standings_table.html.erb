@@ -1,0 +1,32 @@
+<%# locals: (event:, config:, rows:) %>
+<div class="overflow-x-auto">
+  <table class="table-scores">
+    <thead>
+      <tr>
+        <th class="w-10">#</th>
+        <th><%= rows.first&.competitor&.team? ? "Team" : "Player" %></th>
+        <% config.medals.each_index do |index| %>
+          <th class="text-center"><%= medal_header(config, index) %></th>
+        <% end %>
+        <th class="text-right"><%= standings_metric_label(config) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rows.each do |row| %>
+        <tr class="<%= "opacity-60" unless row.ranked %>">
+          <td class="font-black tabular-nums"><%= place_label(row) %></td>
+          <td class="max-w-[12rem] font-semibold sm:max-w-none"><%= competitor_name(event, row.competitor) %></td>
+          <% row.medal_counts.each do |count| %>
+            <td class="text-center tabular-nums <%= "muted" if count.zero? %>"><%= count %></td>
+          <% end %>
+          <td class="text-right font-black tabular-nums">
+            <%= points(row.total) %>
+            <% if row.adjustment_points.to_d.nonzero? %>
+              <span class="block text-xs font-normal muted" title="Includes adjustments"><%= row.adjustment_points.positive? ? "+" : "" %><%= points(row.adjustment_points) %> adj</span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

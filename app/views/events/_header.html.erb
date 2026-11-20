@@ -1,0 +1,28 @@
+<%# locals: (event:) %>
+<header class="relative overflow-hidden rounded-3xl bg-accent px-6 py-8 text-accent-ink sm:px-10 sm:py-12">
+  <% if event.hero.attached? %>
+    <%= image_tag event.hero, class: "absolute inset-0 h-full w-full object-cover opacity-30", alt: "" %>
+  <% elsif event.series&.hero&.attached? %>
+    <%= image_tag event.series.hero, class: "absolute inset-0 h-full w-full object-cover opacity-30", alt: "" %>
+  <% end %>
+  <div class="relative">
+    <div class="flex flex-wrap items-center gap-3">
+      <% if event.series %>
+        <%= link_to event.series.name, series_home_path(event.series), class: "text-xs font-bold uppercase tracking-widest opacity-80 hover:underline" %>
+      <% end %>
+      <%= status_pill(event) %>
+    </div>
+    <h1 class="display mt-3 text-3xl sm:text-5xl"><%= event.name %></h1>
+    <% if (date = event_date(event)) %>
+      <p class="mt-3 font-semibold opacity-90"><%= date %></p>
+    <% end %>
+    <% if event.location_text.present? || event.online_url.present? %>
+      <p class="mt-1 opacity-90">
+        <%= event.location_text %>
+        <% if event.online_url.present? %>
+          <%= link_to "Join online", event.online_url, class: "underline", target: "_blank", rel: "noopener" %>
+        <% end %>
+      </p>
+    <% end %>
+  </div>
+</header>

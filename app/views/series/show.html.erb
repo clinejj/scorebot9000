@@ -1,0 +1,97 @@
+<% content_for :title, @series.name %>
+<% champions = @stats.champions %>
+<section class="relative overflow-hidden rounded-3xl bg-accent px-6 py-12 text-accent-ink sm:px-10 sm:py-16">
+  <% if @series.hero.attached? %>
+    <%= image_tag @series.hero, class: "absolute inset-0 h-full w-full object-cover opacity-30", alt: "" %>
+  <% end %>
+  <div class="relative flex items-center gap-5">
+    <% if @series.logo.attached? %>
+      <%= image_tag @series.logo, class: "h-20 w-20 rounded-2xl bg-white/10 object-contain sm:h-28 sm:w-28", alt: "" %>
+    <% end %>
+    <div>
+      <p class="text-xs font-bold uppercase tracking-widest opacity-80">Series · <%= pluralize(@events.size, "edition") %></p>
+      <h1 class="display mt-2 text-4xl sm:text-6xl"><%= @series.name %></h1>
+      <% if @series.tagline.present? %><p class="mt-3 max-w-xl text-lg opacity-90"><%= @series.tagline %></p><% end %>
+    </div>
+  </div>
+</section>
+
+<% if @series.description.present? %>
+  <section class="prose prose-stone mt-8 max-w-none dark:prose-invert"><%= @series.description %></section>
+<% end %>
+
+<section class="mt-10">
+  <h2 class="display text-2xl">Editions</h2>
+  <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <% @events.each do |event| %>
+      <% champion = champions.find { |entry| entry.event == event } %>
+      <%= link_to event_path(event), class: "card group block transition hover:-translate-y-0.5 hover:shadow-md" do %>
+        <div class="flex items-center justify-between">
+          <p class="display text-3xl tabular-nums"><%= event.edition_label.presence || event_date(event, format: :short) %></p>
+          <%= status_pill(event) %>
+        </div>
+        <p class="mt-1 font-semibold group-hover:underline"><%= event.name %></p>
+        <% if champion %>
+          <p class="mt-2 text-sm"><span class="medal medal-1 mr-1">1</span> <%= champion.names.to_sentence %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<% if champions.any? %>
+  <section class="mt-10 grid items-start gap-6 lg:grid-cols-2">
+    <div class="card">
+      <h2 class="display text-xl">Champions</h2>
+      <ul class="mt-3 divide-y divide-stone-100 dark:divide-stone-800">
+        <% champions.each do |champion| %>
+          <li class="flex items-center justify-between gap-3 py-2">
+            <span class="tabular-nums font-bold"><%= champion.event.edition_label.presence || champion.event.name %></span>
+            <span class="text-right"><%= champion.names.to_sentence %></span>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <% medal_rows = @stats.all_time_medals %>
+    <% if medal_rows.any? %>
+      <div class="card">
+        <h2 class="display text-xl">All-time medal table</h2>
+        <p class="text-sm muted">Every game medal, credited to each member of the winning team.</p>
+        <table class="table-scores mt-3">
+          <thead><tr><th>Player</th><% @stats.medal_names.each do |name| %><th class="text-center"><%= name %></th><% end %><th class="text-right">Years</th></tr></thead>
+          <tbody>
+            <% medal_rows.each do |row| %>
+              <tr>
+                <td class="font-semibold"><%= row.name %></td>
+                <% row.medal_counts.each do |count| %><td class="text-center tabular-nums <%= "muted" if count.zero? %>"><%= count %></td><% end %>
+                <td class="text-right tabular-nums muted"><%= row.events_played %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </section>
+<% end %>
+
+<% records = @stats.records %>
+<% if records.any? %>
+  <section class="mt-10 card">
+    <h2 class="display text-xl">Records</h2>
+    <p class="text-sm muted">Best result in games played more than once.</p>
+    <table class="table-scores mt-3">
+      <thead><tr><th>Game</th><th>Record</th><th>Held by</th><th class="text-right">Year</th></tr></thead>
+      <tbody>
+        <% records.each do |record| %>
+          <tr>
+            <td class="font-semibold"><%= record.game_name %></td>
+            <td class="tabular-nums"><%= ScoreValue.format(record.value, record.format) %></td>
+            <td><%= record.holder %></td>
+            <td class="text-right"><%= link_to record.event.edition_label.presence || record.event.name, results_event_path(record.event), class: "underline" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>

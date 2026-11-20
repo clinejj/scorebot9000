@@ -99,6 +99,12 @@ class Event < ApplicationRecord
     User.where(id: owner_ids)
   end
 
+  # SMS scoring is flagged in per host (plan section 7.5): enabled when any
+  # owner of the event (or its series) has the sms_scoring flag.
+  def sms_scoring_enabled?
+    owners.any? { |owner| Flipper.enabled?(:sms_scoring, owner) }
+  end
+
   def scoring_config
     Scoring::Config.from(scoring, uses_teams: uses_teams?)
   end
