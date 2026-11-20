@@ -14,3 +14,24 @@ phone_only:
 mapped:
   phone: "+19095550101"
   pending_email: mapped@example.com
+
+organizer:
+  email: organizer@example.com
+  name: Olive Organizer
+  email_verified_at: <%= 1.day.ago.to_fs(:db) %>
+
+alice:
+  phone: "+19095550111"
+  name: Alice
+
+bob:
+  phone: "+19095550112"
+
+carol:
+  phone: "+19095550113"
+
+dave:
+  phone: "+19095550114"
+
+erin:
+  phone: "+19095550115"

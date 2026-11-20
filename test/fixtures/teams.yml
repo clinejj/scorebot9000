@@ -1,0 +1,9 @@
+wheaties:
+  event: clinelympics_2027
+  name: Wheaties
+  color: "#dc2626"
+
+bears:
+  event: clinelympics_2027
+  name: Bears
+  color: "#2563eb"

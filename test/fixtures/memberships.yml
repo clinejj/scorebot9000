@@ -1,0 +1,9 @@
+organizer_owns_series:
+  user: organizer
+  resource: clinelympics (Series)
+  role: owner
+
+carol_scorekeeper:
+  user: carol
+  resource: clinelympics_2027 (Event)
+  role: scorekeeper
