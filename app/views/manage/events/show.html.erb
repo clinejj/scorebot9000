@@ -1,0 +1,65 @@
+<% content_for :title, "Console · #{@event.name}" %>
+<%
+  transitions = {
+    "draft" => [ [ "Publish page", "publish", "btn-primary" ], [ "Go live", "go_live", "btn-secondary" ] ],
+    "published" => [ [ "Go live", "go_live", "btn-primary" ], [ "Finalize results", "finalize", "btn-secondary" ], [ "Back to draft", "unpublish", "btn-secondary" ] ],
+    "live" => [ [ "Finalize results", "finalize", "btn-primary" ], [ "Pause scoring", "pause", "btn-secondary" ] ],
+    "final" => [ [ "Reopen for corrections", "reopen", "btn-secondary" ], [ "Archive", "archive", "btn-secondary" ] ],
+    "archived" => [ [ "Unarchive", "unarchive", "btn-secondary" ] ]
+  }.fetch(@event.status)
+  confirmations = { "finalize" => "Freeze the results? You can reopen later for corrections.", "go_live" => "Open scoring to players now?" }
+%>
+<div class="grid gap-6 lg:grid-cols-3">
+  <section class="card lg:col-span-2">
+    <h2 class="font-bold">Status</h2>
+    <p class="mt-1 text-sm muted">
+      <%= { "draft" => "Only organizers can see this event.", "published" => "The event page is public. Players can't submit scores yet.",
+            "live" => "Players can register and submit scores.", "final" => "Results are frozen in the official snapshot.",
+            "archived" => "Hidden from listings; results stay on the event page." }[@event.status] %>
+      Registration is <strong><%= @event.registration_open? ? "open" : "closed" %></strong>.
+    </p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <% transitions.each do |label, transition, style| %>
+        <%= button_to label, manage_event_lifecycle_path(@event), method: :patch, params: { transition: transition }, class: "btn #{style}",
+              form: { data: ({ turbo_confirm: confirmations[transition] } if confirmations[transition]) } %>
+      <% end %>
+      <% unless @event.finished? %>
+        <%= button_to @event.registration_open? ? "Close registration" : "Open registration", manage_event_lifecycle_path(@event), method: :patch,
+              params: { transition: @event.registration_open? ? "close_registration" : "open_registration" }, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+    <% if @event.live? %>
+      <p class="mt-4 text-sm muted">Event day tip: keep a machine warm with <code>min_machines_running = 1</code> on Fly while you're live.</p>
+    <% end %>
+  </section>
+
+  <section class="card">
+    <h2 class="font-bold">Checklist</h2>
+    <ul class="mt-3 space-y-2 text-sm">
+      <% @checklist.each do |label, done, path| %>
+        <li class="flex items-center gap-2">
+          <span class="grid h-5 w-5 place-items-center rounded-full text-xs font-bold <%= done ? "bg-emerald-600 text-white" : "bg-stone-200 text-stone-500 dark:bg-stone-800" %>"><%= done ? "✓" : "" %></span>
+          <%= path ? link_to(label, path, class: "hover:underline") : label %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+</div>
+
+<div class="mt-6 grid gap-4 sm:grid-cols-4">
+  <% [ [ "Games", @event.games.count, manage_event_games_path(@event) ], [ "Players", @event.participants.count, manage_event_participants_path(@event) ],
+       [ "Teams", @event.teams.count, (manage_event_teams_path(@event) if @event.uses_teams?) ], [ "Scores", @event.score_entries.active.count, manage_event_score_sheets_path(@event) ] ].each do |label, count, path| %>
+    <%= link_to (path || "#"), class: "card block !p-4 hover:ring-accent" do %>
+      <p class="text-sm muted"><%= label %></p><p class="display text-3xl tabular-nums"><%= count %></p>
+    <% end %>
+  <% end %>
+</div>
+
+<section class="mt-6 card text-sm">
+  <h2 class="font-bold">Share</h2>
+  <ul class="mt-2 space-y-1">
+    <li>Event page: <%= link_to event_url(@event), event_path(@event), class: "underline" %></li>
+    <li>TV mode: <%= link_to tv_event_url(@event), tv_event_path(@event), class: "underline" %></li>
+    <li>SMS code: <span class="font-mono font-bold"><%= @event.sms_code %></span> <span class="muted">· texting is <%= @event.sms_scoring_enabled? ? "on" : "off (ask a platform admin to enable SMS for your account)" %></span></li>
+  </ul>
+</section>

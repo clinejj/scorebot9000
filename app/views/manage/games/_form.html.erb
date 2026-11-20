@@ -1,0 +1,12 @@
+<%# locals: (form:, game:) %>
+<div class="grid gap-4 sm:grid-cols-2">
+  <div class="sm:col-span-2"><%= form.label :name, class: "label" %><%= form.text_field :name, required: true, class: "input", placeholder: "Trivia" %></div>
+  <div><%= form.label :direction, "Winner", class: "label" %><%= form.select :direction, [ [ "Highest score wins", "higher_better" ], [ "Lowest score wins", "lower_better" ] ], {}, class: "input" %></div>
+  <div><%= form.label :score_format, "Scores are", class: "label" %><%= form.select :score_format, [ [ "Whole numbers", "integer" ], [ "Decimals", "decimal" ], [ "Times (m:ss.ss)", "time" ], [ "Finishing places (1st, 2nd…)", "placement" ] ], {}, class: "input" %></div>
+  <div><%= form.label :participation, "Who submits", class: "label" %><%= form.select :participation, [ [ "Every player", "individual" ], [ "One score per team", "team" ] ], {}, class: "input" %></div>
+  <div><%= form.label :team_aggregation, "Team result (from players' scores)", class: "label" %><%= form.select :team_aggregation, [ [ "Sum", "sum" ], [ "Average", "average" ], [ "Best player", "best" ], [ "Median", "median" ], [ "Sum of best N", "top_n_sum" ] ], {}, class: "input" %></div>
+  <div><%= form.label :team_aggregation_n, "N (for sum of best N)", class: "label" %><%= form.number_field :team_aggregation_n, min: 1, class: "input" %></div>
+  <div><%= form.label :attempt_policy, "Multiple attempts", class: "label" %><%= form.select :attempt_policy, [ [ "Latest counts", "latest" ], [ "Best counts", "best" ], [ "Average of attempts", "average" ] ], {}, class: "input" %></div>
+  <div><%= form.label :weight, "Weight", class: "label" %><%= form.number_field :weight, step: 0.5, min: 0, class: "input" %><p class="hint">2 = counts double.</p></div>
+  <div><%= form.label :status, class: "label" %><%= form.select :status, [ [ "Open for scores", "open" ], [ "Upcoming", "upcoming" ], [ "Locked", "locked" ], [ "Final", "final" ] ], {}, class: "input" %></div>
+</div>

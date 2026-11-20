@@ -1,0 +1,32 @@
+<% content_for :title, "Games · #{@event.name}" %>
+<div class="grid gap-6 lg:grid-cols-5">
+  <section class="lg:col-span-3">
+    <h2 class="display text-xl">Games</h2>
+    <p class="text-sm muted">Players text the number. <%= "Numbers are locked now that the event is live." if @event.live? || @event.finished? %></p>
+    <ol class="mt-3 divide-y divide-stone-200 rounded-2xl bg-white ring-1 ring-stone-200 dark:divide-stone-800 dark:bg-stone-900 dark:ring-stone-800">
+      <% @games.each_with_index do |game, index| %>
+        <li class="flex items-center gap-3 px-4 py-3">
+          <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent font-black text-accent-ink tabular-nums"><%= game.position %></span>
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold"><%= game.name %> <span class="text-xs font-normal muted">· <%= game.status %></span></p>
+            <p class="text-xs muted"><%= game.higher_better? ? "High" : "Low" %> wins · <%= game.score_format %> · <%= game.scored_by_team? ? "team score" : "#{game.team_aggregation.humanize.downcase} of players" %><%= " · #{ScoreValue.trim(game.weight)}×" if game.weight != 1 %></p>
+          </div>
+          <% unless @event.live? || @event.finished? %>
+            <%= button_to "↑", move_manage_event_game_path(@event, game), method: :patch, params: { direction: "up" }, class: "btn btn-secondary btn-sm", disabled: index.zero?, title: "Move up" %>
+            <%= button_to "↓", move_manage_event_game_path(@event, game), method: :patch, params: { direction: "down" }, class: "btn btn-secondary btn-sm", disabled: index == @games.size - 1, title: "Move down" %>
+          <% end %>
+          <%= link_to "Edit", edit_manage_event_game_path(@event, game), class: "btn btn-secondary btn-sm" %>
+        </li>
+      <% end %>
+      <% if @games.empty? %><li class="px-4 py-6 text-sm muted">No games yet. Add the first one.</li><% end %>
+    </ol>
+  </section>
+  <section class="card lg:col-span-2">
+    <h2 class="font-bold">Add a game</h2>
+    <%= form_with model: @game, url: manage_event_games_path(@event), class: "mt-4 space-y-4" do |form| %>
+      <% if @game.errors.any? %><p class="flash flash-alert"><%= @game.errors.full_messages.to_sentence %></p><% end %>
+      <%= render "form", form: form, game: @game %>
+      <%= form.submit "Add game", class: "btn btn-primary" %>
+    <% end %>
+  </section>
+</div>

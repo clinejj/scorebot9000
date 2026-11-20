@@ -1,0 +1,40 @@
+<% content_for :header_nav do %>
+  <%= link_to "Console", manage_root_path, class: "hover:underline" %>
+  <%= link_to "Admin", admin_root_path, class: "hover:underline" if current_user.platform_admin? %>
+  <%= link_to "Account", account_path, class: "hover:underline" %>
+<% end %>
+<% if @event&.persisted? %>
+  <% content_for :brand_accent, @event.accent_color if @event.accent_color %>
+  <% content_for :page_header do %>
+  <div class="-mt-2 mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="min-w-0">
+        <p class="eyebrow"><%= @event.series&.name || "Event" %> · console</p>
+        <h1 class="display mt-1 truncate text-2xl sm:text-3xl"><%= @event.name %></h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= status_pill(@event) %>
+        <%= link_to "View page", event_path(@event), class: "btn btn-secondary btn-sm", target: "_blank" %>
+      </div>
+    </div>
+    <% manage = allowed_to?(:manage?, @event) %>
+    <nav class="mt-4 flex gap-1 overflow-x-auto border-b border-stone-200 text-sm font-semibold dark:border-stone-800">
+      <% [
+           [ "Overview", manage_event_path(@event), manage ],
+           [ "Setup", edit_manage_event_path(@event), manage ],
+           [ "Games", manage_event_games_path(@event), manage ],
+           [ "Teams", manage_event_teams_path(@event), manage && @event.uses_teams? ],
+           [ "Players", manage_event_participants_path(@event), manage ],
+           [ "Scores", manage_event_score_sheets_path(@event), true ],
+           [ "Adjustments", manage_event_adjustments_path(@event), manage ],
+           [ "SMS", manage_event_sms_path(@event), manage ],
+           [ "Organizers", manage_event_memberships_path(@event), manage ]
+         ].each do |label, path, visible| %>
+        <% next unless visible %>
+        <%= link_to label, path, class: "whitespace-nowrap border-b-2 px-3 py-2 #{current_page?(path) || (label == "Scores" && request.path.include?("/scores")) ? "border-accent text-stone-900 dark:text-white" : "border-transparent muted hover:text-stone-900 dark:hover:text-white"}" %>
+      <% end %>
+    </nav>
+  </div>
+  <% end %>
+<% end %>
+<%= render template: "layouts/application" %>

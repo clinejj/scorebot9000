@@ -1,0 +1,38 @@
+<% content_for :title, "Players · #{@event.name}" %>
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    <h2 class="display text-xl">Players (<%= @participants.size %>)</h2>
+    <p class="text-sm muted">Contact details are only visible to organizers.</p>
+  </div>
+  <%= form_with url: manage_event_participants_path(@event), class: "flex flex-wrap items-end gap-2" do |form| %>
+    <div><%= form.label :identifier, "Email or mobile", class: "label" %><%= form.text_field :identifier, required: true, class: "input" %></div>
+    <% if @event.uses_teams? %><div><%= form.label :team_name, "Team", class: "label" %><%= form.text_field :team_name, class: "input", list: "teams" %></div><% end %>
+    <div><%= form.label :alias_name, "Player name", class: "label" %><%= form.text_field :alias_name, class: "input", placeholder: "Random if blank" %></div>
+    <%= form.submit "Add player", class: "btn btn-primary" %>
+  <% end %>
+  <datalist id="teams"><% @event.teams.each do |team| %><option value="<%= team.name %>"><% end %></datalist>
+</div>
+
+<div class="mt-6 card !p-0 overflow-x-auto">
+  <table class="table-scores">
+    <thead><tr><th>Player name</th><% if @event.uses_teams? %><th>Team</th><% end %><th>Contact</th><th>Joined via</th><th></th></tr></thead>
+    <tbody>
+      <% @participants.each do |participant| %>
+        <tr>
+          <td colspan="<%= @event.uses_teams? ? 2 : 1 %>">
+            <%= form_with model: participant, url: manage_event_participant_path(@event, participant), method: :patch, class: "flex flex-wrap items-center gap-2" do |form| %>
+              <%= form.text_field :alias_name, class: "input !mt-0 w-48" %>
+              <% if @event.uses_teams? %>
+                <%= form.collection_select :team_id, @event.teams, :id, :name, { include_blank: "No team" }, class: "input !mt-0 w-40" %>
+              <% end %>
+              <%= form.submit "Save", class: "btn btn-secondary btn-sm" %>
+            <% end %>
+          </td>
+          <td class="text-xs"><%= participant.user.email || PhoneNumber.display(participant.user.phone) || ("placeholder" if participant.user.placeholder?) %></td>
+          <td class="text-xs muted"><%= participant.registered_via %></td>
+          <td class="text-right"><%= button_to "Remove", manage_event_participant_path(@event, participant), method: :delete, class: "text-xs text-red-700 underline", form: { data: { turbo_confirm: "Remove #{participant.alias_name}?" } } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

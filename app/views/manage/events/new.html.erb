@@ -1,0 +1,3 @@
+<% content_for :title, "New event" %>
+<h1 class="display text-3xl">New event</h1>
+<div class="mt-6"><%= render "form", event: @event, url: manage_events_path, method: :post %></div>

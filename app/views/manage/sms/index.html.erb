@@ -1,0 +1,30 @@
+<% content_for :title, "SMS · #{@event.name}" %>
+<div class="grid gap-6 lg:grid-cols-3">
+  <section class="card lg:col-span-2 overflow-x-auto">
+    <h2 class="display text-xl">Texts</h2>
+    <table class="table-scores mt-3">
+      <thead><tr><th>When</th><th>Player</th><th>Message</th><th>Reply</th></tr></thead>
+      <tbody>
+        <% @messages.each do |message| %>
+          <tr>
+            <td class="whitespace-nowrap text-xs"><%= time_ago_in_words(message.created_at) %> ago<%= tag.span(" · sim", class: "muted") if message.simulated? %></td>
+            <td class="text-xs"><%= @event.participant_for(message.user)&.alias_name || PhoneNumber.mask(message.from_number) %></td>
+            <td class="font-mono text-xs"><%= message.body %></td>
+            <td class="text-xs"><%= message.reply&.body || tag.span(message.status, class: "muted") %></td>
+          </tr>
+        <% end %>
+        <% if @messages.empty? %><tr><td colspan="4" class="muted">No texts yet.</td></tr><% end %>
+      </tbody>
+    </table>
+  </section>
+  <section class="card">
+    <h2 class="font-bold">Simulator</h2>
+    <p class="mt-1 text-sm muted">Rehearse the event: send a text as any number. It runs the real commands for this event but nothing is sent.</p>
+    <%= form_with url: manage_event_sms_path(@event), class: "mt-3 space-y-3" do |form| %>
+      <div><%= form.label :from, "From", class: "label" %><%= form.text_field :from, required: true, class: "input", placeholder: "909-555-0123", value: params[:from] %></div>
+      <div><%= form.label :body, "Message", class: "label" %><%= form.text_field :body, required: true, class: "input font-mono", placeholder: "REGISTER WHEATIES" %></div>
+      <%= form.submit "Send", class: "btn btn-primary" %>
+    <% end %>
+    <p class="mt-3 text-xs muted">Texting is <%= @event.sms_scoring_enabled? ? "on" : "off" %> for this event<%= " (the simulator still shows what players would see)" unless @event.sms_scoring_enabled? %>.</p>
+  </section>
+</div>
