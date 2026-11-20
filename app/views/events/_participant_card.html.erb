@@ -1,0 +1,39 @@
+<%# locals: (event:, participant:) %>
+<section class="card">
+  <h2 class="font-bold">You're in</h2>
+  <p class="mt-1">Playing as <strong><%= participant.alias_name %></strong><%= tag.span(" on #{participant.team.name}") if participant.team %>.</p>
+
+  <% if event.live? && event.games.any?(&:open_for_players?) %>
+    <%= form_with url: event_submissions_path(event), class: "mt-4 space-y-3" do |form| %>
+      <p class="text-sm font-semibold">Submit a score</p>
+      <div class="grid grid-cols-5 gap-2">
+        <%= form.select :game, event.games.select(&:open_for_players?).map { |game| [ "#{game.position}. #{game.name}", game.position ] }, {}, class: "input col-span-3 !mt-0" %>
+        <%= form.text_field :value, required: true, placeholder: "Score", inputmode: "decimal", class: "input col-span-2 !mt-0" %>
+      </div>
+      <%= form.submit "Submit", class: "btn btn-primary w-full" %>
+    <% end %>
+    <%= button_to "Undo my last score", undo_event_submissions_path(event), method: :delete, class: "mt-2 w-full text-sm muted underline", form: { data: { turbo_confirm: "Remove your most recent score?" } } %>
+  <% end %>
+
+  <details class="mt-4 text-sm">
+    <summary class="cursor-pointer font-semibold">Change team or name</summary>
+    <div class="mt-3 space-y-3">
+      <% if event.teams_self_registered? %>
+        <%= form_with url: event_registration_path(event), method: :patch, class: "flex gap-2" do |form| %>
+          <%= form.text_field :team_name, value: participant.team&.name, class: "input !mt-0", placeholder: "Team name", list: "event-teams" %>
+          <%= form.submit "Switch", class: "btn btn-secondary btn-sm" %>
+        <% end %>
+        <datalist id="event-teams"><% event.teams.each do |team| %><option value="<%= team.name %>"><% end %></datalist>
+      <% end %>
+      <% if event.allow_alias_override? || !event.aliases_random? %>
+        <%= form_with url: event_registration_path(event), method: :patch, class: "flex gap-2" do |form| %>
+          <%= form.text_field :alias_name, placeholder: "New player name", class: "input !mt-0", maxlength: 60 %>
+          <%= form.submit "Rename", class: "btn btn-secondary btn-sm" %>
+        <% end %>
+      <% end %>
+      <% if event.aliases_random? %>
+        <%= button_to "Give me a new random name", event_registration_path(event), method: :patch, params: { alias_name: "" }, class: "text-sm underline muted" %>
+      <% end %>
+    </div>
+  </details>
+</section>

@@ -74,3 +74,9 @@ gem "mission_control-jobs"
 
 # Phone number parsing/normalization (E.164)
 gem "phonelib"
+
+# Twilio: Verify (phone sign-in codes) and Messaging (SMS scoring)
+gem "twilio-ruby"
+
+# Authorization policies (per-series/event roles)
+gem "action_policy"

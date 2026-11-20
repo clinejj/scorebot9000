@@ -69,9 +69,12 @@
     <% end %>
 
     <% if @participant %>
+      <%= render "events/participant_card", event: @event, participant: @participant %>
+    <% elsif @event.accepting_registrations? %>
       <section class="card">
-        <h2 class="font-bold">You're in</h2>
-        <p class="mt-1">You're playing as <strong><%= @participant.alias_name %></strong><%= " on #{@participant.team.name}" if @participant.team %>.</p>
+        <h2 class="font-bold">Play in this event</h2>
+        <p class="mt-1 text-sm muted">Join on the web<%= " or by text" if sms_instructions?(@event) %>, then submit scores as you go.</p>
+        <%= link_to "Join #{@event.name}", new_event_registration_path(@event), class: "btn btn-primary mt-3 w-full" %>
       </section>
     <% end %>
 

@@ -19,6 +19,7 @@ class SessionsController < ApplicationController
     if identifier&.email?
       code = SignInCode.issue!(email: identifier.value, ip_address: request.remote_ip)
       SignInMailer.with(sign_in_code: code, code: code.code).code.deliver_later
+      session.delete(:sign_in_phone)
       session[:sign_in_email] = identifier.value
       redirect_to verify_session_path, notice: development_code_notice(code) || "We emailed a 6-digit code to #{identifier.value}."
     elsif identifier&.phone?
@@ -32,20 +33,13 @@ class SessionsController < ApplicationController
   def verify
     if params[:token].present?
       sign_in_with_magic_link(params[:token])
-    elsif pending_email.blank?
+    elsif pending_email.blank? && pending_phone.blank?
       redirect_to new_session_path
     end
   end
 
   def confirm
-    sign_in_code = SignInCode.latest_usable_for(pending_email) if pending_email.present?
-
-    if sign_in_code&.verify(params[:code])
-      complete_sign_in(User.from_verified_email!(sign_in_code.email))
-    else
-      flash.now[:alert] = sign_in_code&.usable? ? "That code didn't match. Try again." : "That code has expired. Request a new one."
-      render :verify, status: :unprocessable_entity
-    end
+    pending_phone.present? ? confirm_phone : confirm_email
   end
 
   def destroy
@@ -56,6 +50,31 @@ class SessionsController < ApplicationController
   private
     def pending_email
       session[:sign_in_email]
+    end
+
+    def pending_phone
+      session[:sign_in_phone]
+    end
+
+    def confirm_email
+      sign_in_code = SignInCode.latest_usable_for(pending_email) if pending_email.present?
+
+      if sign_in_code&.verify(params[:code])
+        complete_sign_in(User.from_verified_email!(sign_in_code.email))
+      else
+        flash.now[:alert] = sign_in_code&.usable? ? "That code didn't match. Try again." : "That code has expired. Request a new one."
+        render :verify, status: :unprocessable_entity
+      end
+    end
+
+    def confirm_phone
+      result = PhoneVerifier.check(pending_phone, params[:code])
+      if result.ok?
+        complete_sign_in(User.from_verified_phone!(pending_phone))
+      else
+        flash.now[:alert] = result.error
+        render :verify, status: :unprocessable_entity
+      end
     end
 
     def sign_in_with_magic_link(token)
@@ -70,14 +89,34 @@ class SessionsController < ApplicationController
 
     def complete_sign_in(user)
       return_to = after_authentication_url
+      session.delete(:sign_in_email)
+      session.delete(:sign_in_phone)
       start_new_session_for(user)
       redirect_to return_to, notice: "Signed in as #{user.display_name}."
     end
 
-    # Phone sign-in arrives with Twilio Verify in a later PR.
-    def start_phone_sign_in(_identifier)
-      flash.now[:alert] = "Phone sign-in isn't available yet. Use your email address."
-      render :new, status: :unprocessable_entity
+    def start_phone_sign_in(identifier)
+      unless PhoneVerifier.available?
+        flash.now[:alert] = "Signing in by text is unavailable right now. Use your email address."
+        return render(:new, status: :unprocessable_entity)
+      end
+
+      result = PhoneVerifier.start(identifier.value)
+      if result.ok?
+        session.delete(:sign_in_email)
+        session[:sign_in_phone] = identifier.value
+        session[:sign_in_phone_display] = PhoneNumber.display(identifier.value)
+        redirect_to verify_session_path, notice: development_phone_notice(identifier.value) || "We texted a 6-digit code to #{PhoneNumber.display(identifier.value)}."
+      else
+        flash.now[:alert] = result.error
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def development_phone_notice(phone)
+      return unless Rails.env.development? && PhoneVerifier.backend.respond_to?(:last_code_for)
+
+      "Development: your code is #{PhoneVerifier.backend.last_code_for(phone)}."
     end
 
     # In development there's no mail delivery, so show the code on screen.

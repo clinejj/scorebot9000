@@ -1,0 +1,50 @@
+<% content_for :title, "Your account" %>
+<p class="eyebrow">Your account</p>
+<h1 class="display mt-2 text-3xl"><%= current_user.display_name %></h1>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-3">
+  <section class="card lg:col-span-1">
+    <h2 class="font-bold">Profile</h2>
+    <%= form_with model: current_user, url: account_path, method: :patch, class: "mt-3 space-y-3" do |form| %>
+      <div>
+        <%= form.label :name, "Your name", class: "label" %>
+        <%= form.text_field :name, class: "input", placeholder: "Shown only where events use real names" %>
+        <% current_user.errors.full_messages_for(:name).each do |message| %><p class="field-error"><%= message %></p><% end %>
+      </div>
+      <%= form.submit "Save", class: "btn btn-secondary btn-sm" %>
+    <% end %>
+
+    <h2 class="mt-6 font-bold">Sign-in methods</h2>
+    <p class="text-sm muted">Sign in with any of these. They're never shown publicly.</p>
+    <ul class="mt-3 space-y-2 text-sm">
+      <li class="flex items-center justify-between gap-3">
+        <span><span class="muted">Email</span><br><strong><%= current_user.email || "—" %></strong></span>
+        <%= link_to current_user.email ? "Change" : "Add", new_identifier_path(kind: "email"), class: "btn btn-secondary btn-sm" %>
+      </li>
+      <li class="flex items-center justify-between gap-3">
+        <span><span class="muted">Mobile</span><br><strong><%= PhoneNumber.display(current_user.phone) || "—" %></strong></span>
+        <%= link_to current_user.phone ? "Change" : "Add", new_identifier_path(kind: "phone"), class: "btn btn-secondary btn-sm" %>
+      </li>
+    </ul>
+    <p class="mt-3 text-xs muted">Played before under a different number or email? Add it here and we'll combine your history.</p>
+  </section>
+
+  <section class="card lg:col-span-2">
+    <h2 class="font-bold">Your events</h2>
+    <% if @participants.any? %>
+      <ul class="mt-3 divide-y divide-stone-100 dark:divide-stone-800">
+        <% @participants.each do |participant| %>
+          <li class="flex items-center justify-between gap-3 py-3">
+            <div class="min-w-0">
+              <%= link_to participant.event.name, event_path(participant.event), class: "font-semibold hover:underline" %>
+              <p class="text-sm muted">as <strong><%= participant.alias_name %></strong><%= " · #{participant.team.name}" if participant.team %></p>
+            </div>
+            <%= status_pill(participant.event) %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-2 text-sm muted">You haven't played in any events yet.</p>
+    <% end %>
+  </section>
+</div>

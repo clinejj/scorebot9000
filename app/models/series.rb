@@ -27,6 +27,13 @@ class Series < ApplicationRecord
     find_by(custom_domain: domain) if domain.present?
   end
 
+  def role_for(user)
+    return nil unless user
+    return :owner if user.platform_admin?
+
+    Membership.highest_role(memberships.where(user: user).pluck(:role))
+  end
+
   def public_events
     events.publicly_visible
   end

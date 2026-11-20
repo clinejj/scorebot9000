@@ -9,6 +9,15 @@ Rails.application.routes.draw do
   end
   get "sign_in" => "sessions#new"
 
+  # Your account: profile, linked email/phone, your events.
+  resource :account, only: %i[show update], path: "me"
+  resources :identifiers, only: %i[new create], path: "me/identifiers" do
+    collection do
+      get :verify
+      post :verify, action: :confirm
+    end
+  end
+
   # Platform admin tools. Every route here requires a signed-in platform admin;
   # for anyone else they don't exist (404). See AdminConstraint.
   constraints(AdminConstraint) do
@@ -38,6 +47,10 @@ Rails.application.routes.draw do
     end
     resources :games, only: :show, param: :position
     resources :teams, only: :show
+    resource :registration, only: %i[new create update], path: "join"
+    resources :submissions, only: :create do
+      delete :undo, on: :collection
+    end
   end
 
   # Old clinelympics.com URLs.

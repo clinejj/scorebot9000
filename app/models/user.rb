@@ -40,6 +40,16 @@ class User < ApplicationRecord
     end
   end
 
+  def self.from_verified_phone!(phone)
+    transaction do
+      user = find_by(phone: phone) || new(phone: phone)
+      user.phone_verified_at ||= Time.current
+      user.placeholder = false
+      user.save!
+      user
+    end
+  end
+
   def flipper_id
     public_id
   end

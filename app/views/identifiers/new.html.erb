@@ -1,0 +1,14 @@
+<% content_for :title, @kind == "phone" ? "Add a mobile number" : "Add an email" %>
+<div class="mx-auto max-w-md card">
+  <h1 class="display text-2xl"><%= @kind == "phone" ? "Add a mobile number" : "Add an email" %></h1>
+  <p class="mt-1 muted">We'll send a code to confirm it's yours.</p>
+  <%= form_with url: identifiers_path, class: "mt-6 space-y-4" do |form| %>
+    <%= form.hidden_field :kind, value: @kind %>
+    <div>
+      <%= form.label :identifier, @kind == "phone" ? "Mobile number" : "Email", class: "label" %>
+      <%= form.text_field :identifier, required: true, autofocus: true, class: "input",
+            inputmode: @kind == "phone" ? "tel" : "email", autocomplete: @kind == "phone" ? "tel" : "email" %>
+    </div>
+    <%= form.submit "Send code", class: "btn btn-primary w-full" %>
+  <% end %>
+</div>
