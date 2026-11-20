@@ -28,6 +28,7 @@ Rails.application.routes.draw do
 
     namespace :admin do
       root "dashboard#show"
+      resources :sms_messages, only: %i[index create], path: "sms"
       resources :legacy_imports, only: %i[index new create show] do
         post :run, on: :member
       end
@@ -52,6 +53,10 @@ Rails.application.routes.draw do
       delete :undo, on: :collection
     end
   end
+
+  # Twilio inbound SMS webhook (/inbound is the legacy URL, kept during cutover).
+  post "twilio/sms" => "sms_webhooks#create", as: :twilio_sms
+  post "inbound" => "sms_webhooks#create"
 
   # Old clinelympics.com URLs.
   %w[summary medals scores details index admin].each do |page|

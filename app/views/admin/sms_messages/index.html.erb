@@ -1,0 +1,35 @@
+<% content_for :title, "SMS" %>
+<p class="eyebrow">Platform admin</p>
+<h1 class="display mt-2 text-3xl">SMS log</h1>
+
+<section class="mt-6 card max-w-2xl">
+  <h2 class="font-bold">Simulator</h2>
+  <p class="text-sm muted">Runs a text through the real command pipeline (logged as simulated; nothing is sent).</p>
+  <%= form_with url: admin_sms_messages_path, class: "mt-3 grid gap-3 sm:grid-cols-5" do |form| %>
+    <%= form.text_field :from, placeholder: "From, e.g. 909-555-0123", required: true, class: "input !mt-0 sm:col-span-2" %>
+    <%= form.text_field :body, placeholder: "SCORE 1 228", required: true, class: "input !mt-0 sm:col-span-2" %>
+    <%= form.submit "Send", class: "btn btn-primary" %>
+  <% end %>
+</section>
+
+<section class="mt-6 card overflow-x-auto">
+  <table class="table-scores">
+    <thead><tr><th>When</th><th>From</th><th>Event</th><th>Message</th><th>Reply</th><th>Status</th></tr></thead>
+    <tbody>
+      <% @messages.each do |message| %>
+        <tr>
+          <td class="whitespace-nowrap"><%= time_ago_in_words(message.created_at) %> ago</td>
+          <td class="whitespace-nowrap"><%= PhoneNumber.mask(message.from_number) || message.from_number %></td>
+          <td><%= message.event&.name %></td>
+          <td class="font-mono text-xs"><%= message.body %></td>
+          <td class="text-xs"><%= message.reply&.body %></td>
+          <td class="text-xs">
+            <%= message.status %><%= " · #{message.command}" if message.command.present? %>
+            <%= tag.span("simulated", class: "ml-1 rounded bg-stone-200 px-1 dark:bg-stone-800") if message.simulated? %>
+            <%= tag.span("legacy", class: "ml-1 rounded bg-stone-200 px-1 dark:bg-stone-800") if message.legacy? %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
