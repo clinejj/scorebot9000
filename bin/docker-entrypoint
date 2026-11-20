@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+# Migrations run once per deploy via Fly's release_command (see fly.toml),
+# not on every machine boot.
+exec "${@}"

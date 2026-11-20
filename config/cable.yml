@@ -1,0 +1,13 @@
+# Async adapter only works within the same process, which is fine for local
+# development. Production uses Solid Cable in the primary database.
+development:
+  adapter: async
+
+test:
+  adapter: test
+
+production:
+  adapter: solid_cable
+  # Relaxed from the 0.1s default to keep idle query volume trivial.
+  polling_interval: 0.5.seconds
+  message_retention: 1.day

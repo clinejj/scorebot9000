@@ -1,0 +1,6 @@
+<% if notice.present? || alert.present? %>
+  <div class="mx-auto mt-4 w-full max-w-5xl space-y-2 px-4" role="status">
+    <% if notice.present? %><p class="flash flash-notice"><%= notice %></p><% end %>
+    <% if alert.present? %><p class="flash flash-alert"><%= alert %></p><% end %>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+<% content_for :title, "SMS terms" %>
+<article class="prose prose-stone max-w-none dark:prose-invert">
+  <h1>SMS terms</h1>
+  <p class="lead">Scorebot 9000 lets players at live events register and submit scores by text message.</p>
+
+  <h2>How you opt in</h2>
+  <p>You opt in by texting a command such as <strong>REGISTER</strong>, <strong>JOIN</strong> or <strong>SCORE</strong> to an event's number<% if Rails.configuration.x.sms_number %> (<%= Rails.configuration.x.sms_number %>)<% end %>. The number and these terms appear on each event's page. We only send replies to messages you send, plus one-time sign-in codes when you ask for one.</p>
+
+  <h2>Message frequency and cost</h2>
+  <p>Message frequency varies and depends on how many commands you send, typically a handful of messages per event. <strong>Message and data rates may apply.</strong></p>
+
+  <h2>Help and opting out</h2>
+  <ul>
+    <li>Text <strong>HELP</strong> or <strong>COMMANDS</strong> for a list of commands.</li>
+    <li>Text <strong>STOP</strong> at any time to stop receiving messages. Text <strong>START</strong> to opt back in.</li>
+  </ul>
+  <p>Carriers are not liable for delayed or undelivered messages.</p>
+
+  <h2>Privacy</h2>
+  <p>See our <%= link_to "privacy policy", privacy_path %>. No mobile information will be shared with third parties or affiliates for marketing or promotional purposes.</p>
+</article>
