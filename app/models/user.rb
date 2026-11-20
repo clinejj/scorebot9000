@@ -14,6 +14,7 @@ class User < ApplicationRecord
   encrypts :email, deterministic: true
   encrypts :pending_email, deterministic: true
   encrypts :phone, deterministic: true
+  encrypts :legacy_player_id, deterministic: true
 
   normalizes :email, :pending_email, with: ->(email) { email.strip.downcase.presence }
   normalizes :phone, with: ->(phone) { PhoneNumber.normalize(phone) }
@@ -57,6 +58,8 @@ class User < ApplicationRecord
 
   private
     def has_contact_method
+      return if placeholder?
+
       errors.add(:base, "needs an email or phone number") if email.blank? && phone.blank? && pending_email.blank?
     end
 end

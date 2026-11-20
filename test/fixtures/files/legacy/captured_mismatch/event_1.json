@@ -1,0 +1,80 @@
+{
+  "legacy_event_id": 1,
+  "title": "Summary of 2012 Clinelympic Games",
+  "captured_at": "2026-11-20T00:00:00Z",
+  "medal_names": [
+    "Gold",
+    "Silver",
+    "Bronze"
+  ],
+  "tables": {
+    "team_medal_count": {
+      "headers": [
+        "Team",
+        "Gold",
+        "Silver",
+        "Bronze",
+        "Total"
+      ],
+      "rows": [
+        [
+          "BEARS",
+          "1",
+          "1",
+          "0",
+          "5"
+        ],
+        [
+          "WHEATIES",
+          "1",
+          "1",
+          "0",
+          "5"
+        ]
+      ]
+    },
+    "team_medals": {
+      "headers": [
+        "",
+        "Trivia",
+        "Golf"
+      ],
+      "rows": [
+        [
+          "Gold",
+          "BEARS: 12",
+          "WHEATIES: 3"
+        ],
+        [
+          "Silver",
+          "WHEATIES: 10",
+          "BEARS: 4"
+        ],
+        [
+          "Bronze",
+          "",
+          ""
+        ]
+      ]
+    },
+    "team_scores": {
+      "headers": [
+        "Team",
+        "Trivia",
+        "Golf"
+      ],
+      "rows": [
+        [
+          "Wheaties",
+          "10",
+          "3"
+        ],
+        [
+          "Bears",
+          "12",
+          "4"
+        ]
+      ]
+    }
+  }
+}

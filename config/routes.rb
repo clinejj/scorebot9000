@@ -19,6 +19,9 @@ Rails.application.routes.draw do
 
     namespace :admin do
       root "dashboard#show"
+      resources :legacy_imports, only: %i[index new create show] do
+        post :run, on: :member
+      end
     end
   end
 

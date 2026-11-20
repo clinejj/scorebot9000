@@ -37,3 +37,4 @@
 # Legacy data dumps contain phone numbers; never commit them.
 /tmp/legacy/
 *.jsonl
+!/test/fixtures/files/legacy/*.jsonl

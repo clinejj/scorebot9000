@@ -1,0 +1,29 @@
+<% content_for :title, "Legacy import" %>
+<div class="flex items-center justify-between gap-4">
+  <div>
+    <p class="eyebrow">Platform admin</p>
+    <h1 class="display mt-2 text-3xl">Legacy import</h1>
+  </div>
+  <%= link_to "Upload dump", new_admin_legacy_import_path, class: "btn btn-primary" %>
+</div>
+<p class="mt-3 max-w-2xl muted">Import the 2012–2021 Clinelympics data from the old App Engine Datastore. Create the dump with <code>script/legacy/dump_datastore.rb</code>, and capture the announced results with <code>script/legacy/capture_results.rb</code> first.</p>
+
+<div class="mt-6 card">
+  <% if @legacy_imports.any? %>
+    <table class="table-scores">
+      <thead><tr><th>Uploaded</th><th>By</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        <% @legacy_imports.each do |legacy_import| %>
+          <tr>
+            <td><%= l legacy_import.created_at, format: :short %></td>
+            <td><%= legacy_import.created_by_user&.display_name %></td>
+            <td><%= legacy_import.status %></td>
+            <td class="text-right"><%= link_to "Report", admin_legacy_import_path(legacy_import), class: "underline" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="muted">No imports yet.</p>
+  <% end %>
+</div>

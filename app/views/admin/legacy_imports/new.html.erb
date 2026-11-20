@@ -1,0 +1,15 @@
+<% content_for :title, "Upload legacy dump" %>
+<h1 class="display text-3xl">Upload legacy dump</h1>
+<div class="mt-6 max-w-xl card">
+  <%= form_with model: @legacy_import, url: admin_legacy_imports_path, class: "space-y-4" do |form| %>
+    <% if @legacy_import.errors.any? %>
+      <p class="flash flash-alert"><%= @legacy_import.errors.full_messages.to_sentence %></p>
+    <% end %>
+    <div>
+      <%= form.label :dump_file, "Dump file (.jsonl)", class: "label" %>
+      <%= form.file_field :dump_file, accept: ".jsonl,.json,.txt", required: true, class: "mt-2 block w-full text-sm" %>
+      <p class="hint">The file contains phone numbers. It's stored privately and only platform admins can see this page.</p>
+    </div>
+    <%= form.submit "Upload", class: "btn btn-primary" %>
+  <% end %>
+</div>

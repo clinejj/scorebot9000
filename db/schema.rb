@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_20_110005) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_20_120001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -245,6 +245,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110005) do
     t.index ["reviewed_by_user_id"], name: "index_host_requests_on_reviewed_by_user_id"
     t.index ["user_id"], name: "index_host_requests_on_user_id"
     t.check_constraint "status::text = ANY (ARRAY['pending'::character varying, 'approved'::character varying, 'declined'::character varying]::text[])", name: "host_requests_status_valid"
+  end
+
+  create_table "legacy_imports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "status", default: "uploaded", null: false
+    t.jsonb "report", default: {}, null: false
+    t.uuid "created_by_user_id"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_user_id"], name: "index_legacy_imports_on_created_by_user_id"
+    t.check_constraint "status::text = ANY (ARRAY['uploaded'::character varying, 'running'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "legacy_imports_status_valid"
   end
 
   create_table "maintenance_tasks_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -581,11 +593,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110005) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "sms_context_event_id"
+    t.boolean "placeholder", default: false, null: false
+    t.string "legacy_player_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["legacy_player_id"], name: "index_users_on_legacy_player_id", unique: true
     t.index ["pending_email"], name: "index_users_on_pending_email"
     t.index ["phone"], name: "index_users_on_phone", unique: true
     t.index ["sms_context_event_id"], name: "index_users_on_sms_context_event_id"
-    t.check_constraint "email IS NOT NULL OR phone IS NOT NULL OR pending_email IS NOT NULL", name: "users_have_contact"
+    t.check_constraint "email IS NOT NULL OR phone IS NOT NULL OR pending_email IS NOT NULL OR placeholder", name: "users_have_contact"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -602,6 +617,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110005) do
   add_foreign_key "games", "events", on_delete: :cascade
   add_foreign_key "host_requests", "users", column: "reviewed_by_user_id", on_delete: :nullify
   add_foreign_key "host_requests", "users", on_delete: :cascade
+  add_foreign_key "legacy_imports", "users", column: "created_by_user_id", on_delete: :nullify
   add_foreign_key "memberships", "users", on_delete: :cascade
   add_foreign_key "participants", "events", on_delete: :cascade
   add_foreign_key "participants", "teams", on_delete: :nullify
