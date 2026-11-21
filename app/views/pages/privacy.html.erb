@@ -1,0 +1,36 @@
+<% content_for :title, "Privacy policy" %>
+<article class="prose prose-stone max-w-none dark:prose-invert">
+  <h1>Privacy policy</h1>
+  <p class="lead"><%= Rails.configuration.x.operator_name %> runs Scorebot 9000, a score-tracking service for informal competitions and parties. This page explains what we collect and why.</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Contact details</strong> you give us to sign in or play: a mobile phone number and/or an email address, and optionally your name.</li>
+    <li><strong>Event participation</strong>: the events you join, your team, your player alias, and the scores you or your organizers submit.</li>
+    <li><strong>Text messages</strong> you send to an event's number, and our replies, so we can process commands like <code>REGISTER</code> and <code>SCORE</code> and troubleshoot problems.</li>
+    <li><strong>Basic technical data</strong> such as IP address and browser type, kept in server logs for security.</li>
+  </ul>
+
+  <h2>How we use it</h2>
+  <ul>
+    <li>To register you for events, record and display scores and standings, and send replies to your commands.</li>
+    <li>To send one-time sign-in codes by text or email.</li>
+    <li>To keep the service secure and working.</li>
+  </ul>
+  <p>Public event pages show player aliases, team names and scores. They never show phone numbers or email addresses.</p>
+
+  <h2>Sharing</h2>
+  <p><strong>We do not sell your information. No mobile information will be shared with third parties or affiliates for marketing or promotional purposes.</strong> We use service providers only to operate the service (for example Twilio to send and receive text messages, an email provider to send sign-in codes, and our hosting and database providers), and they may only use the data to provide those services.</p>
+
+  <h2>Retention and your choices</h2>
+  <p>Event results are kept as a historical record of each event. You can ask us to remove your contact details or delete your account at any time. Reply <strong>STOP</strong> to any text to stop receiving messages from that number.</p>
+
+  <h2>Contact</h2>
+  <p>
+    <% if Rails.configuration.x.support_email %>
+      Questions or requests: <%= mail_to Rails.configuration.x.support_email %>.
+    <% else %>
+      Questions or requests: contact the organizer of your event.
+    <% end %>
+  </p>
+</article>

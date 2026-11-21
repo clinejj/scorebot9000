@@ -1,0 +1,21 @@
+# PostgreSQL everywhere. Production is PlanetScale Postgres, configured with
+# DATABASE_URL (a Fly secret). Solid Queue and Solid Cable live in the same
+# database as the app tables, so there is a single connection config.
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i + 5 %>
+
+development:
+  <<: *default
+  database: scorebot_development
+
+test:
+  <<: *default
+  database: scorebot_test
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
+  # PlanetScale's pooled endpoint runs PgBouncer in transaction mode.
+  prepared_statements: <%= ENV.fetch("DATABASE_PREPARED_STATEMENTS", "true") == "true" %>

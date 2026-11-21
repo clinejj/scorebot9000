@@ -1,0 +1,47 @@
+# Fly.io config for production. See docs/MIGRATION_PLAN.md section 12.
+# One stateless machine that suspends when idle; all state is in PlanetScale
+# Postgres and Cloudflare R2. Secrets (DATABASE_URL, SECRET_KEY_BASE, ...)
+# are set with `fly secrets set`; see README.md.
+app = "scorebot9000"
+primary_region = "iad"  # keep next to the PlanetScale database region
+kill_signal = "SIGTERM"
+kill_timeout = "30s"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[deploy]
+  release_command = "./bin/rails db:migrate"
+  strategy = "immediate"
+
+[env]
+  RAILS_ENV = "production"
+  SOLID_QUEUE_IN_PUMA = "true"
+  RAILS_MAX_THREADS = "3"
+  APP_HOST = "scorebot9000.fly.dev"
+  PORT = "3000"
+
+[http_service]
+  internal_port = 80  # Thruster in front of Puma
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  # Set to 1 on event days: fly scale count 1 && fly machine update --autostop=off
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 50
+    hard_limit = 100
+
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "60s"
+    method = "GET"
+    path = "/up"
+    timeout = "5s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
