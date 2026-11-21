@@ -549,6 +549,7 @@ Rails picks the series by `request.host` with a routing constraint. Custom domai
 
 **Organizer console (`/manage`):**
 - Event setup wizard: basics → content → teams → **aliases** (random / self-chosen / real names, override allowed) → games → scoring preset with a preview → publish
+  - The scoring preview recomputes standings as settings change, using the event's own scores once it has some and otherwise a sample event in `db/scoring_samples/default.json`. The committed sample is synthetic. After the legacy import, replace it with a scrub of a real Clinelympics year: `bin/rails scoring:export_sample EVENT=clinelympics-<year>` renames teams and players to "Team N" and "Player N" and keeps the game settings and score values.
 - Games builder with drag-to-reorder; renumbering is locked once live
 - Teams: create, recolor, **randomize or balance** ("teams of 2, one team of 3 if odd"), drag players between teams
 - Participants: add manually, edit aliases, merge duplicates

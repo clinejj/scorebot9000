@@ -1,0 +1,19 @@
+<%# locals: (preview:, event:) %>
+<turbo-frame id="scoring_preview" class="block">
+  <div class="rounded-xl bg-stone-100 p-4 dark:bg-stone-900">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+      <h3 class="text-sm font-bold">Preview: <%= preview.config.preset_label %></h3>
+      <p class="text-xs muted"><%= preview.sample? ? "Sample results. Your event's own scores replace them once it has some." : "Your event's scores so far" %></p>
+    </div>
+    <% if preview.result.nil? %>
+      <p class="mt-2 text-sm font-semibold text-red-700 dark:text-red-400">These settings won't work: <%= preview.config.errors.to_sentence %>.</p>
+    <% elsif (rows = preview.result.standings).empty? %>
+      <p class="mt-2 text-sm muted">No one to rank yet.</p>
+    <% else %>
+      <div class="mt-3 rounded-lg bg-white p-1 dark:bg-stone-950">
+        <%= render "results/standings_table", event: event, config: preview.config, rows: rows.first(10), link: false %>
+      </div>
+      <% if rows.size > 10 %><p class="mt-2 text-xs muted">and <%= rows.size - 10 %> more</p><% end %>
+    <% end %>
+  </div>
+</turbo-frame>

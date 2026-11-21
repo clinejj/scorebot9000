@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   # Organizer console.
   namespace :manage do
     root "dashboard#show"
+    match "scoring_preview", to: "scoring_previews#create", via: %i[post patch], as: :scoring_preview
     resources :series, only: %i[new create edit update], param: :slug
     resources :events, only: %i[new create show edit update destroy], param: :slug do
       resource :lifecycle, only: :update

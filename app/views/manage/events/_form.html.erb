@@ -1,7 +1,7 @@
 <%# locals: (event:, url:, method:) %>
 <% scoring = ScoringForm.from_config(event.scoring_config) %>
 <% manageable_series = current_user.platform_admin? ? Series.order(:name) : Series.where(id: current_user.memberships.where(resource_type: "Series", role: %w[owner organizer]).select(:resource_id)).order(:name) %>
-<%= form_with model: event, url: url, method: method, class: "space-y-8" do |form| %>
+<%= form_with model: event, url: url, method: method, class: "space-y-8", data: { controller: "scoring-preview", action: "change->scoring-preview#refresh" } do |form| %>
   <% if event.errors.any? %>
     <div class="flash flash-alert"><%= event.errors.full_messages.to_sentence %></div>
   <% end %>
@@ -69,6 +69,9 @@
         </div>
       </details>
     <% end %>
+    <%= render "manage/events/scoring_preview", preview: Scoring::Preview.call(event.scoring_config, event: event), event: event %>
+    <%= form.button "Update preview", type: "submit", name: nil, formaction: manage_scoring_preview_path(event_slug: event.slug), formmethod: "post", formnovalidate: true,
+          class: "btn btn-secondary text-sm", data: { turbo_frame: "scoring_preview", scoring_preview_target: "button" } %>
   </section>
 
   <%= form.submit event.persisted? ? "Save" : "Create event", class: "btn btn-primary" %>
