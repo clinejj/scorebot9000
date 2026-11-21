@@ -1,0 +1,93 @@
+<% content_for :title, @event.name %>
+<%= render "events/header", event: @event %>
+<%= render "events/nav", event: @event, current: :overview %>
+
+<div class="mt-8 grid gap-8 lg:grid-cols-3">
+  <div class="space-y-8 lg:col-span-2">
+    <% if @event.description.present? %>
+      <section class="prose prose-stone max-w-none dark:prose-invert"><%= @event.description %></section>
+    <% end %>
+
+    <% if @event.schedule.present? %>
+      <section>
+        <h2 class="display text-xl">Schedule</h2>
+        <div class="prose prose-stone mt-2 max-w-none dark:prose-invert"><%= @event.schedule %></div>
+      </section>
+    <% end %>
+
+    <% if @event.games.any? %>
+      <section>
+        <h2 class="display text-xl">Games</h2>
+        <ol class="mt-3 divide-y divide-stone-200 rounded-2xl bg-white ring-1 ring-stone-200 dark:divide-stone-800 dark:bg-stone-900 dark:ring-stone-800">
+          <% @event.games.each do |game| %>
+            <li>
+              <%= link_to event_game_path(@event, game), class: "flex items-center gap-4 px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50" do %>
+                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent font-black text-accent-ink tabular-nums"><%= game.position %></span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-semibold"><%= game.name %></span>
+                  <span class="block text-xs muted">
+                    <%= game.higher_better? ? "Highest" : "Lowest" %> <%= game.format_time? ? "time" : "score" %> wins
+                    <%= "· team game" if game.scored_by_team? %>
+                    <%= "· counts #{ScoreValue.trim(game.weight)}×" if game.weight != 1 %>
+                    <%= "· locked" if game.locked? %>
+                  </span>
+                </span>
+              <% end %>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+    <% end %>
+
+    <% if @event.rules.present? %>
+      <section>
+        <h2 class="display text-xl">Rules</h2>
+        <div class="prose prose-stone mt-2 max-w-none dark:prose-invert"><%= @event.rules %></div>
+      </section>
+    <% end %>
+  </div>
+
+  <aside class="space-y-6 <%= "order-first lg:order-none" if @event.live? %>">
+    <% if @standings&.standings&.any? %>
+      <section class="card">
+        <div class="flex items-center justify-between">
+          <h2 class="font-bold"><%= @event.finished? ? "Final standings" : "Standings" %></h2>
+          <%= link_to "All results", results_event_path(@event), class: "text-sm underline" %>
+        </div>
+        <ol class="mt-3 space-y-2">
+          <% @standings.standings.select(&:place).first(5).each do |row| %>
+            <li class="flex items-center justify-between gap-3">
+              <span class="flex min-w-0 items-center gap-3">
+                <span class="w-5 text-right font-black tabular-nums"><%= row.place %></span>
+                <%= competitor_name(@event, row.competitor) %>
+              </span>
+              <span class="font-bold tabular-nums"><%= points(row.total) %></span>
+            </li>
+          <% end %>
+        </ol>
+      </section>
+    <% end %>
+
+    <% if @participant %>
+      <section class="card">
+        <h2 class="font-bold">You're in</h2>
+        <p class="mt-1">You're playing as <strong><%= @participant.alias_name %></strong><%= " on #{@participant.team.name}" if @participant.team %>.</p>
+      </section>
+    <% end %>
+
+    <% if sms_instructions?(@event) %>
+      <section class="card">
+        <h2 class="font-bold">Play by text</h2>
+        <p class="mt-1 text-sm muted">Text these to <%= link_to sms_number, "sms:#{sms_number.to_s.gsub(/[^\d+]/, "")}", class: "font-semibold underline" %>:</p>
+        <dl class="mt-3 space-y-2 text-sm">
+          <div><dt class="font-mono font-bold"><%= @event.teams_self_registered? ? "REGISTER <team name>" : "REGISTER" %></dt><dd class="muted">Join and get your player name</dd></div>
+          <div><dt class="font-mono font-bold">SCORE &lt;game #&gt; &lt;score&gt;</dt><dd class="muted">e.g. SCORE 1 228</dd></div>
+          <div><dt class="font-mono font-bold">UNDO</dt><dd class="muted">Take back your last score</dd></div>
+          <div><dt class="font-mono font-bold">STANDINGS</dt><dd class="muted">How you're doing</dd></div>
+          <div><dt class="font-mono font-bold">COMMANDS</dt><dd class="muted">Everything else</dd></div>
+        </dl>
+        <p class="mt-3 text-xs muted">Playing in more than one event? Start with <span class="font-mono">JOIN <%= @event.sms_code %></span>. Msg &amp; data rates may apply. <%= link_to "SMS terms", sms_terms_path, class: "underline" %>.</p>
+      </section>
+    <% end %>
+  </aside>
+</div>

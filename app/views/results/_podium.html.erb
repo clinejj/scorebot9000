@@ -1,0 +1,17 @@
+<%# locals: (event:, config:, rows:) %>
+<% top = rows.select(&:place).first(3) %>
+<% if top.any? { |row| row.medal_counts.sum.positive? || row.total.to_d.positive? } %>
+  <ol class="grid grid-cols-3 items-end gap-2 sm:gap-4" aria-label="Podium">
+    <% [ top[1], top[0], top[2] ].each_with_index do |row, slot| %>
+      <% next tag.li if row.nil? %>
+      <% height = { 0 => "h-20 sm:h-28", 1 => "h-28 sm:h-40", 2 => "h-14 sm:h-20" }[slot] %>
+      <li class="flex flex-col items-center text-center">
+        <p class="mb-2 line-clamp-2 text-sm font-bold sm:text-base"><%= row.competitor.name %></p>
+        <p class="mb-2 text-xs muted tabular-nums"><%= points(row.total) %> <%= standings_metric_label(config).downcase %></p>
+        <div class="<%= height %> flex w-full items-start justify-center rounded-t-xl pt-2 text-2xl font-black text-white sm:text-4xl" style="background-color: <%= config.medals[row.place - 1]&.dig("color") || "#a8a29e" %>">
+          <%= row.place %>
+        </div>
+      </li>
+    <% end %>
+  </ol>
+<% end %>

@@ -1,0 +1,49 @@
+<% content_for :title, "#{@game.name} · #{@event.name}" %>
+<% config = @result.config %>
+<%= render "events/header", event: @event %>
+<%= render "events/nav", event: @event, current: :results %>
+
+<div class="mt-6" data-controller="<%= "auto-refresh" if @event.live? %>" data-auto-refresh-interval-value="20">
+  <p class="eyebrow">Game <%= @game.position %></p>
+  <h2 class="display mt-1 text-3xl"><%= @game.name %></h2>
+  <p class="mt-1 muted">
+    <%= @game.higher_better? ? "Highest" : "Lowest" %> wins ·
+    <%= @game.scored_by_team? ? "one score per team" : "everyone scores" %>
+    <% if @game.scored_by_individual? && config.team_basis? %>· team result = <%= @game.team_aggregation.humanize.downcase %> of members<% end %>
+    <% if @game.weight != 1 %>· counts <%= ScoreValue.trim(@game.weight) %>×<% end %>
+  </p>
+  <% if @game.description.present? %>
+    <div class="prose prose-stone mt-4 max-w-none dark:prose-invert"><%= @game.description %></div>
+  <% end %>
+
+  <% if @game_result&.rows&.any? %>
+    <div class="mt-6 card !p-0 sm:!p-2 overflow-x-auto">
+      <table class="table-scores">
+        <thead><tr><th class="w-10">#</th><th></th><th><%= @game_result.rows.first.competitor.team? ? "Team" : "Player" %></th><th class="text-right">Score</th></tr></thead>
+        <tbody>
+          <% @game_result.rows.each do |row| %>
+            <tr>
+              <td class="font-black tabular-nums"><%= row.place %></td>
+              <td class="w-8"><%= medal_badge(config, row.medal) %></td>
+              <td>
+                <span class="font-semibold"><%= competitor_name(@event, row.competitor) %></span>
+                <% if row.contributors.any? %>
+                  <span class="block text-xs muted"><%= row.contributors.map { |contributor| "#{contributor.name} #{game_value(@game_result.game, contributor.value)}" }.join(" · ") %></span>
+                <% end %>
+              </td>
+              <td class="text-right font-black tabular-nums"><%= game_value(@game_result.game, row.value) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <% stats = @game_result.stats %>
+    <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <% [ [ "Scores", stats.count ], [ "Best", game_value(@game_result.game, stats.best) ], [ "Average", game_value(@game_result.game, stats.mean) ], [ "Median", game_value(@game_result.game, stats.median) ] ].each do |label, value| %>
+        <div class="card !p-4"><dt class="text-xs muted"><%= label %></dt><dd class="display text-2xl tabular-nums"><%= value %></dd></div>
+      <% end %>
+    </dl>
+  <% else %>
+    <p class="mt-6 card muted">No scores yet.</p>
+  <% end %>
+</div>

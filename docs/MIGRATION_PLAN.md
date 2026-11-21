@@ -342,9 +342,9 @@ Flipper is for **gates, kill switches and rollouts**. Per-record permissions ("o
 |---|---|---|
 | `hosting` | user; group `platform_admins` | Can create series and events. Approving a host request enables this flag for that user. |
 | `sms_scoring` | **user** (the host); group `platform_admins` | SMS commands are accepted for events owned by a user with this flag (an owner of the event, or of its series). Platform-admin controlled, because texts cost money on *your* Twilio account. |
-| `sms_inbound` | global | Kill switch: stop processing inbound SMS |
-| `phone_login` | global | Kill switch: fall back to email-only sign-in if Verify spend spikes |
-| `tv_mode`, `scoring_methods_v2`, `sms_broadcasts` | global or user | Staged rollout of new features |
+| `pause_sms_inbound` | global | Kill switch: when enabled, inbound SMS is logged but not processed |
+| `pause_phone_login` | global | Kill switch: when enabled, sign-in falls back to email only if Verify spend spikes |
+| `sms_broadcasts` | global or user | Staged rollout of proactive SMS broadcasts |
 
 `Flipper.register(:platform_admins) { |actor| actor.respond_to?(:platform_admin?) && actor.platform_admin? }`. `User#flipper_id` returns the prefixed ID.
 
@@ -437,7 +437,7 @@ Twilio ──POST──▶ https://scorebot9000.fly.dev/twilio/sms
                  (direct to Fly, not through the Cloudflare proxy; see 10.2)
   1. Rack::TwilioWebhookAuthentication validates X-Twilio-Signature (403 if invalid)
   2. Insert sms_messages row (unique MessageSid, so retries are no-ops)
-  3. Flipper kill switch (sms_inbound) check
+  3. Flipper kill switch (pause_sms_inbound) check
   4. Resolve the user by From (create a phone-only user if new)
   5. Resolve the event (9.2) and check sms_scoring for its owner
   6. Sms::CommandParser → command object → the same services the web UI uses
@@ -498,7 +498,7 @@ US carriers block unregistered application traffic from 10-digit local numbers, 
 
 **Cost controls:**
 - No second Twilio number for staging. Point the idle production number's webhook at staging during development, and use the simulator.
-- US/CA geo permissions; `sms_scoring` per host and `sms_inbound` as a kill switch.
+- US/CA geo permissions; `sms_scoring` per host and `pause_sms_inbound` as a kill switch.
 - Broadcasts come later behind `sms_broadcasts`.
 
 ---
@@ -758,7 +758,7 @@ There's no deadline, so the work is organized into three milestones. **Milestone
 | Admin tools exposed by a routing change | High | Route constraint + controller-level checks + CI gate tests (§7.4) |
 | Sole Proprietor campaign scope vs other hosts' SMS | Medium | SMS flagged in per host; revisit the brand type before scaling it (§9.5) |
 | Shared PlanetScale cluster couples the two apps | Low | Separate database and roles; move to a dedicated database if it ever matters |
-| SMS-pumping or Verify abuse once hosting opens | Medium | Verify Fraud Guard, US/CA geo permissions, rate limits, `phone_login` and `sms_inbound` kill switches |
+| SMS-pumping or Verify abuse once hosting opens | Medium | Verify Fraud Guard, US/CA geo permissions, rate limits, `pause_phone_login` and `pause_sms_inbound` kill switches |
 | Fly or PlanetScale pricing changes | Low–Medium | Standard Docker image + plain Postgres can move to any host or provider |
 | Cold start on the first text of the day | Low | Suspend/resume, or `min_machines_running = 1` on event day |
 

@@ -1,0 +1,45 @@
+<% content_for :title, "#{@team.name} · #{@event.name}" %>
+<% config = @result.config %>
+<%= render "events/header", event: @event %>
+<%= render "events/nav", event: @event, current: :results %>
+
+<section class="mt-6 flex items-center gap-4">
+  <span class="grid h-14 w-14 place-items-center rounded-2xl text-2xl font-black text-white" style="background-color: <%= @team.color || "#78716c" %>"><%= @team.emoji.presence || @team.name.first %></span>
+  <div>
+    <p class="eyebrow">Team</p>
+    <h2 class="display text-3xl"><%= @team.name %></h2>
+  </div>
+  <% if @standing&.place %>
+    <div class="ml-auto text-right">
+      <p class="display text-4xl tabular-nums"><%= @standing.place.ordinalize %></p>
+      <p class="text-sm muted"><%= points(@standing.total) %> <%= standings_metric_label(config).downcase %></p>
+    </div>
+  <% end %>
+</section>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-3">
+  <section class="card">
+    <h3 class="font-bold">Players</h3>
+    <ul class="mt-2 space-y-1">
+      <% @members.each do |member| %><li><%= member.alias_name %></li><% end %>
+      <% if @members.empty? %><li class="muted">No players yet.</li><% end %>
+    </ul>
+  </section>
+  <section class="card lg:col-span-2">
+    <h3 class="font-bold">Results</h3>
+    <table class="table-scores mt-2">
+      <thead><tr><th>Game</th><th></th><th class="text-right">Score</th><th class="text-right">Place</th></tr></thead>
+      <tbody>
+        <% @result.game_results.each do |game_result| %>
+          <% row = game_result.rows.find { |candidate| candidate.competitor.public_id == @team.public_id } %>
+          <tr>
+            <td><%= game_result.game.name %></td>
+            <td class="w-8"><%= medal_badge(config, row&.medal) %></td>
+            <td class="text-right tabular-nums"><%= row ? game_value(game_result.game, row.value) : "—" %></td>
+            <td class="text-right tabular-nums"><%= row&.place || "—" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</div>

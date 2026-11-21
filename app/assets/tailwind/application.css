@@ -17,15 +17,19 @@
   --font-sans: "Archivo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
 
-  /* Use .btn with a variant (.btn-primary), and .flash with .flash-notice/.flash-alert. */
-  /* Series/event themes override --brand-accent on <body>. */
-  --color-accent: var(--brand-accent, #4338ca);
-  --color-accent-ink: var(--brand-accent-ink, #ffffff);
-
   --color-gold: #c9a227;
   --color-silver: #9ca3af;
   --color-bronze: #b8743a;
 }
+
+/* Series/event themes set --brand-accent on <body> (or a card). "inline" makes
+   utilities reference the variable directly, so the override cascades. */
+@theme inline {
+  --color-accent: var(--brand-accent, #4338ca);
+  --color-accent-ink: var(--brand-accent-ink, #ffffff);
+}
+
+/* Use .btn with a variant (.btn-primary), and .flash with .flash-notice/.flash-alert. */
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }

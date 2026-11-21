@@ -25,6 +25,26 @@ Rails.application.routes.draw do
     end
   end
 
+  # Public pages. A series' custom domain (clinelympics.com) roots at its
+  # series page; everything else works on any host.
+  constraints(CustomDomainConstraint) do
+    get "/", to: "series#show", as: :series_domain_root
+  end
+  get "s/:slug", to: "series#show", as: :series
+  resources :events, path: "e", param: :slug, only: :show do
+    member do
+      get :results
+      get :tv
+    end
+    resources :games, only: :show, param: :position
+    resources :teams, only: :show
+  end
+
+  # Old clinelympics.com URLs.
+  %w[summary medals scores details index admin].each do |page|
+    get "#{page}.jsp", to: "legacy_redirects#show", defaults: { page: page }
+  end
+
   get "privacy" => "pages#privacy"
   get "sms-terms" => "pages#sms_terms", as: :sms_terms
 

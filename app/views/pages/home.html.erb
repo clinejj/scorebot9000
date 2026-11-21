@@ -1,8 +1,65 @@
 <% content_for :title, "Event scoring by text" %>
-<section class="py-10 sm:py-16">
-  <p class="eyebrow">Scorebot 9000</p>
-  <h1 class="display mt-3 text-4xl sm:text-6xl">Run the games.<br>We'll keep score.</h1>
-  <p class="mt-5 max-w-xl text-lg muted">
-    Host a series of competitions, let players register and text in their scores, and watch the standings update live.
-  </p>
+<section class="relative overflow-hidden rounded-3xl bg-stone-900 px-6 py-12 text-white sm:px-10 sm:py-16 dark:bg-stone-900">
+  <div class="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-accent opacity-40 blur-3xl"></div>
+  <p class="eyebrow !text-white/70">Scorebot 9000</p>
+  <h1 class="display mt-3 max-w-2xl text-4xl sm:text-6xl">Run the games. We'll keep score.</h1>
+  <p class="mt-5 max-w-xl text-lg text-white/80">Host a series of competitions. Players register and text in their scores, and the standings update live on every phone and TV in the room.</p>
+  <div class="mt-8 flex flex-wrap gap-3">
+    <% if @live_events.any? %>
+      <%= link_to "See what's live", "#live", class: "btn btn-primary" %>
+    <% end %>
+    <%= link_to "Host an event", authenticated? ? root_path(anchor: "host") : new_session_path, class: "btn bg-white text-stone-900 hover:bg-stone-100" %>
+  </div>
+</section>
+
+<% if @live_events.any? %>
+  <section id="live" class="mt-12">
+    <h2 class="display text-2xl">Live now</h2>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <%= render partial: "events/card", collection: @live_events, as: :event %>
+    </div>
+  </section>
+<% end %>
+
+<% if @upcoming_events.any? %>
+  <section class="mt-12">
+    <h2 class="display text-2xl">Coming up</h2>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <%= render partial: "events/card", collection: @upcoming_events, as: :event %>
+    </div>
+  </section>
+<% end %>
+
+<% if @recent_events.any? %>
+  <section class="mt-12">
+    <h2 class="display text-2xl">Recent results</h2>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <%= render partial: "events/card", collection: @recent_events, as: :event %>
+    </div>
+  </section>
+<% end %>
+
+<% if @series_list.any? %>
+  <section class="mt-12">
+    <h2 class="display text-2xl">Series</h2>
+    <div class="mt-4 flex flex-wrap gap-3">
+      <% @series_list.each do |series| %>
+        <%= link_to series.name, series_path(series), class: "btn btn-secondary", style: ("--brand-accent: #{series.accent_color}" if series.accent_color) %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<section id="how" class="mt-16 grid gap-4 sm:grid-cols-3">
+  <% [
+       [ "1", "Set up your games", "Name each competition, pick high or low score wins, and choose how standings are tallied: medal table, points, or averages." ],
+       [ "2", "Players text in", "REGISTER to join a team, SCORE 3 228 to post a score. No app needed. The web works too." ],
+       [ "3", "Watch it live", "Standings, podiums and per-game medals update as scores come in. Put TV mode on the big screen." ]
+     ].each do |number, title, body| %>
+    <div class="card">
+      <span class="grid h-9 w-9 place-items-center rounded-full bg-accent font-black text-accent-ink"><%= number %></span>
+      <h3 class="mt-3 font-bold"><%= title %></h3>
+      <p class="mt-1 text-sm muted"><%= body %></p>
+    </div>
+  <% end %>
 </section>
