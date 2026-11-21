@@ -7,6 +7,19 @@ module Sms
   class Inbound
     Outcome = Data.define(:reply, :message)
 
+    # Cost guards (plan section 9.5): texts beyond these get processed-but-no-reply.
+    SENDER_LIMIT = 30           # inbound texts per number per 10 minutes
+    SENDER_WINDOW = 10.minutes
+
+    # Twilio's A2P 10DLC limit for a Sole Proprietor brand is 1,000 segments
+    # a day to T-Mobile (about 3,000 across US carriers), reset at midnight
+    # Pacific. Every event shares the one number, so the cap is platform-wide.
+    REPLY_CAP_TIME_ZONE = "America/Los_Angeles"
+
+    def self.daily_reply_cap
+      ENV.fetch("SMS_DAILY_REPLY_CAP", 1000).to_i
+    end
+
     def self.call(**)
       new(**).call
     end
@@ -35,7 +48,17 @@ module Sms
         return Outcome.new(reply: nil, message: @message)
       end
 
+      if sender_rate_limited?
+        @message.update!(status: "rate_limited")
+        return Outcome.new(reply: nil, message: @message)
+      end
+
       reply = process
+      if reply.present? && reply_cap_reached?
+        @message.update!(status: "capped")
+        Rails.logger.warn("SMS daily reply cap (#{self.class.daily_reply_cap}) reached")
+        return Outcome.new(reply: nil, message: @message)
+      end
       log_reply(reply)
       Outcome.new(reply: reply, message: @message)
     rescue StandardError => error
@@ -87,6 +110,19 @@ module Sms
 
       def routed_event(command)
         @route_to unless command.name == :join
+      end
+
+      def sender_rate_limited?
+        return false if @simulated
+
+        SmsMessage.inbound.where(from_number: @from, simulated: false).where(created_at: SENDER_WINDOW.ago..).count > SENDER_LIMIT
+      end
+
+      def reply_cap_reached?
+        return false if @simulated
+
+        day_start = Time.current.in_time_zone(REPLY_CAP_TIME_ZONE).beginning_of_day
+        SmsMessage.outbound.where(simulated: false, created_at: day_start..).count >= self.class.daily_reply_cap
       end
 
       # ADMIN START <code> can target an event that isn't live yet.

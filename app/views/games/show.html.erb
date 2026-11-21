@@ -1,9 +1,10 @@
 <% content_for :title, "#{@game.name} · #{@event.name}" %>
+<%= turbo_stream_from @event unless @event.finished? %>
 <% config = @result.config %>
 <%= render "events/header", event: @event %>
 <%= render "events/nav", event: @event, current: :results %>
 
-<div class="mt-6" data-controller="<%= "auto-refresh" if @event.live? %>" data-auto-refresh-interval-value="20">
+<div class="mt-6" data-controller="<%= "auto-refresh" if @event.live? %>" data-auto-refresh-interval-value="60">
   <p class="eyebrow">Game <%= @game.position %></p>
   <h2 class="display mt-1 text-3xl"><%= @game.name %></h2>
   <p class="mt-1 muted">

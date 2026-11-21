@@ -4,11 +4,22 @@ A small event-hosting platform for informal competitions. Players register and s
 
 - **Plan and design:** [`docs/MIGRATION_PLAN.md`](docs/MIGRATION_PLAN.md)
 - **Open questions:** [`docs/QUESTIONS.md`](docs/QUESTIONS.md)
+- **Launch checklist:** [`docs/LAUNCH_CHECKLIST.md`](docs/LAUNCH_CHECKLIST.md) (accounts, secrets, DNS, Twilio, legacy import, cutover)
 - **Legacy app:** [`legacy/`](legacy/) holds the original Java App Engine app, kept for reference until cutover.
 
 ## Stack
 
 Rails 8.1 + Hotwire, Tailwind, PostgreSQL (PlanetScale in production), Solid Queue and Solid Cable in the same database, Active Storage on Cloudflare R2. It's deployed to a single auto-suspending Fly.io machine.
+
+## What's where
+
+| Path | |
+|---|---|
+| `/`, `/s/:series`, `/e/:event` | Public site: platform home, series pages (also served on a series' custom domain), event pages, results, TV mode |
+| `/me`, `/e/:event/join/new` | Accounts and joining events |
+| `/manage` | Organizer console |
+| `/admin` | Platform admin: Flipper, Blazer, Maintenance Tasks, Mission Control, SMS log, host requests, legacy import (404 unless you're a platform admin) |
+| `POST /twilio/sms` | Twilio webhook (signature-validated) |
 
 ## Local development
 
@@ -21,6 +32,8 @@ bin/setup
 ```bash
 bin/dev
 ```
+
+`bin/rails db:seed` loads demo data. In development, sign-in codes appear on screen instead of being sent.
 
 Run the tests, linter and security scan:
 
@@ -71,6 +84,7 @@ All secrets come from environment variables (Fly secrets in production). The rep
 | `BLAZER_DATABASE_URL` | recommended | SELECT-only Postgres role for Blazer; falls back to the app connection |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | for SMS | Twilio credentials |
 | `TWILIO_VERIFY_SERVICE_SID` | for phone sign-in | Twilio Verify service; without it phone sign-in is hidden (email still works) |
+| `SMS_DAILY_REPLY_CAP` | no | Platform-wide SMS replies per day, reset at midnight Pacific (default 1000, within the 10DLC Sole Proprietor limit); texts beyond it are processed without a reply |
 | `OPERATOR_NAME`, `SUPPORT_EMAIL`, `SMS_DISPLAY_NUMBER` | recommended | Shown on `/privacy` and `/sms-terms` (needed for 10DLC registration) |
 
 Production refuses to boot when a required variable is missing (`config/initializers/require_production_secrets.rb`).

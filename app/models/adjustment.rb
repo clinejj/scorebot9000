@@ -2,6 +2,8 @@
 class Adjustment < ApplicationRecord
   has_prefixed_id :adj
 
+  broadcasts_refreshes_to :event
+
   belongs_to :event, touch: true
   belongs_to :participant, optional: true
   belongs_to :team, optional: true

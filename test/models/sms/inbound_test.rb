@@ -172,5 +172,27 @@ module Sms
       assert_nil text("SCORE 1 99", sid: "SM999")
       assert_equal "paused", SmsMessage.find_by!(twilio_sid: "SM999").status
     end
+
+    test "rate limits a number that floods us" do
+      (Inbound::SENDER_LIMIT + 1).times { |i| SmsMessage.create!(direction: "inbound", from_number: "+19095550111", body: "x#{i}") }
+      assert_nil text("WHO", sid: "SMflood")
+      assert_equal "rate_limited", SmsMessage.find_by!(twilio_sid: "SMflood").status
+    end
+
+    test "stops replying for the day once the platform hits its daily reply cap" do
+      ENV["SMS_DAILY_REPLY_CAP"] = "2"
+      other = Event.create!(name: "Lake Day", status: "live")
+      SmsMessage.create!(direction: "outbound", event: other, body: "a reply for another event")
+      SmsMessage.create!(direction: "outbound", event: @event, body: "a simulated reply", simulated: true)
+      assert_match "Usain Bolt", text("WHO")
+      assert_nil text("WHO", sid: "SMcap")
+      assert_equal "capped", SmsMessage.find_by!(twilio_sid: "SMcap").status
+
+      travel_to Time.current.in_time_zone("America/Los_Angeles").tomorrow.beginning_of_day + 1.minute do
+        assert_match "Usain Bolt", text("WHO")
+      end
+    ensure
+      ENV.delete("SMS_DAILY_REPLY_CAP")
+    end
   end
 end

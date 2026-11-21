@@ -2,6 +2,7 @@
 # skips everything if the demo series already exists.
 return if Series.exists?(slug: "clinelympics")
 
+LiveUpdates.suppress do
 srand(2027)
 
 platform_pool = AliasPool.find_or_create_by!(name: AliasPool::PLATFORM_DEFAULT_NAME, owner: nil)
@@ -75,3 +76,4 @@ Membership.create!(user: admin, resource: backyard, role: "owner")
 %w[Cornhole Frisbee\ Golf Water\ Balloon\ Toss].each { |name| backyard.games.create!(name: name) }
 
 puts "Seeded demo data. Sign in as admin@example.com or organizer@example.com (codes print in development)."
+end

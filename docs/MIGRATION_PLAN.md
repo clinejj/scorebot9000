@@ -1,8 +1,8 @@
 # Scorebot 9000: Modernization Plan
 
-**Status:** Draft v3: Fly + PlanetScale Postgres, prefixed UUIDv7 IDs, admin gate (decisions in §2)
+**Status:** v4: Fly + PlanetScale Postgres, prefixed UUIDv7 IDs, admin gate (decisions in §2; build-time answers in `docs/QUESTIONS.md`)
 **Based on:** `master` at `976d813` (Clinelympics 2021)
-**Last updated:** 2026-11-20
+**Last updated:** 2026-11-21
 
 ---
 
@@ -30,7 +30,8 @@ The current single-purpose Clinelympics site becomes a small event-hosting platf
 |---|---|
 | Stack | Rails 8 + Hotwire |
 | Hosting | Optimize for lowest running cost → **Fly.io** (app) + **PlanetScale Postgres** (DB) |
-| Database | Postgres, not SQLite (durability) |
+| Database | Postgres, not SQLite (durability); **its own PlanetScale database on a new server**, not shared with your other app |
+| Fly app | `scorebot9000` (`scorebot9000.fly.dev`), plus `scorebot9000-staging` |
 | IDs | **UUIDv7** for every primary key; models with a public face get **prefixed IDs** (TypeID: `usr_…`, `evt_…`) |
 | Admin tooling | Flipper, Blazer, Maintenance Tasks and Mission Control are **all behind a platform-admin gate** |
 | DNS | **Cloudflare** (clinelympics.com) |
@@ -494,7 +495,7 @@ US carriers block unregistered application traffic from 10-digit local numbers, 
 
 **Approximate costs** (check current Twilio pricing): brand and campaign vetting about $20 one-time, campaign about $2 a month, number about $1.15 a month.
 
-**Sole Proprietor limits:** one campaign, one number, and low daily throughput. That's fine for parties.
+**Sole Proprietor limits:** one campaign, one number, about 1 message per second, and 1,000 segments a day to T-Mobile subscribers (about 3,000 a day across US carriers), reset at midnight Pacific. That's fine for parties: a 40-person event with 8 games sends a few hundred replies. The app stops replying after `SMS_DAILY_REPLY_CAP` replies a day across all events (default 1,000; texts are still processed, just not answered), and ignores a number that sends more than 30 texts in 10 minutes.
 
 **Campaign-scope caveat:** a Sole Proprietor campaign is meant for *your own* messaging. Enabling `sms_scoring` for an occasional friend's event is in the spirit of it. If other hosts' events start sending meaningful SMS volume through your number, carriers may treat that as platform (ISV) traffic, which generally needs a standard brand with an EIN. Revisit before turning SMS on for many hosts.
 
@@ -636,12 +637,12 @@ A reconciliation report from Blazer and the task output: legacy counts versus im
 - **One Machine** (`shared-cpu-1x`, 512 MB) running Puma, with Solid Queue in-process. There is **no volume**: all state lives in PlanetScale and R2, so deploys are simple and the machine is disposable.
 - **`auto_stop_machines = "suspend"`** (or `"stop"`), `auto_start_machines = true`, `min_machines_running = 0`. The machine only runs, and only bills, while there's traffic. Resume is fast. Even a cold boot fits inside Twilio's 15-second webhook timeout.
 - **Migrations** run via `release_command = "bin/rails db:migrate"`. This works now that there's no volume.
-- **Region:** put the Fly app in the region closest to the PlanetScale database (match your other app's pairing).
+- **Region:** put the Fly app in the same region as the new PlanetScale database. `fly.toml` defaults to `iad` (us-east); change `primary_region` if the database lives elsewhere.
 
 ### 12.2 Database: PlanetScale Postgres
 
 - **One Postgres database** holds the app tables plus Solid Queue and Solid Cable. Solid Cable's polling interval is relaxed (e.g. 0.5 s) to keep idle query volume trivial while the machine is awake.
-- **Cost:** if your existing PlanetScale Postgres cluster can host an additional logical database (`CREATE DATABASE` with its own roles), this app's marginal database cost is **$0**, at the price of sharing resources and fate with your other app. Otherwise use a separate entry-level single-node database; check current PlanetScale pricing.
+- **Its own server:** a new PlanetScale Postgres database on the smallest single-node tier, not shared with your other app, so the two never compete for resources or go down together. It's the one fixed monthly cost; check current PlanetScale pricing.
 - **Roles:** `scorebot_app` (read/write) and **`scorebot_blazer` (SELECT only)** for Blazer.
 - **Postgres 18** gives native `uuidv7()` defaults (§6.1). On 17, everything still works with Ruby-minted IDs.
 - **Staging:** a second small database, or a branch if your PlanetScale plan supports it (mirror your other app).
@@ -655,12 +656,12 @@ Figures are approximate; check current pricing.
 | Item | Idle month | Event month | Notes |
 |---|---|---|---|
 | Fly machine | ~$0–1 | ~$1–3 | Running 24/7 would be about $3; no volume |
-| PlanetScale Postgres | **$0** if shared with your existing cluster; otherwise its entry tier | same | Always on, managed |
+| PlanetScale Postgres | Entry single-node tier | same | Always on, managed; its own server |
 | Cloudflare (DNS, proxy, R2) | $0 | $0 | Free plan + R2 free tier (10 GB, zero egress) |
 | Email (Resend / SES) | $0 | $0 | |
 | Twilio number + 10DLC campaign | ~$3.15 | ~$3.15 | Plus about $20 one-time |
 | SMS + Verify | $0 | ~$5–10 | A few hundred messages at about $0.01, plus about $0.05 per phone login |
-| **Total** | **~$3–4** (shared DB) | **~$10–15** | Add the entry-tier price if the DB isn't shared |
+| **Total** | **~$3–4 + the database** | **~$10–15 + the database** | The database tier is the largest fixed cost |
 
 ### 12.4 Alternatives considered
 
@@ -760,7 +761,6 @@ There's no deadline, so the work is organized into three milestones. **Milestone
 | 10DLC approval delay or rejection | High for SMS | Brand in Phase 0, campaign in Phase 1, months before any event. Web scoring works regardless. |
 | Admin tools exposed by a routing change | High | Route constraint + controller-level checks + CI gate tests (§7.4) |
 | Sole Proprietor campaign scope vs other hosts' SMS | Medium | SMS flagged in per host; revisit the brand type before scaling it (§9.5) |
-| Shared PlanetScale cluster couples the two apps | Low | Separate database and roles; move to a dedicated database if it ever matters |
 | SMS-pumping or Verify abuse once hosting opens | Medium | Verify Fraud Guard, US/CA geo permissions, rate limits, `pause_phone_login` and `pause_sms_inbound` kill switches |
 | Fly or PlanetScale pricing changes | Low–Medium | Standard Docker image + plain Postgres can move to any host or provider |
 | Cold start on the first text of the day | Low | Suspend/resume, or `min_machines_running = 1` on event day |
@@ -769,5 +769,9 @@ There's no deadline, so the work is organized into three milestones. **Milestone
 
 ## 16. Open questions
 
-1. **PlanetScale:** can this app live on your existing PlanetScale Postgres cluster (separate database and roles, so ~$0 marginal), or should it get its own database? Which region is it in, so the Fly app sits next to it?
-2. **Fly app name:** is `scorebot9000` available on Fly (giving `scorebot9000.fly.dev`)? If not, pick an alternative before the 10DLC campaign is submitted, since the campaign references the site URLs.
+Both were answered on 2026-11-21:
+
+1. **PlanetScale:** the app gets its own database on a new server (§12.2).
+2. **Fly app name:** assume `scorebot9000` is available.
+
+Questions raised while building the PR stack, with their answers, are in `docs/QUESTIONS.md`.

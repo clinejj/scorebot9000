@@ -28,7 +28,10 @@ module Legacy
     def run_step!(step)
       raise ArgumentError, "unknown step #{step}" unless STEPS.include?(step)
 
-      ApplicationRecord.transaction { send("import_#{step}") }
+      # Bulk imports shouldn't push thousands of page refreshes.
+      LiveUpdates.suppress do
+        ApplicationRecord.transaction { send("import_#{step}") }
+      end
     end
 
     private
