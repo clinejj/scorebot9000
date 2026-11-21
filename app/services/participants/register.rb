@@ -28,7 +28,9 @@ module Participants
       end
 
       participant = nil
-      ApplicationRecord.transaction do
+      # requires_new: a savepoint, so the rollback below also works when the
+      # caller already has a transaction open (SMS sign-up from a new number).
+      ApplicationRecord.transaction(requires_new: true) do
         participant = create_participant!
         if @team_name && @event.uses_teams?
           joined = Teams::Join.call(participant: participant, team_name: @team_name)

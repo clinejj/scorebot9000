@@ -28,8 +28,7 @@ module Sms
       def require_participant
         return nil if @participant
 
-        hint = @event.teams_self_registered? ? "REGISTER <team name>" : "REGISTER"
-        "You're not registered for #{@event.name} yet. Text #{hint} to join."
+        Replies.not_registered(@event)
       end
 
       def register
