@@ -1,0 +1,8 @@
+<% content_for :header_nav do %>
+  <%= link_to "Dashboard", admin_root_path, class: "hover:underline" %>
+  <%= link_to "Flipper", "/admin/flipper", class: "hover:underline" %>
+  <%= link_to "Blazer", "/admin/blazer", class: "hover:underline" %>
+  <%= link_to "Tasks", "/admin/maintenance_tasks", class: "hover:underline" %>
+  <%= link_to "Jobs", "/admin/jobs", class: "hover:underline" %>
+<% end %>
+<%= render template: "layouts/application" %>

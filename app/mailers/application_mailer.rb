@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "from@example.com"
+  default from: -> { ENV.fetch("MAIL_FROM", "Scorebot 9000 <no-reply@scorebot9000.fly.dev>") }
   layout "mailer"
 end

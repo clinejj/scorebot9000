@@ -1,0 +1,43 @@
+<% content_for :title, "Admin" %>
+<p class="eyebrow">Platform admin</p>
+<h1 class="display mt-2 text-3xl">Admin</h1>
+
+<div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  <% [
+       [ "Flipper", "/admin/flipper", "Feature flags, hosting approval, SMS gates, kill switches" ],
+       [ "Blazer", "/admin/blazer", "Read-only SQL against production" ],
+       [ "Maintenance Tasks", "/admin/maintenance_tasks", "Imports, CSV mappings, data fixes, admin grants" ],
+       [ "Jobs", "/admin/jobs", "Solid Queue jobs and failures" ]
+     ].each do |name, path, description| %>
+    <%= link_to path, class: "card block transition hover:ring-accent" do %>
+      <h2 class="font-bold"><%= name %></h2>
+      <p class="mt-1 text-sm muted"><%= description %></p>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="mt-8 grid gap-4 sm:grid-cols-2">
+  <div class="card"><p class="muted text-sm">Users</p><p class="display text-3xl tabular-nums"><%= @user_count %></p></div>
+  <div class="card"><p class="muted text-sm">Platform admins</p><p class="display text-3xl tabular-nums"><%= @admin_count %></p></div>
+</div>
+
+<section class="mt-8 card">
+  <h2 class="font-bold">Recent admin activity</h2>
+  <% if @recent_audit_events.any? %>
+    <table class="table-scores mt-3">
+      <thead><tr><th>When</th><th>Who</th><th>Action</th><th>Subject</th></tr></thead>
+      <tbody>
+        <% @recent_audit_events.each do |event| %>
+          <tr>
+            <td class="whitespace-nowrap"><%= time_ago_in_words(event.created_at) %> ago</td>
+            <td><%= event.user&.display_name || "system" %></td>
+            <td><code><%= event.action %></code></td>
+            <td><code><%= event.subject %></code></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="mt-2 text-sm muted">No admin activity yet.</p>
+  <% end %>
+</section>

@@ -66,6 +66,9 @@ All secrets come from environment variables (Fly secrets in production). The rep
 | `ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT` | yes | |
 | `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | yes | Active Storage on Cloudflare R2 |
 | `APP_HOST` | set in `fly.toml` | Host used in emailed links |
+| `SMTP_ADDRESS`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD` | yes | Outgoing mail for sign-in codes (Resend: `smtp.resend.com` / `resend` / API key; or Amazon SES) |
+| `MAIL_FROM` | recommended | From address for sign-in emails |
+| `BLAZER_DATABASE_URL` | recommended | SELECT-only Postgres role for Blazer; falls back to the app connection |
 | `OPERATOR_NAME`, `SUPPORT_EMAIL`, `SMS_DISPLAY_NUMBER` | recommended | Shown on `/privacy` and `/sms-terms` (needed for 10DLC registration) |
 
 Production refuses to boot when a required variable is missing (`config/initializers/require_production_secrets.rb`).
@@ -87,5 +90,13 @@ fly deploy
 ```
 
 Migrations run once per deploy through `release_command`. Pushes to `main` deploy automatically after CI passes, once the `FLY_API_TOKEN` repository secret is set (`fly tokens create deploy -a scorebot9000`). Staging uses `fly.staging.toml` (`fly deploy -c fly.staging.toml`).
+
+**First admin:** after the first deploy, grant yourself platform admin from a shell, then sign in at `/session/new` with that email:
+
+```bash
+fly ssh console -a scorebot9000 -C "bin/rails users:grant_admin EMAIL=you@example.com"
+```
+
+Everything under `/admin` (Flipper, Blazer, Maintenance Tasks, Mission Control) returns 404 unless you're signed in as a platform admin. Grant further admins with the `Users::GrantPlatformAdminTask` maintenance task.
 
 **Event days:** keep a machine warm with `min_machines_running = 1` (or `fly machine update --autostop=off`), and switch it back afterward. See the plan, section 12.5.

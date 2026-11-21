@@ -1,0 +1,16 @@
+admin:
+  email: admin@example.com
+  email_verified_at: <%= 1.day.ago.to_fs(:db) %>
+  platform_admin: true
+
+player:
+  email: player@example.com
+  name: Pat Player
+  email_verified_at: <%= 1.day.ago.to_fs(:db) %>
+
+phone_only:
+  phone: "+19095550100"
+
+mapped:
+  phone: "+19095550101"
+  pending_email: mapped@example.com

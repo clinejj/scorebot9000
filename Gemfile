@@ -61,3 +61,20 @@ end
 
 # Active Storage on Cloudflare R2 (S3-compatible)
 gem "aws-sdk-s3", require: false
+
+# Feature flags and gates (hosting approval, per-host SMS, kill switches)
+gem "flipper"
+gem "flipper-active_record"
+gem "flipper-ui"
+
+# Production SQL queries for platform admins (read-only role)
+gem "blazer"
+
+# Imports and data fixes, run from the admin UI
+gem "maintenance_tasks"
+
+# Solid Queue dashboard
+gem "mission_control-jobs"
+
+# Phone number parsing/normalization (E.164)
+gem "phonelib"

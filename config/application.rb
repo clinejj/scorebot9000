@@ -37,6 +37,11 @@ module Scorebot
       g.system_tests = nil
     end
 
+    # Mission Control - Jobs sits behind the platform-admin gate instead of
+    # its own HTTP basic auth (see config/initializers/admin_tools.rb).
+    config.mission_control.jobs.base_controller_class = "Admin::BaseController"
+    config.mission_control.jobs.http_basic_auth_enabled = false
+
     # Secrets come from the environment (Fly secrets in production) rather
     # than encrypted credentials, so nothing depends on a master key that
     # only one machine holds. Dev/test use fixed, non-secret keys.
