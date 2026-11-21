@@ -12,6 +12,7 @@ class AdminGateTest < ActionDispatch::IntegrationTest
     /admin/maintenance_tasks
     /admin/jobs
     /admin/legacy_imports
+    /admin/sms
     /admin/legacy_imports/new
   ].freeze
 
