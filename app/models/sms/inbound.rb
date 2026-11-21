@@ -11,12 +11,15 @@ module Sms
       new(**).call
     end
 
-    def initialize(from:, body:, to: nil, sid: nil, simulated: false)
+    # route_to: an event to route to instead of the usual rules (the
+    # organizer simulator passes its event). JOIN <code> still wins.
+    def initialize(from:, body:, to: nil, sid: nil, simulated: false, route_to: nil)
       @from = PhoneNumber.normalize(from) || from.to_s.strip
       @to = to
       @body = body.to_s
       @sid = sid.presence
       @simulated = simulated
+      @route_to = route_to
     end
 
     def call
@@ -54,7 +57,7 @@ module Sms
         return "Sorry, that number can't be used here." unless PhoneNumber.valid?(@from)
 
         user = User.find_by(phone: @from)
-        event = admin_target_event(command) || EventRouter.resolve(user: user, command: command)
+        event = admin_target_event(command) || routed_event(command) || EventRouter.resolve(user: user, command: command)
         @message.update!(user: user, event: event)
         return Replies.which_event(command, known_sender: user.present?) if event.nil?
         return "Texting isn't turned on for #{event.name}. Play on the event page instead." unless event.sms_scoring_enabled? || command.name == :admin
@@ -80,6 +83,10 @@ module Sms
         end
         @message.update!(user: user) if user&.persisted?
         reply
+      end
+
+      def routed_event(command)
+        @route_to unless command.name == :join
       end
 
       # ADMIN START <code> can target an event that isn't live yet.

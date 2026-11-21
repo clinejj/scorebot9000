@@ -9,9 +9,9 @@ class Manage::SmsController < Manage::EventScopedController
     from = PhoneNumber.normalize(params[:from])
     return redirect_to(manage_event_sms_path(@event), alert: "Enter a valid mobile number.") unless from
 
-    user = User.find_by(phone: from) || User.create!(phone: from)
-    user.update!(sms_context_event: @event)
-    outcome = Sms::Inbound.call(from: from, body: params[:body], simulated: true)
+    # Routed to this event without touching anyone's account; as with a real
+    # text, an unknown number only gets an account by registering.
+    outcome = Sms::Inbound.call(from: from, body: params[:body], simulated: true, route_to: @event)
     redirect_to manage_event_sms_path(@event), notice: outcome.reply.present? ? "Reply: #{outcome.reply}" : "No reply (#{outcome.message&.status})."
   end
 end

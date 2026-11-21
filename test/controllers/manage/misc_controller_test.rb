@@ -31,6 +31,26 @@ class Manage::MiscControllerTest < ActionDispatch::IntegrationTest
     assert_match "WHO", response.body
   end
 
+  test "SMS simulator routes to this event even when others are live, without changing accounts" do
+    Flipper.enable_actor(:sms_scoring, users(:organizer))
+    other = Event.create!(name: "Lake Day", status: "live", registration_open: true, team_mode: "none", sms_code: "LAKE27")
+    Membership.create!(user: users(:organizer), resource: other, role: "owner")
+    post manage_event_sms_path(@event), params: { from: "909-555-0115", body: "REGISTER Night Owls" }
+    assert_match "Welcome to team Night Owls", flash[:notice]
+    assert_nil users(:erin).reload.sms_context_event
+  end
+
+  test "SMS simulator doesn't create accounts for unknown numbers unless they register" do
+    Flipper.enable_actor(:sms_scoring, users(:organizer))
+    assert_no_difference -> { User.count } do
+      post manage_event_sms_path(@event), params: { from: "909-555-0188", body: "WHO" }
+    end
+    assert_match "not registered", flash[:notice]
+    assert_difference -> { User.count } do
+      post manage_event_sms_path(@event), params: { from: "909-555-0188", body: "REGISTER Bears" }
+    end
+  end
+
   test "owners add and remove organizers" do
     post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "scorekeeper" }
     helper = User.find_by!(email: "helper@example.com")
