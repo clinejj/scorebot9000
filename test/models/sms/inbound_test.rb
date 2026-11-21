@@ -179,13 +179,20 @@ module Sms
       assert_equal "rate_limited", SmsMessage.find_by!(twilio_sid: "SMflood").status
     end
 
-    test "stops replying when an event hits its daily reply cap" do
-      ENV["SMS_DAILY_REPLY_CAP_PER_EVENT"] = "1"
-      SmsMessage.create!(direction: "outbound", event: @event, body: "earlier reply")
+    test "stops replying for the day once the platform hits its daily reply cap" do
+      ENV["SMS_DAILY_REPLY_CAP"] = "2"
+      other = Event.create!(name: "Lake Day", status: "live")
+      SmsMessage.create!(direction: "outbound", event: other, body: "a reply for another event")
+      SmsMessage.create!(direction: "outbound", event: @event, body: "a simulated reply", simulated: true)
+      assert_match "Usain Bolt", text("WHO")
       assert_nil text("WHO", sid: "SMcap")
       assert_equal "capped", SmsMessage.find_by!(twilio_sid: "SMcap").status
+
+      travel_to Time.current.in_time_zone("America/Los_Angeles").tomorrow.beginning_of_day + 1.minute do
+        assert_match "Usain Bolt", text("WHO")
+      end
     ensure
-      ENV.delete("SMS_DAILY_REPLY_CAP_PER_EVENT")
+      ENV.delete("SMS_DAILY_REPLY_CAP")
     end
   end
 end

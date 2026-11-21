@@ -84,7 +84,7 @@ All secrets come from environment variables (Fly secrets in production). The rep
 | `BLAZER_DATABASE_URL` | recommended | SELECT-only Postgres role for Blazer; falls back to the app connection |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | for SMS | Twilio credentials |
 | `TWILIO_VERIFY_SERVICE_SID` | for phone sign-in | Twilio Verify service; without it phone sign-in is hidden (email still works) |
-| `SMS_DAILY_REPLY_CAP_PER_EVENT` | no | Daily SMS reply cap per event (default 2000); texts beyond it are processed without a reply |
+| `SMS_DAILY_REPLY_CAP` | no | Platform-wide SMS replies per day, reset at midnight Pacific (default 1000, within the 10DLC Sole Proprietor limit); texts beyond it are processed without a reply |
 | `OPERATOR_NAME`, `SUPPORT_EMAIL`, `SMS_DISPLAY_NUMBER` | recommended | Shown on `/privacy` and `/sms-terms` (needed for 10DLC registration) |
 
 Production refuses to boot when a required variable is missing (`config/initializers/require_production_secrets.rb`).

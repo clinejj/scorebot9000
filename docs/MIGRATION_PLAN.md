@@ -494,7 +494,7 @@ US carriers block unregistered application traffic from 10-digit local numbers, 
 
 **Approximate costs** (check current Twilio pricing): brand and campaign vetting about $20 one-time, campaign about $2 a month, number about $1.15 a month.
 
-**Sole Proprietor limits:** one campaign, one number, and low daily throughput. That's fine for parties.
+**Sole Proprietor limits:** one campaign, one number, about 1 message per second, and 1,000 segments a day to T-Mobile subscribers (about 3,000 a day across US carriers), reset at midnight Pacific. That's fine for parties: a 40-person event with 8 games sends a few hundred replies. The app stops replying after `SMS_DAILY_REPLY_CAP` replies a day across all events (default 1,000; texts are still processed, just not answered), and ignores a number that sends more than 30 texts in 10 minutes.
 
 **Campaign-scope caveat:** a Sole Proprietor campaign is meant for *your own* messaging. Enabling `sms_scoring` for an occasional friend's event is in the spirit of it. If other hosts' events start sending meaningful SMS volume through your number, carriers may treat that as platform (ISV) traffic, which generally needs a standard brand with an EIN. Revisit before turning SMS on for many hosts.
 
