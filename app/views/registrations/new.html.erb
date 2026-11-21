@@ -1,0 +1,26 @@
+<% content_for :title, "Join #{@event.name}" %>
+<div class="mx-auto max-w-md card">
+  <p class="eyebrow"><%= @event.series&.name || "Join" %></p>
+  <h1 class="display mt-1 text-2xl">Join <%= @event.name %></h1>
+  <%= form_with url: event_registration_path(@event), class: "mt-6 space-y-4" do |form| %>
+    <% if @event.uses_teams? %>
+      <div>
+        <%= form.label :team_name, "Team", class: "label" %>
+        <% if @event.teams_self_registered? %>
+          <%= form.text_field :team_name, value: params[:team_name], list: "teams", class: "input", placeholder: "Join a team or start a new one" %>
+          <datalist id="teams"><% @event.teams.each do |team| %><option value="<%= team.name %>"><% end %></datalist>
+        <% else %>
+          <%= form.select :team_name, @event.teams.map(&:name), { include_blank: "Organizers will assign you" }, class: "input" %>
+        <% end %>
+      </div>
+    <% end %>
+    <% if !@event.aliases_random? || @event.allow_alias_override? %>
+      <div>
+        <%= form.label :alias_name, @event.aliases_random? ? "Player name (optional)" : "Player name", class: "label" %>
+        <%= form.text_field :alias_name, value: params[:alias_name] || (current_user.name unless @event.aliases_random?), class: "input", maxlength: 60 %>
+        <% if @event.aliases_random? %><p class="hint">Leave blank and we'll pick a fun one for you.</p><% end %>
+      </div>
+    <% end %>
+    <%= form.submit "Join", class: "btn btn-primary w-full" %>
+  <% end %>
+</div>

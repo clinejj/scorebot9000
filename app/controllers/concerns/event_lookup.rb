@@ -6,7 +6,7 @@ module EventLookup
   private
     def set_event
       @event = Event.includes(:series).find_by!(slug: params[:event_slug] || params[:slug])
-      raise ActiveRecord::RecordNotFound if @event.draft? && @event.role_for(current_user).nil?
+      authorize! @event, to: :show?
 
       @series = @event.series
     end

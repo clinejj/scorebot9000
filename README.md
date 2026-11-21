@@ -69,6 +69,8 @@ All secrets come from environment variables (Fly secrets in production). The rep
 | `SMTP_ADDRESS`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD` | yes | Outgoing mail for sign-in codes (Resend: `smtp.resend.com` / `resend` / API key; or Amazon SES) |
 | `MAIL_FROM` | recommended | From address for sign-in emails |
 | `BLAZER_DATABASE_URL` | recommended | SELECT-only Postgres role for Blazer; falls back to the app connection |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | for SMS | Twilio credentials |
+| `TWILIO_VERIFY_SERVICE_SID` | for phone sign-in | Twilio Verify service; without it phone sign-in is hidden (email still works) |
 | `OPERATOR_NAME`, `SUPPORT_EMAIL`, `SMS_DISPLAY_NUMBER` | recommended | Shown on `/privacy` and `/sms-terms` (needed for 10DLC registration) |
 
 Production refuses to boot when a required variable is missing (`config/initializers/require_production_secrets.rb`).

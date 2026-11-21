@@ -63,12 +63,6 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test "phone sign-in is not available yet" do
-    post session_path, params: { identifier: "909-726-7311" }
-    assert_response :unprocessable_entity
-    assert_select ".flash-alert", /Phone sign-in/
-  end
-
   test "signs out" do
     sign_in_as users(:player)
     delete session_path

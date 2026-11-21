@@ -10,6 +10,7 @@
         <% if current_user.platform_admin? && !content_for?(:header_nav) %>
           <%= link_to "Admin", admin_root_path, class: "hover:underline" %>
         <% end %>
+        <%= link_to "Account", account_path, class: "hover:underline" %>
         <%= button_to "Sign out", session_path, method: :delete, class: "btn btn-secondary btn-sm" %>
       <% else %>
         <%= link_to "Sign in", new_session_path, class: "btn btn-secondary btn-sm" %>
