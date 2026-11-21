@@ -24,6 +24,39 @@ module Sms
       assert_equal "sms", User.find_by(phone: "+19095550188").participants.first.registered_via
     end
 
+    test "texts from an unknown number don't create an account" do
+      assert_no_difference -> { User.count } do
+        assert_match "You're not registered for 2027 Clinelympic Games yet. Text REGISTER <team name> to join.", text("WHO", from: "+19095550188")
+        assert_match "not registered", text("SCORE 1 5", from: "+19095550188")
+        assert_match "didn't understand", text("ADMIN STOP", from: "+19095550188")
+      end
+      inbound = SmsMessage.inbound.where(from_number: "+19095550188").order(:created_at).first
+      assert_nil inbound.user
+      assert_equal @event, inbound.event
+    end
+
+    test "a failed registration from a new number leaves no account" do
+      assert_no_difference [ "User.count", "Participant.count" ] do
+        assert_match "Include a team name", text("REGISTER", from: "+19095550188")
+        @event.update!(registration_open: false)
+        assert_match "Registration is closed", text("REGISTER Bears", from: "+19095550188")
+      end
+    end
+
+    test "an unknown number with no event to route to is pointed at JOIN" do
+      Event.update_all(status: "final")
+      assert_no_difference -> { User.count } do
+        assert_match "You're not registered for an event yet. Text JOIN", text("SCORE 1 3", from: "+19095550188")
+      end
+    end
+
+    test "JOIN with a team from a new number creates the player in that event" do
+      assert_difference -> { User.count } do
+        assert_match "Welcome to team Bears", text("JOIN CLINE27 Bears", from: "+19095550188")
+      end
+      assert_equal @event, User.find_by(phone: "+19095550188").sms_context_event
+    end
+
     test "REGISTER again says you're already in" do
       assert_match "already in 2027 Clinelympic Games as Usain Bolt on team Wheaties", text("REGISTER Wheaties")
     end

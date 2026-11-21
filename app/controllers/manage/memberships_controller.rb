@@ -15,7 +15,13 @@ class Manage::MembershipsController < Manage::EventScopedController
     membership = @event.memberships.find_or_initialize_by(user: user)
     membership.role = params[:role]
     if membership.save
-      redirect_to manage_event_memberships_path(@event), notice: "#{email} is now a #{membership.role}. They can sign in with that email."
+      if membership.previously_new_record?
+        MembershipMailer.with(membership: membership, invited_by: current_user).invited.deliver_later
+        notice = "#{email} is now a #{membership.role}. We emailed them an invite."
+      else
+        notice = "#{email} is now a #{membership.role}."
+      end
+      redirect_to manage_event_memberships_path(@event), notice: notice
     else
       redirect_to manage_event_memberships_path(@event), alert: membership.errors.full_messages.to_sentence
     end

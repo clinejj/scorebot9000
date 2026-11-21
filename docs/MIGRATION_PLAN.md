@@ -474,6 +474,8 @@ Existing commands keep working unchanged.
 
 The parser is case-insensitive and whitespace-tolerant. It answers with a helpful error instead of raising.
 
+A number we haven't seen gets an account only when its text is a `REGISTER` or `JOIN` that succeeds for an event taking registrations; the account and the registration are created in one transaction. Any other text from an unknown number gets a pointer to `REGISTER` (or `JOIN <code>`), and nothing is stored beyond the message log.
+
 ### 9.4 Reserved keywords
 
 `STOP`, `START`, `HELP` and similar words, sent as the whole message, are carrier opt-out keywords handled by Twilio. Configure **Advanced Opt-Out** on the Messaging Service so `HELP` returns the command list, and keep `COMMANDS` / `?` as aliases.
@@ -547,6 +549,7 @@ Rails picks the series by `request.host` with a routing constraint. Custom domai
 
 **Organizer console (`/manage`):**
 - Event setup wizard: basics → content → teams → **aliases** (random / self-chosen / real names, override allowed) → games → scoring preset with a preview → publish
+  - The scoring preview recomputes standings as settings change, using the event's own scores once it has some and otherwise a sample event in `db/scoring_samples/default.json`. The committed sample is synthetic. After the legacy import, replace it with a scrub of a real Clinelympics year: `bin/rails scoring:export_sample EVENT=clinelympics-<year>` renames teams and players to "Team N" and "Player N" and keeps the game settings and score values.
 - Games builder with drag-to-reorder; renumbering is locked once live
 - Teams: create, recolor, **randomize or balance** ("teams of 2, one team of 3 if odd"), drag players between teams
 - Participants: add manually, edit aliases, merge duplicates

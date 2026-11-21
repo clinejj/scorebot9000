@@ -31,10 +31,37 @@ class Manage::MiscControllerTest < ActionDispatch::IntegrationTest
     assert_match "WHO", response.body
   end
 
+  test "SMS simulator routes to this event even when others are live, without changing accounts" do
+    Flipper.enable_actor(:sms_scoring, users(:organizer))
+    other = Event.create!(name: "Lake Day", status: "live", registration_open: true, team_mode: "none", sms_code: "LAKE27")
+    Membership.create!(user: users(:organizer), resource: other, role: "owner")
+    post manage_event_sms_path(@event), params: { from: "909-555-0115", body: "REGISTER Night Owls" }
+    assert_match "Welcome to team Night Owls", flash[:notice]
+    assert_nil users(:erin).reload.sms_context_event
+  end
+
+  test "SMS simulator doesn't create accounts for unknown numbers unless they register" do
+    Flipper.enable_actor(:sms_scoring, users(:organizer))
+    assert_no_difference -> { User.count } do
+      post manage_event_sms_path(@event), params: { from: "909-555-0188", body: "WHO" }
+    end
+    assert_match "not registered", flash[:notice]
+    assert_difference -> { User.count } do
+      post manage_event_sms_path(@event), params: { from: "909-555-0188", body: "REGISTER Bears" }
+    end
+  end
+
   test "owners add and remove organizers" do
-    post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "scorekeeper" }
+    assert_enqueued_emails 1 do
+      post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "scorekeeper" }
+    end
+    assert_match "We emailed them an invite", flash[:notice]
     helper = User.find_by!(email: "helper@example.com")
     assert_equal :scorekeeper, @event.role_for(helper)
+    assert_no_enqueued_emails do
+      post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "organizer" }
+    end
+    assert_equal :organizer, @event.role_for(helper)
     delete manage_event_membership_path(@event, @event.memberships.find_by!(user: helper))
     assert_nil @event.role_for(helper)
   end

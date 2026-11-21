@@ -39,6 +39,30 @@ class Manage::EventsControllerTest < ActionDispatch::IntegrationTest
     assert_not config.show_individual_standings?
   end
 
+  test "the event form previews scoring with sample results, and updates it" do
+    get new_manage_event_path
+    assert_select "turbo-frame#scoring_preview", text: /Sample results/
+    post manage_scoring_preview_path, params: { event: { team_mode: "none", scoring: { preset: "average_rank" } } }
+    assert_response :success
+    assert_select "turbo-frame#scoring_preview" do
+      assert_select "h3", text: /Average rank/
+      assert_select "td", text: /Player \d+/
+    end
+    post manage_scoring_preview_path, params: { event: { scoring: { preset: "olympic", ranking: "sideways" } } }
+    assert_select "turbo-frame#scoring_preview", text: /won't work/
+  end
+
+  test "scoring previews for an event use its scores and need organizer access" do
+    event = events(:clinelympics_2027)
+    patch manage_scoring_preview_path(event_slug: event.slug), params: { event: { scoring: { preset: "weighted_medals" } } }
+    assert_response :not_found
+
+    sign_in_as users(:organizer)
+    patch manage_scoring_preview_path(event_slug: event.slug), params: { event: { scoring: { preset: "weighted_medals" } } }
+    assert_select "turbo-frame#scoring_preview", text: /Your event's scores so far/
+    assert_select "td", text: /Bears/
+  end
+
   test "owners can delete draft events without scores" do
     sign_in_as users(:admin)
     delete manage_event_path(events(:draft_party))

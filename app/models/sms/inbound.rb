@@ -19,12 +19,15 @@ module Sms
       new(**).call
     end
 
-    def initialize(from:, body:, to: nil, sid: nil, simulated: false)
+    # route_to: an event to route to instead of the usual rules (the
+    # organizer simulator passes its event). JOIN <code> still wins.
+    def initialize(from:, body:, to: nil, sid: nil, simulated: false, route_to: nil)
       @from = PhoneNumber.normalize(from) || from.to_s.strip
       @to = to
       @body = body.to_s
       @sid = sid.presence
       @simulated = simulated
+      @route_to = route_to
     end
 
     def call
@@ -71,15 +74,37 @@ module Sms
 
         return "Sorry, that number can't be used here." unless PhoneNumber.valid?(@from)
 
-        user = User.find_by(phone: @from) || User.create!(phone: @from)
-        @message.update!(user: user)
-
-        event = admin_target_event(command) || EventRouter.resolve(user: user, command: command)
-        @message.update!(event: event)
-        return Replies.which_event(command) if event.nil?
+        user = User.find_by(phone: @from)
+        event = admin_target_event(command) || routed_event(command) || EventRouter.resolve(user: user, command: command)
+        @message.update!(user: user, event: event)
+        return Replies.which_event(command, known_sender: user.present?) if event.nil?
         return "Texting isn't turned on for #{event.name}. Play on the event page instead." unless event.sms_scoring_enabled? || command.name == :admin
 
+        return register_new_sender(event, command) if user.nil?
+
         Commands.new(event: event, user: user, command: command).run
+      end
+
+      # A number we haven't seen only gets an account when it registers for
+      # an event that's taking registrations. Anything else gets a pointer to
+      # REGISTER, and nothing is stored beyond the message log.
+      def register_new_sender(event, command)
+        return Replies.unknown if command.name == :admin
+        return Replies.not_registered(event) unless command.name.in?(%i[register join])
+
+        reply = nil
+        user = nil
+        User.transaction do
+          user = User.create!(phone: @from, sms_context_event: (event if command.name == :join))
+          reply = Commands.new(event: event, user: user, command: command).run
+          raise ActiveRecord::Rollback unless event.participants.exists?(user: user)
+        end
+        @message.update!(user: user) if user&.persisted?
+        reply
+      end
+
+      def routed_event(command)
+        @route_to unless command.name == :join
       end
 
       def sender_rate_limited?
