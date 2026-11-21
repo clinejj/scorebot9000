@@ -1,0 +1,32 @@
+trivia:
+  event: clinelympics_2027
+  position: 1
+  name: Trivia
+  direction: higher_better
+  score_format: integer
+
+mini_golf:
+  event: clinelympics_2027
+  position: 2
+  name: Mini Golf
+  direction: lower_better
+  score_format: integer
+
+relay:
+  event: clinelympics_2027
+  position: 3
+  name: Relay
+  direction: lower_better
+  score_format: time
+
+team_quiz:
+  event: clinelympics_2027
+  position: 4
+  name: Team Quiz
+  participation: team
+
+legacy_trivia:
+  event: clinelympics_2021
+  position: 1
+  name: Trivia
+  status: final

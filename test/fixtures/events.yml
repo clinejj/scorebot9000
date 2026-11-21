@@ -1,0 +1,34 @@
+clinelympics_2021:
+  series: clinelympics
+  slug: clinelympics-2021
+  name: 2021 Clinelympic Games
+  edition_label: "2021"
+  starts_at: 2021-01-09 23:00:00
+  status: final
+  finalized_at: 2021-01-10 03:00:00
+  sms_code: CLINE21
+  team_mode: self_registered
+  legacy_event_id: 10
+  scoring: {}
+
+clinelympics_2027:
+  series: clinelympics
+  slug: clinelympics-2027
+  name: 2027 Clinelympic Games
+  edition_label: "2027"
+  starts_at: 2027-01-09 23:00:00
+  status: live
+  registration_open: true
+  sms_code: CLINE27
+  team_mode: self_registered
+  max_team_size: 3
+  scoring: {}
+  created_by_user: organizer
+
+draft_party:
+  slug: draft-party
+  name: Backyard Games
+  status: draft
+  sms_code: BACKYD
+  team_mode: none
+  scoring: {}

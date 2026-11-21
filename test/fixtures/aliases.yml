@@ -1,0 +1,9 @@
+<% %w[Usain\ Bolt Serena\ Williams Simone\ Biles Michael\ Phelps Mia\ Hamm].each_with_index do |name, i| %>
+classic_<%= i %>:
+  alias_pool: classics
+  name: <%= name %>
+<% end %>
+
+platform_one:
+  alias_pool: platform
+  name: Captain Scoreboard

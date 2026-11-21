@@ -2,6 +2,12 @@ class User < ApplicationRecord
   has_prefixed_id :usr
 
   has_many :sessions, dependent: :delete_all
+  has_many :participants, dependent: :destroy
+  has_many :events, through: :participants
+  has_many :memberships, dependent: :delete_all
+  has_many :host_requests, dependent: :destroy
+  has_many :sms_messages, dependent: :nullify
+  belongs_to :sms_context_event, class_name: "Event", optional: true
 
   # Deterministic encryption keeps these queryable and uniquely indexable
   # while storing ciphertext (which is also what Blazer shows).

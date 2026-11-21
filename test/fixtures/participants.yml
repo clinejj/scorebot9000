@@ -1,0 +1,27 @@
+alice:
+  event: clinelympics_2027
+  user: alice
+  team: wheaties
+  alias_name: Usain Bolt
+  registered_via: sms
+
+bob:
+  event: clinelympics_2027
+  user: bob
+  team: wheaties
+  alias_name: Serena Williams
+  registered_via: sms
+
+carol:
+  event: clinelympics_2027
+  user: carol
+  team: bears
+  alias_name: Simone Biles
+  registered_via: web
+
+dave:
+  event: clinelympics_2027
+  user: dave
+  team: bears
+  alias_name: Turbo Otter
+  registered_via: sms

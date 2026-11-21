@@ -1,0 +1,7 @@
+clinelympics:
+  slug: clinelympics
+  name: Clinelympic Games
+  tagline: The annual contest of athletic skill and mental fortitude
+  custom_domain: clinelympics.com
+  theme: { accent: "#b91c1c" }
+  default_alias_pool: classics
