@@ -1,0 +1,33 @@
+{"kind": "setting", "key": "Settings:settingsList/setting:1", "properties": {"adminName": "oldadmin", "adminNumName": "+19095550199", "eventID": 2, "siteName": "Clinelympics"}}
+{"kind": "event", "key": "Events:eventList/event:1", "properties": {"eventID": 1, "eventName": "2012 Clinelympic Games", "medals": "Gold,Silver,Bronze", "archived": false, "active": false, "teamscore": true, "teams": true}}
+{"kind": "event", "key": "Events:eventList/event:2", "properties": {"eventID": 2, "eventName": "2013 Clinelympic Games", "medals": "Gold,Silver,Bronze", "archived": false, "active": false, "teamscore": true, "teams": true}}
+{"kind": "event", "key": "Events:eventList/event:2", "properties": {"eventID": 2, "eventName": "Duplicate of 2013", "medals": "Gold,Silver,Bronze", "archived": false, "active": false, "teamscore": true, "teams": true}}
+{"kind": "game", "key": "Games:gameList/game:1-1", "properties": {"eventID": 1, "gameID": 1, "gameName": "Trivia", "scoreType": true}}
+{"kind": "game", "key": "Games:gameList/game:1-2", "properties": {"eventID": 1, "gameID": 2, "gameName": "Golf", "scoreType": false}}
+{"kind": "game", "key": "Games:gameList/game:2-1", "properties": {"eventID": 2, "gameID": 1, "gameName": "Darts", "scoreType": true}}
+{"kind": "game", "key": "Games:gameList/game:9-1", "properties": {"eventID": 9, "gameID": 1, "gameName": "Orphan Game", "scoreType": true}}
+{"kind": "player", "key": "Players:playerList/player:1-+19095550201", "properties": {"eventID": 1, "playerID": "+19095550201", "playerName": "Usain Bolt", "teamName": "WHEATIES"}}
+{"kind": "player", "key": "Players:playerList/player:1-+19095550202", "properties": {"eventID": 1, "playerID": "+19095550202", "playerName": "Mia Hamm", "teamName": "WHEATIES"}}
+{"kind": "player", "key": "Players:playerList/player:1-+19095550203", "properties": {"eventID": 1, "playerID": "+19095550203", "playerName": "Pele", "teamName": "BEARS"}}
+{"kind": "player", "key": "Players:playerList/player:1-+19095550204", "properties": {"eventID": 1, "playerID": "+19095550204", "playerName": "Mia Hamm", "teamName": "BEARS"}}
+{"kind": "player", "key": "Players:playerList/player:1-TESTER", "properties": {"eventID": 1, "playerID": "TESTER", "playerName": "Test Player", "teamName": "BEARS"}}
+{"kind": "player", "key": "Players:playerList/player:1-+19095550201", "properties": {"eventID": 1, "playerID": "+19095550201", "playerName": "Usain Bolt Again", "teamName": "WHEATIES"}}
+{"kind": "player", "key": "Players:playerList/player:2-+19095550201", "properties": {"eventID": 2, "playerID": "+19095550201", "playerName": "Pele", "teamName": "WHEATIES"}}
+{"kind": "player", "key": "Players:playerList/player:2-+19095550199", "properties": {"eventID": 2, "playerID": "+19095550199", "playerName": "Ali", "teamName": "BEARS"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550201-1-2012-01-07T23:05:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550201", "gameID": 1, "playerScore": 1, "date": "2012-01-07T23:05:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550201-1-2012-01-07T23:10:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550201", "gameID": 1, "playerScore": 6, "date": "2012-01-07T23:10:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550202-1-2012-01-07T23:11:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550202", "gameID": 1, "playerScore": 4, "date": "2012-01-07T23:11:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550203-1-2012-01-07T23:12:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550203", "gameID": 1, "playerScore": 7, "date": "2012-01-07T23:12:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-TESTER-1-2012-01-07T23:13:00.000Z", "properties": {"eventID": 1, "playerID": "TESTER", "gameID": 1, "playerScore": 3, "date": "2012-01-07T23:13:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550201-2-2012-01-08T00:10:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550201", "gameID": 2, "playerScore": 3, "date": "2012-01-08T00:10:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550203-2-2012-01-08T00:20:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550203", "gameID": 2, "playerScore": 4, "date": "2012-01-08T00:20:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550201-5-2012-01-08T00:30:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550201", "gameID": 5, "playerScore": 9, "date": "2012-01-08T00:30:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:1-+19095550299-1-2012-01-08T00:31:00.000Z", "properties": {"eventID": 1, "playerID": "+19095550299", "gameID": 1, "playerScore": 9, "date": "2012-01-08T00:31:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:2-+19095550201-1-2013-01-12T23:00:00.000Z", "properties": {"eventID": 2, "playerID": "+19095550201", "gameID": 1, "playerScore": 50, "date": "2013-01-12T23:00:00.000Z"}}
+{"kind": "score", "key": "Scores:scoreList/score:2-+19095550199-1-2013-01-12T23:05:00.000Z", "properties": {"eventID": 2, "playerID": "+19095550199", "gameID": 1, "playerScore": 40, "date": "2013-01-12T23:05:00.000Z"}}
+{"kind": "name", "key": "Names:nameList/name:Usain Bolt", "properties": {"Name": "Usain Bolt", "rnd": 1, "isUsed": false}}
+{"kind": "name", "key": "Names:nameList/name:Mia Hamm", "properties": {"Name": "Mia Hamm", "rnd": 1, "isUsed": false}}
+{"kind": "name", "key": "Names:nameList/name:usain bolt", "properties": {"Name": "usain bolt", "rnd": 1, "isUsed": false}}
+{"kind": "name", "key": "Names:nameList/name:Pele", "properties": {"Name": "Pele", "rnd": 1, "isUsed": false}}
+{"kind": "text", "key": "Texts:textList/text:1", "properties": {"SmsSid": "SM0001", "AccountSid": "AC1", "From": "+19095550201", "Body": "REGISTER WHEATIES", "date": "2012-01-07T22:50:00.000Z"}}
+{"kind": "text", "key": "Texts:textList/text:2", "properties": {"SmsSid": null, "AccountSid": null, "From": "9095550202", "Body": "SCORE 1 4", "date": "2012-01-07T23:11:00.000Z"}}

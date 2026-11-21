@@ -11,6 +11,8 @@ class AdminGateTest < ActionDispatch::IntegrationTest
     /admin/blazer/queries/new
     /admin/maintenance_tasks
     /admin/jobs
+    /admin/legacy_imports
+    /admin/legacy_imports/new
   ].freeze
 
   ADMIN_PATHS.each do |path|
