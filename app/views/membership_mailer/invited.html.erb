@@ -1,0 +1,3 @@
+<p><%= @inviter_name %> added you as <%= @role_with_article %> for <strong><%= @event.name %></strong> on Scorebot 9000. You can <%= @role_summary %>.</p>
+<p><%= link_to "Open the organizer console", @console_url %></p>
+<p style="color: #78716c;">There's no password: sign in at <%= link_to @sign_in_url, @sign_in_url %> with this email address (<%= @membership.user.email %>) and we'll send you a code. If you weren't expecting this, you can ignore this email.</p>

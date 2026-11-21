@@ -52,9 +52,16 @@ class Manage::MiscControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "owners add and remove organizers" do
-    post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "scorekeeper" }
+    assert_enqueued_emails 1 do
+      post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "scorekeeper" }
+    end
+    assert_match "We emailed them an invite", flash[:notice]
     helper = User.find_by!(email: "helper@example.com")
     assert_equal :scorekeeper, @event.role_for(helper)
+    assert_no_enqueued_emails do
+      post manage_event_memberships_path(@event), params: { email: "helper@example.com", role: "organizer" }
+    end
+    assert_equal :organizer, @event.role_for(helper)
     delete manage_event_membership_path(@event, @event.memberships.find_by!(user: helper))
     assert_nil @event.role_for(helper)
   end
