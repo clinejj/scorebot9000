@@ -1,0 +1,78 @@
+<%# locals: (event:, url:, method:) %>
+<% scoring = ScoringForm.from_config(event.scoring_config) %>
+<% manageable_series = current_user.platform_admin? ? Series.order(:name) : Series.where(id: current_user.memberships.where(resource_type: "Series", role: %w[owner organizer]).select(:resource_id)).order(:name) %>
+<%= form_with model: event, url: url, method: method, class: "space-y-8", data: { controller: "scoring-preview", action: "change->scoring-preview#refresh" } do |form| %>
+  <% if event.errors.any? %>
+    <div class="flash flash-alert"><%= event.errors.full_messages.to_sentence %></div>
+  <% end %>
+
+  <section class="card space-y-4">
+    <h2 class="font-bold">Basics</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="sm:col-span-2"><%= form.label :name, class: "label" %><%= form.text_field :name, required: true, class: "input", placeholder: "2027 Clinelympic Games" %></div>
+      <div><%= form.label :series_id, "Series", class: "label" %><%= form.collection_select :series_id, manageable_series, :id, :name, { include_blank: "Standalone event" }, class: "input" %></div>
+      <div><%= form.label :edition_label, "Edition", class: "label" %><%= form.text_field :edition_label, class: "input", placeholder: "2027" %></div>
+      <div><%= form.label :starts_at, "Starts", class: "label" %><%= form.datetime_field :starts_at, value: event.local_starts_at&.strftime("%Y-%m-%dT%H:%M"), class: "input" %></div>
+      <div><%= form.label :time_zone, class: "label" %><%= form.select :time_zone, ActiveSupport::TimeZone.all.map { |zone| [ zone.to_s, zone.tzinfo.name ] }.uniq(&:last), {}, class: "input" %></div>
+      <div><%= form.label :location_text, "Location", class: "label" %><%= form.text_field :location_text, class: "input" %></div>
+      <div><%= form.label :online_url, "Online link", class: "label" %><%= form.url_field :online_url, class: "input" %></div>
+      <% if event.persisted? %>
+        <div><%= form.label :slug, "Page address", class: "label" %><div class="flex items-center gap-1"><span class="mt-1 text-sm muted">/e/</span><%= form.text_field :slug, class: "input" %></div></div>
+      <% end %>
+      <div><%= form.label :sms_code, "SMS code", class: "label" %><%= form.text_field :sms_code, class: "input uppercase", placeholder: "Generated if blank" %><p class="hint">Players text JOIN <%= event.sms_code || "CODE" %> when several events are live.</p></div>
+    </div>
+  </section>
+
+  <section class="card space-y-4">
+    <h2 class="font-bold">Page content</h2>
+    <div><%= form.label :description, class: "label" %><%= form.rich_textarea :description, class: "input min-h-32" %></div>
+    <div><%= form.label :schedule, class: "label" %><%= form.rich_textarea :schedule, class: "input min-h-24" %></div>
+    <div><%= form.label :rules, class: "label" %><%= form.rich_textarea :rules, class: "input min-h-24" %></div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div><%= form.label :hero, "Header image", class: "label" %><%= form.file_field :hero, accept: "image/*", class: "mt-2 block text-sm" %></div>
+      <div><%= form.label :accent_color, "Accent color", class: "label" %><%= form.color_field :accent_color, value: event.theme["accent"] || event.series&.accent_color || "#4338ca", class: "mt-1 h-11 w-20 rounded-lg" %><p class="hint">Defaults to the series color.</p></div>
+    </div>
+  </section>
+
+  <section class="card space-y-4">
+    <h2 class="font-bold">Teams and player names</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div><%= form.label :team_mode, "Teams", class: "label" %><%= form.select :team_mode, [ [ "Players form their own teams", "self_registered" ], [ "Organizers assign teams", "assigned" ], [ "No teams", "none" ] ], {}, class: "input" %></div>
+      <div><%= form.label :max_team_size, "Max team size", class: "label" %><%= form.number_field :max_team_size, min: 1, class: "input", placeholder: "No limit" %></div>
+      <div><%= form.label :alias_mode, "Player names", class: "label" %><%= form.select :alias_mode, [ [ "Random fun names", "random" ], [ "Players choose", "self_chosen" ], [ "Real names", "real_name" ] ], {}, class: "input" %></div>
+      <div class="flex items-end gap-2 pb-2"><%= form.check_box :allow_alias_override, class: "h-5 w-5" %><%= form.label :allow_alias_override, "Let players change their name", class: "text-sm font-semibold" %></div>
+    </div>
+  </section>
+
+  <section class="card space-y-4">
+    <h2 class="font-bold">Scoring</h2>
+    <%= form.fields_for :scoring do |scoring_form| %>
+      <div>
+        <%= scoring_form.label :preset, "How standings are decided", class: "label" %>
+        <%= scoring_form.select :preset, Scoring::Config.preset_options + (scoring[:preset].to_s.start_with?("legacy") ? [ [ event.scoring_config.preset_label, scoring[:preset] ] ] : []), { selected: scoring[:preset] }, class: "input" %>
+        <ul class="hint mt-2 space-y-0.5">
+          <% Scoring::Config::PRESETS.reject { |key, _| key.start_with?("legacy") }.each do |key, preset| %>
+            <li><strong><%= preset["label"] %>:</strong> <%= preset["description"] %></li>
+          <% end %>
+        </ul>
+      </div>
+      <details class="text-sm">
+        <summary class="cursor-pointer font-semibold">Advanced</summary>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <div><%= scoring_form.label :ranking, "Ties", class: "label" %><%= scoring_form.select :ranking, [ [ "Share a place, skip the next (1, 1, 3)", "competition" ], [ "Share a place, don't skip (1, 1, 2)", "dense" ] ], { selected: scoring[:ranking] }, class: "input" %></div>
+          <div><%= scoring_form.label :missing_scores, "Skipped games", class: "label" %><%= scoring_form.select :missing_scores, [ [ "Ignore", "ignore" ], [ "Count as last place", "worst_place" ], [ "Count as zero", "zero" ] ], { selected: scoring[:missing_scores] }, class: "input" %></div>
+          <div><%= scoring_form.label :medal_names, "Medals (best first)", class: "label" %><%= scoring_form.text_field :medal_names, value: scoring[:medal_names], class: "input" %></div>
+          <div><%= scoring_form.label :medal_points, "Medal points", class: "label" %><%= scoring_form.text_field :medal_points, value: scoring[:medal_points], class: "input" %></div>
+          <div><%= scoring_form.label :placement_points, "Placement points", class: "label" %><%= scoring_form.text_field :placement_points, value: scoring[:placement_points], class: "input" %><p class="hint">Comma-separated, or "linear" (last place gets 1).</p></div>
+          <div><%= scoring_form.label :min_games, "Minimum games to be ranked", class: "label" %><%= scoring_form.number_field :min_games, value: scoring[:min_games], min: 0, class: "input" %></div>
+          <div class="flex items-center gap-2 sm:col-span-2"><%= scoring_form.check_box :show_individual_standings, { checked: scoring[:show_individual_standings] }, "1", "0" %><%= scoring_form.label :show_individual_standings, "Show player standings alongside team standings", class: "text-sm font-semibold" %></div>
+        </div>
+      </details>
+    <% end %>
+    <%= render "manage/events/scoring_preview", preview: Scoring::Preview.call(event.scoring_config, event: event), event: event %>
+    <%= form.button "Update preview", type: "submit", name: nil, formaction: manage_scoring_preview_path(event_slug: event.slug), formmethod: "post", formnovalidate: true,
+          class: "btn btn-secondary text-sm", data: { turbo_frame: "scoring_preview", scoring_preview_target: "button" } %>
+  </section>
+
+  <%= form.submit event.persisted? ? "Save" : "Create event", class: "btn btn-primary" %>
+<% end %>

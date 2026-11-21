@@ -1,0 +1,9 @@
+<% content_for :title, "Setup · #{@event.name}" %>
+<%= render "form", event: @event, url: manage_event_path(@event), method: :patch %>
+<% if allowed_to?(:own?, @event) && @event.draft? %>
+  <div class="mt-10 card">
+    <h2 class="font-bold text-red-700">Delete event</h2>
+    <p class="text-sm muted">Only draft events without scores can be deleted.</p>
+    <%= button_to "Delete #{@event.name}", manage_event_path(@event), method: :delete, class: "btn btn-danger btn-sm mt-3", form: { data: { turbo_confirm: "Delete this event permanently?" } } %>
+  </div>
+<% end %>

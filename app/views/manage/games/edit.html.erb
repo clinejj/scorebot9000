@@ -1,0 +1,14 @@
+<% content_for :title, "Edit #{@game.name}" %>
+<div class="max-w-2xl card">
+  <h2 class="display text-xl">Game <%= @game.position %>: <%= @game.name %></h2>
+  <%= form_with model: @game, url: manage_event_game_path(@event, @game), method: :patch, class: "mt-4 space-y-4" do |form| %>
+    <% if @game.errors.any? %><p class="flash flash-alert"><%= @game.errors.full_messages.to_sentence %></p><% end %>
+    <%= render "form", form: form, game: @game %>
+    <div><%= form.label :description, class: "label" %><%= form.rich_textarea :description, class: "input min-h-24" %></div>
+    <div class="flex gap-2">
+      <%= form.submit "Save", class: "btn btn-primary" %>
+      <%= link_to "Cancel", manage_event_games_path(@event), class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+  <%= button_to "Delete game", manage_event_game_path(@event, @game), method: :delete, class: "mt-6 text-sm text-red-700 underline", form: { data: { turbo_confirm: "Delete #{@game.name}?" } } %>
+</div>

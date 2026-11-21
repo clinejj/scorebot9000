@@ -35,6 +35,28 @@ Rails.application.routes.draw do
     end
   end
 
+  # Organizer console.
+  namespace :manage do
+    root "dashboard#show"
+    match "scoring_preview", to: "scoring_previews#create", via: %i[post patch], as: :scoring_preview
+    resources :series, only: %i[new create edit update], param: :slug
+    resources :events, only: %i[new create show edit update destroy], param: :slug do
+      resource :lifecycle, only: :update
+      resources :games, only: %i[index create edit update destroy], param: :position do
+        patch :move, on: :member
+      end
+      resources :teams, only: %i[index create update destroy] do
+        post :randomize, on: :collection
+      end
+      resources :participants, only: %i[index create update destroy], path: "players"
+      resources :score_sheets, only: %i[index show update], param: :position, path: "scores"
+      resources :score_entries, only: :destroy
+      resources :adjustments, only: %i[index create destroy]
+      resources :sms, only: %i[index create], controller: "sms"
+      resources :memberships, only: %i[index create destroy], path: "organizers"
+    end
+  end
+
   # Public pages. A series' custom domain (clinelympics.com) roots at its
   # series page; everything else works on any host.
   constraints(CustomDomainConstraint) do

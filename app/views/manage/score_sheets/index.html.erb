@@ -1,0 +1,36 @@
+<% content_for :title, "Scores · #{@event.name}" %>
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <h2 class="display text-xl">Scores</h2>
+  <div class="flex flex-wrap gap-2">
+    <% @games.each do |game| %>
+      <%= link_to "#{game.position}. #{game.name}", manage_event_score_sheet_path(@event, game), class: "btn btn-secondary btn-sm" %>
+    <% end %>
+  </div>
+</div>
+<p class="mt-1 text-sm muted">Pick a game to enter or correct scores. The grid shows each <%= @result.config.team_basis? ? "team's" : "player's" %> counted result.</p>
+
+<% if @games.any? && @competitors.any? %>
+  <div class="mt-6 card !p-0 overflow-x-auto">
+    <table class="table-scores">
+      <thead>
+        <tr>
+          <th><%= @result.config.team_basis? ? "Team" : "Player" %></th>
+          <% @games.each do |game| %><th class="text-right"><%= link_to "#{game.position}. #{game.name}", manage_event_score_sheet_path(@event, game), class: "hover:underline" %></th><% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @competitors.each do |competitor| %>
+          <tr>
+            <td class="font-semibold"><%= competitor.display_name %></td>
+            <% @result.game_results.each do |game_result| %>
+              <% row = game_result.rows.find { |candidate| candidate.competitor.id == competitor.id } %>
+              <td class="text-right tabular-nums"><%= row ? game_value(game_result.game, row.value) : tag.span("—", class: "muted") %><%= medal_badge(@result.config, row&.medal) if row&.medal %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="mt-6 card muted">Add games and players first.</p>
+<% end %>

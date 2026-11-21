@@ -27,6 +27,7 @@
     <%= render "shared/header" %>
     <%= render "shared/flash" %>
     <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:py-10">
+      <%= yield :page_header %>
       <%= yield %>
     </main>
     <%= render "shared/footer" %>

@@ -1,0 +1,4 @@
+<% content_for :title, "New series" %>
+<h1 class="display text-3xl">New series</h1>
+<p class="mt-1 muted">A series groups recurring events (like a yearly games) with their own page, champions and records.</p>
+<div class="mt-6"><%= render "form", series: @series, url: manage_series_index_path, method: :post %></div>

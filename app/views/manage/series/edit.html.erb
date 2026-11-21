@@ -1,0 +1,4 @@
+<% content_for :title, "Edit #{@series.name}" %>
+<p class="eyebrow">Series</p>
+<h1 class="display mt-1 text-3xl"><%= @series.name %></h1>
+<div class="mt-6"><%= render "form", series: @series, url: manage_series_path(@series), method: :patch %></div>
