@@ -1,6 +1,6 @@
 # Launch checklist
 
-These are the steps that happen outside the code: accounts, secrets, DNS, Twilio and the data migration. They follow the plan's milestones (`docs/MIGRATION_PLAN.md` §13–14). Open questions with their current defaults are in `docs/QUESTIONS.md`.
+These are the steps that happen outside the code: accounts, secrets, DNS, Twilio and the data migration. They follow the plan's milestones (`docs/MIGRATION_PLAN.md` §13–14). Build-time questions and their answers are in `docs/QUESTIONS.md`.
 
 ## Phase 0: safeguard the legacy data (do this first)
 
@@ -39,9 +39,10 @@ These are the steps that happen outside the code: accounts, secrets, DNS, Twilio
 
 ## Phase 1: infrastructure
 
-- [ ] **PlanetScale Postgres:**
-  - a database for production (and one for staging)
+- [ ] **PlanetScale Postgres**, on its own new server (not your other app's cluster):
+  - a database for production on the smallest single-node tier (and a small one, or a branch, for staging), on Postgres 18 if offered
   - an app role (read/write) and a **SELECT-only `scorebot_blazer` role**
+  - note its region, and set `primary_region` in `fly.toml` and `fly.staging.toml` to match (they default to `iad`)
 - [ ] **Cloudflare R2:** a private bucket for Active Storage, plus an API token scoped to it.
 - [ ] **Email:** a Resend (or SES) SMTP credential, with a verified sending domain for `MAIL_FROM`.
 - [ ] **Twilio:**
@@ -81,6 +82,11 @@ These are the steps that happen outside the code: accounts, secrets, DNS, Twilio
 - [ ] Optional: run `Maintenance::Legacy::ReconcileResultsTask` so raw scores match the announced totals.
 - [ ] Fix any guessed event dates in `/manage`.
 - [ ] Spot-check `/s/clinelympics` and a few `/e/clinelympics-20XX/results` pages against the captured HTML in `tmp/legacy/html/`.
+- [ ] Replace the synthetic scoring-preview sample with a scrubbed real year (teams and players are renamed; check the file before committing it):
+
+  ```bash
+  fly ssh console -a scorebot9000 -C "bin/rails scoring:export_sample EVENT=clinelympics-2019" > db/scoring_samples/default.json
+  ```
 
 ## Cutover A: archive goes live on the new stack
 
@@ -111,6 +117,7 @@ These are the steps that happen outside the code: accounts, secrets, DNS, Twilio
 ## Before the next event
 
 - [ ] The 10DLC campaign is approved.
+- [ ] Check that `SMS_DAILY_REPLY_CAP` (default 1,000 replies a day across all events) still fits within the brand's daily limit shown in Twilio's Trust Hub.
 - [ ] Rehearse in `/manage` → SMS simulator, then from a real phone: `REGISTER`, `SCORE`, `UNDO`, `STANDINGS`.
 - [ ] On the day, keep a machine warm (`fly scale count 1`, or `fly machine update --autostop=off`). Undo it afterwards.
 - [ ] After the closing ceremony: **Finalize** (in the console, or text `ADMIN FINAL`), then `pg_dump` to R2.
