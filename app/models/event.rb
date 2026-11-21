@@ -45,6 +45,7 @@ class Event < ApplicationRecord
   validates :time_zone, inclusion: { in: ->(_) { ActiveSupport::TimeZone::MAPPING.values.uniq + ActiveSupport::TimeZone.all.map { |zone| zone.tzinfo.name } } }
   validates :max_team_size, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validate :ends_after_start
+  validate :scoring_config_valid
 
   def display_name
     name
@@ -98,6 +99,14 @@ class Event < ApplicationRecord
     User.where(id: owner_ids)
   end
 
+  def scoring_config
+    Scoring::Config.from(scoring, uses_teams: uses_teams?)
+  end
+
+  def standings
+    Scoring::Standings.for(self)
+  end
+
   def participant_for(user)
     participants.find_by(user: user) if user
   end
@@ -114,6 +123,10 @@ class Event < ApplicationRecord
         counter += 1
       end
       self.sms_code = candidate
+    end
+
+    def scoring_config_valid
+      scoring_config.errors.each { |message| errors.add(:scoring, message) }
     end
 
     def ends_after_start
